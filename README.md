@@ -1,4 +1,4 @@
-##A More Abstract Mathamatic Analysis Note by mcrsdl
+# A More Abstract Mathamatic Analysis Note by mcrsdl
 
 数分笔记未完成
 
