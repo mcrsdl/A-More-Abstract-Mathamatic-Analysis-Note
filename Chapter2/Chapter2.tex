@@ -1,0 +1,435 @@
+\documentclass[../main.tex]{subfiles}
+
+\setcounter{chapter}{1}
+
+\begin{document}
+
+\chapter{一元微分学}
+
+\section{导数与微分}
+
+我们从导数开始. 导数的几何意义即函数在一点处的瞬时变化率，于是我们可以利用极限给出以下定义：
+
+\begin{definition}[导数的定义] \label{def:derivative}
+    设 $D \subset \mathbb R$，函数 $f:D \to \mathbb R$ 在 $x \in D$ 的一个邻域上有定义，若极限 
+    $$
+    \lim_{\Delta x \to 0} \frac{f(x + \Delta x) - f(x)}{\Delta x}
+    $$ 
+    存在且有限，则称 $f$ 在 $x$ 处\textbf{可导}，并称该极限为 $f$ 在点 $x$ 处的\textbf{导数}\index{daoshu@导数}，记为 $f'(x)$. 否则称 $f$ 在 $x$ 处\textbf{不可导}. 
+    
+    若 $f$ 在每个 $x \in D$ 处均可导，则称 $f$ 在 $D$ 上可导. 此时可以得到函数 $f':D \to \mathbb R, x \mapsto f'(x)$，称为 $f$ 的\textbf{导函数}\index{daoshu@导数!daohanshu@导函数}. 
+\end{definition}
+
+\begin{remark}
+    $\Delta x$ 作为自变量的变化量可以取负数. 
+
+    $f$ 在 $x$ 处可导要求 $x$ 为 $D$ 的内点，因此 $f$ 在 $D$ 上可导隐含 $D$ 是开集. 
+\end{remark}
+
+在上面的定义中，我们用记号 $f'(x)$ 表示函数 $f$ 在 $x$ 处的导数，这是导数的 Lagrange 记号. 以下记号同样可以表示导数：
+$$
+\frac{\d}{\d x} f(x), 
+$$
+该记号是 Leibniz 记号，用 Leibniz 记号可将导函数 $f'$ 记为 $\frac{\d}{\d x} f$. Leibniz 记号是很有启发性的，我们在后面会看到它在形式运算上的简洁性与巨大作用. 
+
+对在 $D$ 上可导的函数 $f$，若 $f'$ 也在 $D$ 上可导，我们将 $f'$ 的导函数称为 $f$ 的\textbf{二阶导函数}，记为 $f''$，或用 Leibniz 记号
+$$
+\frac{\d}{\d x} \bigg(\frac{\d}{\d x} f \bigg) = \frac{\d^2}{\d x^2} f. 
+$$
+依此类推，我们可以定义 $n$ 阶导函数，记为 $f^{(n)}$ 或 $\frac{\d^n}{\d x^n} f$，即
+$$
+f^{(n)} = (f^{(n - 1)})'. 
+$$
+若 $f$ 在 $D$ 上存在 \textbf{$n$ 阶导函数}，则称 $f$ 在 $D$ 上 $n$ 阶可导. 在 $D$ 上 $n$ 阶可导的函数全体记为 $D^n(D)$，在 $D$ 上 $n$ 阶可导且 $n$ 阶导函数连续的函数全体记为 $C^n(D)$. 
+
+利用数学归纳法，容易证明以下命题：
+
+\begin{proposition}[Leibniz 公式]
+    若 $f, g \in D^n(D)$，则 $fg \in D^n(D)$，且有
+    $$
+    (fg)^{(n)} = \sum_{k = 0}^{n} \binom{n}{k} f^{(n - k)} g^{(k)}. 
+    $$
+\end{proposition}
+
+利用单侧极限，我们还可以定义\textbf{左、右导数}的概念：
+\begin{align*}
+    f'_-(x) := \lim_{\Delta x \to 0^-} \frac{f(x + \Delta x) - f(x)}{\Delta x}, \\
+    f'_+(x) := \lim_{\Delta x \to 0^+} \frac{f(x + \Delta x) - f(x)}{\Delta x}. 
+\end{align*}
+例如，$f(x) = |x|$ 在 $0$ 处不可导，但 $f'_-(x) = -1, f'_+(x) = 1$. 
+
+
+然后我们讨论函数的\textbf{微分}. 
+
+\begin{definition} \label{def:differential}
+    设 $D \subset \mathbb R$，函数 $f:D \to \mathbb R$ 在 $x \in D$ 的一个邻域上有定义，若存在 $k = k(x) \in \mathbb R$ 使得
+    $$
+    f(x + \Delta x) - f(x) = k(x) \Delta x + o(|\Delta x|) \ (\Delta x \to 0), 
+    $$
+    则称 $f$ 在点 $x$ 处\textbf{可微}. 线性映射 $\mathbb R \to \mathbb R, h \mapsto kh$ 称为 $f$ 在 $x$ 处的\textbf{微分}\index{weifen@微分}，记为 $\d f(x)$. 
+    
+    若 $f$ 在每个 $x \in D$ 处可微，则称 $f$ 在 $D$ 上可微. 
+\end{definition}
+
+\begin{remark}
+    以上定义中的 $k$ 若存在则唯一（若 $k_1, k_2$ 均满足定义中的等式，相减即得 $(k_1 - k_2)\Delta x = o(|\Delta x|)$，令 $\Delta x \to 0$ 即得 $k_1 = k_2$），因此 $\d f(x)$ 是良定的. 
+
+    $\d f(x)$ 的定义域中的 $\mathbb R$ 与 $f$ 的定义域中的 $\mathbb R$ 在本质上是不同的，前者（$h$ 所在空间）实际上是后者（$x$ 所在空间）作为 1 维流形的切空间，$\d f(x)$ 事实上是切空间上的线性泛函. 这一点在之后的多元微积分部分会更加明显. 
+\end{remark}
+
+我们容易看出，对一元函数，可微与可导是等价的，且上面定义中的 $k(x)$ 即为 $f$ 在 $x$ 处的导数 $f'(x)$. 不同的是，可导强调的是函数值的变化率的极限的存在性，可微则强调的是线性近似的存在性. 对多元函数，函数值的变化率的极限难以定义，而线性近似在赋范线性空间中也可以定义，因此我们只能将微分的概念推广到之后的多元微分学中. 
+
+我们将 $x$ 看作 $x$ 的函数，则 $\d x:h \mapsto h$，于是对可微函数 $f$ 有 $\d f = f'(x) \,\d x$，用 Leibniz 记号可写为 $\d f = \frac{\d f}{\d x} \,\d x$，这在形式上是十分和谐的. 
+
+在定义~\ref{def:differential} 中令 $\Delta x \to 0$ 可知，若 $f$ 在 $x$ 处可微，则 $f$ 在 $x$ 处连续. 反之不一定成立，例如，$|x|$ 在 $0$ 处连续但不可微. 
+
+
+\section{微分法则}
+
+在定义了导数与微分之后，我们来研究求导与微分的运算法则. 
+
+我们有以下运算法则：
+
+\begin{proposition}[求导与微分的四则运算法则]
+    设函数 $f, g$ 均在 $x \in \mathbb R$ 处可微，$\lambda \in \mathbb R$，则有
+    \begin{enumerate}[label = (\alph*)]
+        \item 线性运算法则：
+        \begin{gather*}
+            (f + g)'(x) = f'(x) + g'(x), \quad (\lambda f)'(x) = \lambda f'(x), \\
+            \d(f + g)(x) = \d f(x) + \d g(x), \quad \d(\lambda f)(x) = \lambda \,\d f(x). 
+        \end{gather*}
+
+        \item 乘法法则：
+        \begin{gather*}
+            (fg)'(x) = f'(x) g(x) + f(x) g'(x),  \\
+            \d(fg)(x) = g(x) \,\d f(x) + f(x) \,\d g(x). 
+        \end{gather*}
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    我们只证明乘法法则. 利用微分的定义，在 $\Delta x \to 0$ 时，
+    \begin{align*}
+        &f(x + \Delta x) g(x + \Delta x) - f(x) g(x) \\
+        ={} & \big(f(x + \Delta x) - f(x)\big) g(x + \Delta x) + f(x) \big(g(x + \Delta x) - g(x)\big) \\
+        ={} & \big(f'(x)\Delta x + o(\Delta x)\big) \big(g(x) + o(1)\big) + f(x) \big(g'(x)\Delta x + o(\Delta x)\big) \\
+        ={} & \big(f'(x)g(x) + f(x)g'(x)\big) \Delta x + o(\Delta x), 
+    \end{align*}
+    所以乘法法则成立. 
+\end{proof}
+
+我们还有关于复合函数的链式法则：
+
+\begin{proposition}[链式法则] \index{lianshifaze@链式法则}
+    设函数 $g$ 在 $x \in \mathbb R$ 处可微，$f$ 在 $u = g(x)$ 处可微，则 $h = f \circ g$ 在 $x$ 处可微，且 
+    $$
+    (f \circ g)'(x) = f'(g(x)) g'(x). 
+    $$
+    写为微分即
+    $$
+    \d h(x) = \d f(u) \circ \d g(x) = f'(u) g'(x) \,\d x = \frac{\d h}{\d g} \cdot \frac{\d g}{\d x} \,\d x. 
+    $$
+\end{proposition}
+
+\begin{proof}
+    当 $\Delta x \to 0$ 时，记 $\Delta u = g(x + \Delta x) - g(x) = O(\Delta x)$，则
+    \begin{align*}
+        f(g(x + \Delta x)) - f(g(x)) &= f(g(x) + \Delta u) - f(g(x)) \\
+        &= f'(g(x)) \Delta u + o(\Delta u) \\
+        &= f'(g(x)) (g'(x) \Delta x + o(\Delta x)) + o(\Delta x) \\
+        &= f'(g(x)) g'(x) \Delta x + o(\Delta x), 
+    \end{align*}
+    故链式法则成立. 
+\end{proof}
+
+从链式法则中可以看出 Leibniz 记号在形式上的和谐性. 
+
+容易证明，$(\frac{1}{x})' = -\frac{1}{x^2}$，利用乘法法则与链式法则可以得到
+\begin{align*}
+    (f / g)'(x) &= (f \cdot (1 / g))'(x) = f'(x) \cdot \frac{1}{g(x)} + f(x) \cdot (1 / g)'(x) \\
+    &= \frac{f'(x)}{g(x)} - \frac{f(x) g'(x)}{g^2(x)} = \frac{f'(x) g(x) - f(x) g'(x)}{g^2(x)}, 
+\end{align*}
+其中 $f, g$ 均在 $x$ 处可微，且 $g(x) \neq 0$. 
+
+回忆 $D^1(E)$ 为在开集 $E \subset \mathbb R$ 上可微的函数全体，记 $Y^X$ 为 $X \to Y$ 的映射全体，由于求导具有线性性，我们可以将
+$$
+\frac{\d}{\d x}:D^1(E) \to \mathbb R^E, f \mapsto f'
+$$
+看作 $D^1(E) \to \mathbb R^E$ 的线性算子，而不只是一个形式上的记号. 对 $f \in D^1(E)$，我们可以将 $\d f$ 看作映射 $E \to \mathbb R^\vee, x \mapsto \d f(x)$（$\mathbb R^\vee$ 为 $\mathbb R$ 作为 $\mathbb R$ 线性空间的对偶空间，即 $\mathbb R$ 上的线性泛函全体），进一步，我们也可以将
+$$
+\d:D^1(E) \to (\mathbb R^\vee)^E, f \mapsto \d f
+$$
+看作 $D^1(E) \to (\mathbb R^\vee)^E$ 的线性算子. 以上两个线性算子也满足乘法法则：
+\begin{equation*}
+    \frac{\d}{\d x}(fg) = g \cdot \frac{\d}{\d x} f + f \cdot \frac{\d}{\d x} g, \quad \d(fg) = g \,\d f + f \,\d g. 
+\end{equation*}
+
+我们可以看到，$\{\d x\}$ 构成 $\mathbb R^\vee$ 的一组基，它是 $\mathbb R$ 的基 $\{1\}$ 的对偶基，我们有线性同构 
+$$
+T:\mathbb R \to \mathbb R^\vee, c \mapsto c\, \d x, 
+$$
+$\d f(x)$ 正是 $f'(x)$ 在同构 $T$ 下的像，因此在同构的意义下，导数与微分是等同的，这也在某种程度上体现了可导与可微的等价性. 
+
+
+
+\section{基本初等函数的导数}
+
+在这一节中，我们利用前面的工具来计算基本初等函数的导数. 
+
+我们首先给出以下命题：
+
+\begin{proposition} \label{prop:monotone-inverse-func-derivative}
+    设 $f:I \to \mathbb R$ 在开区间 $I \subset \mathbb R$ 上严格单调且可导，并且对任意 $x \in I$，$f'(x) \neq 0$，则 $f$ 的反函数 $f^{-1}:f(I) \to I$ 在 $f(I)$ 上可导，且 
+    $$
+    (f^{-1})'(y) = \frac{1}{f'(f^{-1}(y))}. 
+    $$
+\end{proposition}
+
+\begin{proof}
+    $f^{-1}$ 的存在性与连续性由命题~\ref{prop:monotone-inverse-continuous-func} 保证. 固定 $y \in f(I)$，
+    $$
+    (f^{-1})'(y) = \lim_{\Delta y \to 0} \frac{f^{-1}(y + \Delta y) - f^{-1}(y)}{(y + \Delta y) - y}, 
+    $$
+    由于 $f^{-1}$ 连续，$\Delta y \to 0$ 时也有 $f^{-1}(y + \Delta y) - f^{-1}(y) \to 0$，且严格单调性保证 
+    $$
+    f^{-1}(y + \Delta y) - f^{-1}(y) \neq 0. 
+    $$
+    令 $\Delta x = f^{-1}(y + \Delta y) - f^{-1}(y)$，原极限化为
+    \begin{equation*}
+        (f^{-1})'(y) = \lim_{\Delta x \to 0} \frac{\Delta x}{f(f^{-1}(y) + \Delta x) - f(f^{-1}(y))} = \frac{1}{f'(f^{-1}(y))}. \tag*{\qedhere}
+    \end{equation*}
+\end{proof}
+
+现在我们正式开始计算基本初等函数的导数. 
+
+常数函数的导数显然恒为 0. 
+
+接下来我们考察幂函数. 固定定义域内的 $x \neq 0$，
+$$
+\lim_{y \to x} \frac{y^\alpha - x^\alpha}{y - x} = \lim_{y \to x} x^{\alpha - 1} \frac{(y / x)^\alpha - 1}{y / x - 1} = x^{\alpha - 1} \lim_{y \to 1} \frac{y^\alpha - 1}{y - 1}, 
+$$
+因此关键是计算极限 
+$$
+\lim_{y \to 1} \frac{y^\alpha - 1}{y - 1}. 
+$$
+对 $\alpha = p / q > 0 \in \mathbb Q \ (p, q \in \mathbb N, p, q > 0)$，
+\begin{align*}
+    \lim_{y \to 1} \frac{y^\alpha - 1}{y - 1} &= \lim_{y \to 1} \frac{y^{p / q} - 1}{y - 1} \xlongequal{x = y^{1 / q} - 1} \lim_{x \to 0} \frac{(1 + x)^p - 1}{(1 + x)^q - 1} = \lim_{x \to 0} \frac{px + o(x)}{qx + o(x)} = \frac{p}{q} = \alpha, 
+\end{align*}
+容易验证，对 $y > 0$ 且 $y \neq 1$，$\frac{y^\alpha - 1}{y - 1}$ 关于 $\alpha$ 递增，于是对正实数 $\alpha > 0$，以及 $q_1, q_2 \in \mathbb Q$ 满足 $0 < q_1 \leqslant \alpha \leqslant q_2$，有
+$$
+q_1 = \varliminf_{y \to 1} \frac{y^{q_1} - 1}{y - 1} \leqslant \varliminf_{y \to 1} \frac{y^\alpha - 1}{y - 1} \leqslant \varlimsup_{y \to 1} \frac{y^\alpha - 1}{y - 1}\leqslant \varlimsup_{y \to 1} \frac{y^{q_2} - 1}{y - 1} = q_2, 
+$$
+由有理数的稠密性可知
+$$
+\lim_{y \to 1} \frac{y^\alpha - 1}{y - 1} = \varliminf_{y \to 1} \frac{y^\alpha - 1}{y - 1} = \varlimsup_{y \to 1} \frac{y^\alpha - 1}{y - 1} = \alpha. 
+$$
+然后也有
+$$
+\lim_{y \to 1} \frac{y^{-\alpha} - 1}{y - 1} = \lim_{y \to 1} \frac{1 - y^\alpha}{y^\alpha(y - 1)} = -\alpha. 
+$$
+所以对任意 $\alpha \in \mathbb R$，
+$$
+\lim_{y \to 1} \frac{y^\alpha - 1}{y - 1} = \alpha, 
+$$
+于是我们得到
+$$
+(x^\alpha)' = \alpha x^{\alpha - 1}. 
+$$
+
+然后考察指数函数. 固定 $x \in \mathbb R$，
+$$
+\lim_{y \to x} \frac{a^y - a^x}{y - x} = \lim_{y \to x} a^x \cdot \frac{a^{y - x} - 1}{y - x} = a^x \lim_{y \to 0} \frac{a^y - 1}{y}, 
+$$
+因此关键是计算极限 
+$$
+\lim_{y \to 0} \frac{a^y - 1}{y}. 
+$$
+我们首先需要证明极限的存在性. 不妨设 $a > 1$，令 $f(y) = \frac{a^y - 1}{y}\ (y > 0)$，先证明 $f|_{\mathbb Q_{>0}}$ 递增. 对 $q_1 > q_2 \in \mathbb Q_{>0}$，可设 $q_1 = p / q, q_2 = r / q\ (p, q, r \in \mathbb N, p, q, r > 0, p > r)$，令 $c = a^{1 / q} - 1 > 0$，则
+\begin{align*}
+    f(q_1) - f(q_2) &= \frac{(1 + c)^p - 1}{p / q} - \frac{(1 + c)^r - 1}{r / q} 
+    = \sum_{k = 1}^{p} \frac{q}{p} \binom{p}{k} c^k - \sum_{k = 1}^{r} \frac{q}{r} \binom{r}{k} c^k \\
+    &= \sum_{k = r + 1}^{p} \frac{q}{p} \binom{p}{k} c^k + \sum_{k = 1}^{r} \bigg( \frac{q}{p} \binom{p}{k} - \frac{q}{r} \binom{r}{k} \bigg) c^k \geqslant \sum_{k = r + 1}^{p} \frac{q}{p} \binom{p}{k} c^k > 0, 
+\end{align*}
+故 $f|_{\mathbb Q_{>0}}$ 递增. 由于 $f$ 连续，容易证明 $f$ 递增. 由单调收敛定理（定理~\ref{thm:monotone-convergence}）容易证明，$\lim\limits_{y \to 0^+} f(y)$ 存在. 而 
+$$
+\lim_{y \to 0^-} \frac{a^y - 1}{y} = \lim_{y \to 0^+} \frac{a^{-y} - 1}{-y} = \lim_{y \to 0^+} \frac{a^y - 1}{y a^y} = \lim_{y \to 0^+} f(y), 
+$$
+所以 $\lim\limits_{y \to 0} \frac{a^y - 1}{y}$ 存在. 此时我们有 $a^y - 1 = O(y)\ (y \to 0)$. 
+
+令 
+$$
+h(a) = \lim_{y \to 0} \frac{a^y - 1}{y}\ (a > 0), 
+$$
+我们有
+\begin{align*}
+    h(ab) - h(a) - h(b) &= \lim_{y \to 0} \frac{((ab)^y - 1) - (a^y - 1) - (b^y - 1)}{y} \\
+    &= \lim_{y \to 0} \frac{(a^y - 1)(b^y - 1)}{y} = \lim_{y \to 0} \frac{O(y^2)}{y} = 0, 
+\end{align*}
+即
+\begin{equation} \label{eq:2.3.1}
+    h(ab) = h(a) + h(b). 
+\end{equation}
+然后我们证明 $h$ 连续. 在式~(\ref{eq:2.3.1}) 中令 $a = x, b = \frac{x + \Delta x}{x}$，则有
+$$
+h(x + \Delta x) - h(x) = h\bigg(1 + \frac{\Delta x}{x} \bigg), 
+$$
+于是只需证明 $\lim\limits_{x \to 1} h(x) = 0$. 利用幂函数的导数及导数与单调性的关系（将在{\color{red}[补充]}中给出）可以证明，对 $0 < \alpha < 1$ 和 $x > 0$，
+$$
+1 + \alpha x + \frac{\alpha(\alpha - 1)}{2} x^2 \leqslant (1 + x)^\alpha \leqslant 1 + \alpha x, 
+$$
+于是对 $u > 0$ 有
+\begin{align}
+    h(1 + u) &= \lim_{y \to 0^+} \frac{(1 + u)^y - 1}{y} \leqslant \lim_{y \to 0^+} \frac{1 + yu - 1}{y} = u,  \notag \\
+    h(1 + u) &= \lim_{y \to 0^+} \frac{(1 + u)^y - 1}{y} \geqslant \lim_{y \to 0^+} \frac{1 + yu + \frac{y(y - 1)}{2} u^2 - 1}{y} = u - \frac{u^2}{2}, \label{eq:2.3.2}
+\end{align}
+由夹逼定理，$\lim\limits_{x \to 1^+} h(x) = \lim\limits_{u \to 0^+} h(1 + u) = 0$，又由式~(\ref{eq:2.3.1}) 可知 $h(x) + h(1 / x) = h(1) = 0$，所以也有 $\lim\limits_{x \to 1^-} h(x) = 0$，故 $\lim\limits_{x \to 1} h(x) = 0$. 所以 $h$ 连续. 
+
+由式~(\ref{eq:2.3.2})，$h(2) = h(1 + 1) \geqslant 1 - 1 / 2 = 1 / 2$，又由式~(\ref{eq:2.3.1}) 可得 $h(4) = 2 h(2) \geqslant 1$，由连续函数的介值性可知存在 $c \in (1, 4]$ 使得 $h(c) = 1$，我们定义\textbf{自然常数} $\e = c$，并记 $\ln x = \log_\e x$. 由式~(\ref{eq:2.3.1})，对 $p, q \in \mathbb Z, q > 0$ 有
+$$
+h(\e^{p / q}) = \frac{p}{q} \cdot h(\e) = \frac{p}{q}, 
+$$
+由 $h$ 的连续性，$h(\e^r) = r,\ \forall r \in \mathbb R$. 由命题~\ref{prop:monotone-inverse-continuous-func}，$h$ 为 $\e^x$ 的反函数 $\ln x$. 因此，
+$$
+\lim_{y \to 0} \frac{a^y - 1}{y} = \ln a, 
+$$
+从而 
+$$
+(a^x)' = a^x \ln a, 
+$$
+特别地，$(\e^x)' = \e^x$. 我们在后面会看到，$\e = \sum\limits_{n = 0}^{+\infty} \dfrac{1}{n!} \approx 2.718$. 
+
+对数函数的导数可由命题~\ref{prop:monotone-inverse-func-derivative} 得到：
+$$
+(\log_a x)' = \frac{1}{a^{\log_a x} \ln a} = \frac{1}{x \ln a}\ (a > 0, a \neq 1). 
+$$
+特别地，$(\ln x)' = \dfrac{1}{x}$. 
+
+关于三角函数的导数，在 \ref{sec:1.7} 节中我们得到 $(\sin x)' = \cos x, (\cos x)' = -\sin x$. 利用微分法则，可以得到
+\begin{align*}
+    (\tan x)' &= \frac{\cos^2 x - (-\sin^2 x)}{\cos^2 x} = \frac{1}{\cos^2 x} = 1 + \tan^2 x, \\
+    (\cot x)' &= \frac{-\sin^2 x - \cos^2 x}{\sin^2 x} = -\frac{1}{\sin^2 x} = -(1 + \cot^2 x), \\
+    (\sec x)' &= \frac{\sin x}{\cos^2 x},\quad (\csc x)' = -\frac{\cos x}{\sin^2 x}. 
+\end{align*}
+
+反三角函数的导数可由命题~\ref{prop:monotone-inverse-func-derivative} 得到：
+\begin{align*}
+    (\arcsin x)' &= \frac{1}{\cos(\arcsin x)} = \frac{1}{\sqrt{1 - \sin^2(\arcsin x)}} = \frac{1}{\sqrt{1 - x^2}}, \\
+    (\arccos x)' &= \frac{1}{-\sin(\arccos x)} = -\frac{1}{\sqrt{1 - \cos^2(\arccos x)}} = -\frac{1}{\sqrt{1 - x^2}}, \\
+    (\arctan x)' &= \frac{1}{1 + \tan^2(\arctan x)} = \frac{1}{1 + x^2}. 
+\end{align*}
+
+
+\section{Fermat 引理与微分中值定理}
+
+Fermat 引理是求解函数极值问题的重要工具，Rolle、Lagrange 等数学家进一步将其扩展为更加普适的一系列微分中值定理，进一步为研究函数的性质提供了重要工具. 
+
+我们从 Fermat 引理开始. 
+
+\begin{definition}[函数极值的定义] \label{def:local_extremum} \index{hanshujizhi@函数极值} \index{hanshujizhi@函数极值!jizhidian@极值点}
+    设 $(S, d)$ 为度量空间，$X \subset S$，$f:X \to \mathbb R$，点 $z \in X$ 称为 $f$ 的一个\textbf{极大值点}，若存在 $z$ 的邻域 $U \subset X$ 使得对任意 $x \in U$ 成立 $f(x) \leqslant f(z)$，$f(z)$ 称为相应的\textbf{极大值}. 类似可以定义\textbf{极小值点}与\textbf{极小值}. 
+\end{definition}
+
+\begin{remark}
+    极大值点与极小值点统称为极值点，极大值与极小值统称为极值. 
+\end{remark}
+
+\begin{theorem}[Fermat 引理] \index{Fermat yinli@Fermat 引理}
+    设实值函数 $f$ 在 $z \in \mathbb R$ 的一个邻域上有定义，$f$ 在 $z$ 处可导，且 $z$ 为 $f$ 的一个极值点，则 $f'(z) = 0$. 
+\end{theorem}
+
+\begin{proof}
+    不妨设 $z$ 为极大值点，则由定义~\ref{def:local_extremum}，存在 $z$ 的邻域 $U$ 使得对任意 $x \in U$ 成立 $f(x) \leqslant f(z)$，则由极限的保序性知
+    \begin{align*}
+        f'(z) = f_+'(z) &= \lim_{x \to z^+} \frac{f(x) - f(z)}{x - z} \leqslant 0, \\
+        f'(z) = f_-'(z) &= \lim_{x \to z^-} \frac{f(x) - f(z)}{x - z} \geqslant 0, 
+    \end{align*}
+    因此 $f'(z) = 0$. 
+\end{proof}
+
+Fermat 引理是很直观的，其几何意义即可导函数在极值点处的瞬时变化率为 0，证明也并不复杂，但由 Fermat 引理发展出的理论却是十分深刻的. 
+
+接下来我们展示 Fermat 引理的一个应用：
+
+\begin{theorem}[Darboux 定理] \index{Darboux dingli@Darboux 定理}
+    设实值函数 $f:[a, b] \to \mathbb R$ 在 $(a, b)$ 上可微，且在 $a$ 与 $b$ 处存在相应的单侧导数，则 $f'$ 在 $(a, b)$ 上可以取到 $f_+'(a)$ 与 $f_-'(b)$ 之间的任意值. 
+\end{theorem}
+
+\begin{proof}
+    不妨设 $f_+'(a) < f_-'(b)$. 对 $\eta \in (f_+'(a), f_-'(b))$，令 $h(x) = f(x) - \eta x$，则 
+    $$
+    h_+'(a) < 0,\quad h_-'(b) > 0. 
+    $$
+    由定义~\ref{def:lim-func-oneside}，存在 $x_1 > a$ 使得
+    $$
+    \bigg| \frac{h(x_1) - h(a)}{x_1 - a} - h'(x_1) \bigg| < -\frac{1}{2} h'(x_1), 
+    $$
+    即
+    $$
+    \frac{h(x_1) - h(a)}{x_1 - a} < \frac{1}{2} h'(x_1) < 0, 
+    $$
+    则 $h(x_1) < h(a)$. 同理，存在 $x_2 < b$ 使得 $h(x_2) < h(b)$. 由于此时 $h$ 在 $[a, b]$ 上连续，$h$ 存在最小值点 $\xi \in [a, b]$，但由前面的讨论可知最小值点不在区间端点处，即 $\xi \in (a, b)$，由 Fermat 引理知 $h'(\xi) = f'(\xi) - \eta = 0$，即 $f'(\xi) = \eta$. 
+\end{proof}
+
+\begin{remark}
+    以上定理中 $f_+'(a)$ 与 $f_-'(b)$ 之间的任意值不包括 $f_+'(a)$ 与 $f_-'(b)$. 
+\end{remark}
+
+Darboux 定理给出了导函数的介值性，其与连续函数介值定理的区别在于 Darboux 定理不要求导函数的连续性，这也表明可导这一条件不仅对函数自身给出了约束，还对导函数给出了约束. 
+
+然后我们讨论由 Fermat 引理导出的一系列微分中值定理\index{weifenzhongzhidingli@微分中值定理}. 
+
+\begin{theorem}[Rolle 中值定理] \index{weifenzhongzhidingli@微分中值定理!Rolle zhongzhidingli@Rolle 中值定理}
+    设 $f \in C[a, b] \cap D(a, b)$，即 $f$ 在 $[a, b]$ 上连续且在 $(a, b)$ 上可微，若 $f(a) = f(b)$，则存在 $\xi \in (a, b)$ 使得 $f'(\xi) = 0$. 
+\end{theorem}
+
+\begin{proof}
+    若 $f$ 在 $[a, b]$ 上为常值，则 $f'$ 在 $(a, b)$ 上恒为 0. 若 $f$ 在 $[a, b]$ 上不为常值，则 $f$ 在 $[a, b]$ 上的最大值点与最小值点至少有一个属于 $(a, b)$，设为 $\xi$，则由 Fermat 引理，$f'(\xi) = 0$. 
+\end{proof}
+
+由 Rolle 中值定理可以得到 Lagrange 中值定理. 
+
+\begin{theorem}[Lagrange 中值定理] \index{weifenzhongzhidingli@微分中值定理!Lagrange zhongzhidingli@Lagrange 中值定理}
+    设 $f \in C[a, b] \cap D(a, b)$，则存在 $\xi \in (a, b)$ 使得 
+    $$
+    f(b) - f(a) = f'(\xi)(b - a). 
+    $$
+\end{theorem}
+
+\begin{proof}
+    对函数 
+    $$
+    h(x) = f(x) - f(a) - \frac{f(b) - f(a)}{b - a} (x - a)
+    $$
+    应用 Rolle 中值定理即可. 
+\end{proof}
+
+\begin{remark}
+    上面定理中的式子可以写为 
+    $$
+    f'(\xi) = \frac{f(b) - f(a)}{b - a}, 
+    $$
+    几何意义即 $f$ 在 $[a, b]$ 上的平均变化率等于某一点处的瞬时变化率. 
+\end{remark}
+
+我们还可以进一步推广，将自变量 $x$ 参数化为 $g(t)$，得到 Cauchy 中值定理：
+
+\begin{theorem}[Cauchy 中值定理] \index{weifenzhongzhidingli@微分中值定理!Cauchy zhongzhidingli@Cauchy 中值定理}
+    设 $f, g \in C[a, b] \cap D(a, b)$，且 $g'$ 在 $(a, b)$ 上无零点，则存在 $\xi \in (a, b)$ 使得
+    $$
+    \frac{f'(\xi)}{g'(\xi)} = \frac{f(b) - f(a)}{g(b) - g(a)}. 
+    $$
+\end{theorem}
+
+\begin{proof}
+    由 $g'$ 在 $(a, b)$ 上无零点以及 Rolle 中值定理可知 $g(a) \neq g(b)$. 对函数
+    $$
+    h(t) = f(t) - f(a) - \frac{f(b) - f(a)}{g(b) - g(a)} (g(t) - g(a))
+    $$
+    应用 Rolle 中值定理即可. 
+\end{proof}
+
+由 Cauchy 中值定理可以得到 L'Hospital 法则
+
+
+\end{document}
