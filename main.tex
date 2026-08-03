@@ -1,0 +1,107 @@
+\documentclass[openany]{ctexbook}
+\input{note-template.tex}  % 笔记模板
+
+\usepackage{subfiles}
+
+% 重定义超链接锚点
+% 共享 theorem 计数器的环境 —— 加环境名前缀以区分
+\renewcommand{\theHtheorem}{theorem.\thetheorem}
+\renewcommand{\theHproposition}{proposition.\thetheorem}
+\renewcommand{\theHcorollary}{corollary.\thetheorem}
+\renewcommand{\theHlemma}{lemma.\thetheorem}
+\renewcommand{\theHclaim}{claim.\thetheorem}
+
+% 独立计数器的环境 —— 加环境名前缀 + 使用各自计数器值
+\renewcommand{\theHdefinition}{definition.\thedefinition}
+\renewcommand{\theHexample}{example.\theexample}
+\renewcommand{\theHproblem}{problem.\theproblem}
+\renewcommand{\theHremark}{remark.\theremark}
+% 公式锚点
+\renewcommand{\theHequation}{equation.\theequation}
+
+\numberwithin{equation}{section}
+
+\usepackage{fancyhdr} %页眉页脚
+
+\pagestyle{fancy} % 正文使用 fancy 样式
+\iffalse
+\fancypagestyle{fancy}{
+\fancyhf{} % 页眉页脚清空
+\renewcommand{\headrulewidth}{0pt} % 去页眉线
+\fancyfoot[R]{\thepage} % 设置右页脚为页码
+\fancyhead[L]{\rightmark} % 设置右页眉为章节标题
+}
+\fi
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt} % 去页眉线
+\fancyhead[L]{\kaishu\leftmark}
+\fancyhead[R]{\kaishu\rightmark}
+\fancyfoot[R]{\thepage} % 设置右页脚为页码
+
+% 重新定义 plain 样式（即章节首页的样式）
+\fancypagestyle{plain}{
+  \fancyhf{}                        % 清空所有页眉页脚
+  \fancyfoot[R]{\thepage}           % 页脚居中显示页码
+  \renewcommand{\headrulewidth}{0pt}% 去掉页眉线
+}
+
+% 字体设置
+% 主字体：宋体（正体、伪粗体），斜体用楷体
+\setCJKmainfont{SimSun}[
+    AutoFakeBold = 2.5,      % 伪粗体，宋体本身没有粗体
+    ItalicFont   = KaiTi     % 斜体用楷体
+]
+
+% 无衬线字体：同样用宋体（保证标题等处字体的统一）
+\setCJKsansfont{SimSun}[
+    AutoFakeBold = 2.5,
+    ItalicFont   = KaiTi
+]
+
+\newcommand{\dlim}{\displaystyle\lim}
+\newcommand{\dint}{\displaystyle\int}
+\newcommand{\e}{\mathrm{e}}
+\renewcommand{\d}{\mathrm{d}}
+\renewcommand{\i}{\mathrm{i}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\bs}{\boldsymbol} % 定义\bs命令用于加粗数学符号
+
+% 标题页
+\title{更“抽象”的数学分析笔记}
+\author{mcrsdl}
+\date{\today}
+
+% 环境       英文名         标签前缀   说明
+% 定理       Theorem        thm        最核心的理论结果
+% 推论       Corollary      cor        由定理直接推出的结论
+% 命题       Proposition    prop       较定理次要，但仍独立重要
+% 引理       Lemma          lem        辅助证明的小结论
+% 断言       Claim          clm/claim  证明中的声明，通常位于证明环境内
+% 定义       Definition     def        术语的定义
+% 例         Example        ex         示例，说明概念
+% 注记       Remark         rem        注释性内容
+% 猜想       Conjecture     conj       未证明的假设
+% 问题       Problem        prob       练习题或未解决问题
+
+\makeindex[intoc = true, options=-s myindex.ist]  % 收集索引
+
+\begin{document}
+
+\frontmatter
+\makecover{cover/cover.png}
+
+\tableofcontents
+
+\mainmatter
+\subfile{signs/signs.tex}
+
+\subfile{Chapter0/Chapter0.tex}
+
+\subfile{Chapter1/Chapter1.tex}
+
+\subfile{Chapter2/Chapter2.tex}
+
+\backmatter
+\printindex  % 输出索引
+
+\end{document}

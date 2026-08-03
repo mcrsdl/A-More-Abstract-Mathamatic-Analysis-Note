@@ -1,0 +1,191 @@
+%================================
+% note-setup-leftsidebox.tex
+% fenglielie@qq.com 2025-09-12
+%================================
+
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{bm}
+\usepackage{extarrows}
+\usepackage[a4paper, margin=1in]{geometry}
+\usepackage{float}
+\usepackage{indentfirst}
+\usepackage{anyfontsize}
+\usepackage{booktabs,multirow,multicol}
+\usepackage[shortlabels,inline]{enumitem}
+\usepackage{appendix}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\graphicspath{
+    {./figure/}{./figures/}{./image/}{./images/}{./graphic/}{./graphics/}{./picture/}{./pictures/}
+}
+\usepackage{subcaption}
+
+\usepackage[ruled,linesnumbered,noline]{algorithm2e}
+\usepackage{listings}
+\lstdefinestyle{simpleStyle}{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{black},
+    stringstyle=\color{violet},
+    commentstyle=\color[RGB]{34,139,34},
+    showstringspaces=false,
+    numbers=left,
+    numbersep=2em,
+    numberstyle=\footnotesize,
+    frame=single,
+    framesep=1em,
+}
+\lstset{style=simpleStyle}
+
+\usepackage{imakeidx}  % 用于生成索引 
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,linkcolor=,urlcolor=cyan
+}
+
+\renewcommand*{\proofname}{\itshape 证明}  % 证明环境开头改为斜体“证明”
+
+\usepackage{thmtools}
+
+% 注记样式
+\declaretheoremstyle[
+  headformat={\NAME~{\itshape\NUMBER}\NOTE},  % 编号单独用斜体
+  headpunct={},                                  % 标题末尾的标点
+  headfont=\itshape,                             % “注记”二字斜体
+  bodyfont=\itshape,                              % 正文斜体
+  postheadspace=0.5em,                            % 标题与正文间距
+]{remarkstyle}
+
+% 重新定义 plain 样式，去除句点
+\declaretheoremstyle[
+  headpunct={},                         % 去掉编号后的句点
+  headformat={\NAME~\NUMBER\NOTE},      % 格式：名称 + 编号（无标点）
+  headfont=\bfseries,                   % 标题加粗（plain 默认）
+  bodyfont=\itshape,                    % 正文斜体（plain 默认）
+  postheadspace=0.7em,                  % 标题后间距
+  numbered=yes,                         % 默认编号（但环境仍可覆盖）
+]{plain}
+
+% 重新定义 definition 样式，去除句点
+\declaretheoremstyle[
+  headpunct={},
+  headformat={\NAME~\NUMBER\NOTE},
+  headfont=\bfseries,
+  bodyfont=\normalfont,                 % 正文正体（definition 默认）
+  postheadspace=0.7em,
+  numbered=yes,
+]{definition}
+
+%% define environments
+
+\declaretheorem[style=plain, name=定理, numbered=yes, numberwithin=section]{theorem}
+\declaretheorem[style=plain, name=定理, numbered=no]{theorem*}
+
+\declaretheorem[style=plain, name=命题, numbered=yes, sibling=theorem]{proposition}
+\declaretheorem[style=plain, name=命题, numbered=no]{proposition*}
+
+\declaretheorem[style=plain, name=推论, numbered=yes, sibling=theorem]{corollary}
+\declaretheorem[style=plain, name=推论, numbered=no]{corollary*}
+
+\declaretheorem[style=plain, name=引理, numbered=yes, sibling=theorem]{lemma}
+\declaretheorem[style=plain, name=引理, numbered=no]{lemma*}
+
+\declaretheorem[style=plain, name=断言, numbered=yes, sibling=theorem]{claim}
+\declaretheorem[style=plain, name=断言, numbered=no]{claim*}
+
+\declaretheorem[style=definition, name=定义, numbered=yes, numberwithin=section]{definition}
+\declaretheorem[style=definition, name=定义, numbered=no]{definition*}
+
+\declaretheorem[style=definition, name=例, numbered=yes, numberwithin=section]{example}
+\declaretheorem[style=definition, name=例, numbered=no]{example*}
+
+\declaretheorem[style=definition, name=Problem, numbered=yes, numberwithin=section]{problem}
+\declaretheorem[style=definition, name=Problem, numbered=no]{problem*}
+
+\declaretheorem[style=remarkstyle, name=注记, numbered=yes, numberwithin=section]{remark}
+\declaretheorem[style=remarkstyle, name=注记, numbered=no]{remark*}
+
+\declaretheoremstyle[headfont=\color{orange!80}\bfseries, bodyfont=\normalfont, spaceabove=3pt, spacebelow=3pt]{notestyle}
+
+\declaretheorem[style=notestyle, name=Note, numbered=yes, numberwithin=section]{note}
+\declaretheorem[style=notestyle, name=Note, numbered=no]{note*}
+
+\declaretheoremstyle[headfont=\bfseries, bodyfont=\normalfont, spaceabove=3pt, spacebelow=3pt, qed=\ensuremath{\square}]{solutionstyle}
+
+\declaretheorem[style=solutionstyle, name=Solution, numbered=yes, numberwithin=section]{solution}
+\declaretheorem[style=solutionstyle, name=Solution, numbered=no]{solution*}
+
+\usepackage[most]{tcolorbox}
+
+\newcommand{\newtcbenvironment}[2]{
+    \tcolorboxenvironment{#1}{#2, enhanced, breakable, sharp corners,leftrule=2pt, rightrule=0pt, toprule=0pt, bottomrule=0pt}
+    \tcolorboxenvironment{#1*}{#2, enhanced, breakable, rounded corners,leftrule=2pt, rightrule=0pt, toprule=0pt, bottomrule=0pt}
+}
+
+%% define styles
+
+\newtcbenvironment{theorem}{colframe=RoyalPurple, colback=RoyalPurple!8}
+\newtcbenvironment{proposition}{colframe=RoyalPurple, colback=RoyalPurple!8}
+\newtcbenvironment{corollary}{colframe=NavyBlue, colback=SkyBlue!8}
+\newtcbenvironment{lemma}{colframe=NavyBlue, colback=SkyBlue!8}
+\newtcbenvironment{claim}{colframe=NavyBlue, colback=SkyBlue!8}
+
+\newtcbenvironment{definition}{colframe=ForestGreen, colback=ForestGreen!5}
+\newtcbenvironment{example}{colframe=RawSienna, colback=RawSienna!5}
+\newtcbenvironment{problem}{colframe=WildStrawberry!30, colback=WildStrawberry!5}
+
+%% cbox
+\newtcolorbox{cbox}[1][]{%
+    enhanced,
+    breakable,
+    sharp corners,
+    leftrule=2pt, rightrule=0pt, toprule=0pt, bottomrule=0pt,
+    colframe=SkyBlue,
+    colback=SkyBlue!8,
+    #1
+}
+
+%% cover
+\usepackage{titling}
+\newcommand{\extrainfo}{}
+\renewcommand{\extrainfo}[1]{\renewcommand{\extrainfocontent}{#1}}
+\newcommand{\extrainfocontent}{}
+\newcommand{\makecover}[1]{%
+    \begin{titlepage}
+        \newgeometry{margin=0in}
+        \parindent=0pt
+        \includegraphics[width=\linewidth]{#1} % size = 1280*1024
+        \vfill
+        \begin{center}
+            \parbox{0.618\textwidth}{%
+                \raggedleft{\bfseries \Huge \thetitle} \\[0.6pt]
+                \rule{0.618\textwidth}{4pt} \\
+            }
+        \end{center}
+        \vfill
+        \begin{center}
+            \parbox{0.618\textwidth}{%
+                \raggedleft\Large
+                \begin{tabular}{r}
+                    \theauthor \\
+                    \thedate   \\
+                \end{tabular}%
+            }
+        \end{center}
+        \vfill
+        \begin{center}
+            \parbox[t]{0.7\textwidth}{\centering \itshape \extrainfocontent}
+        \end{center}
+        \vfill
+    \end{titlepage}
+    \restoregeometry
+    \thispagestyle{empty}
+}
+% USAGE
+% \extrainfo{xxx}
+% \makecover{/path/to/cover.png}
