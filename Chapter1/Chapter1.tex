@@ -1,0 +1,2212 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\chapter{极限与实数}
+
+在这一章中，我们将逐步建立极限理论并严格构造实数. 在 \ref{sec:1.3} 节之前，我们可以暂且认为数列均为有理数列，并在提到 $\mathbb R$ 时可将 $\mathbb R$ 平行替换为 $\mathbb Q$. 
+
+\section{极限的定义} \label{sec:1.1}
+
+我们先从\textbf{数列的极限}开始. 设 $\{a_n\}$ 为一数列（这里的数指实数或有理数），直观上来看，$a$ 是 $\{a_n\}$ 的极限即 $a_n$ 可以“任意接近” $a$，但这里的“任意接近”是一个模糊的描述，我们需要将其严格化. 于是，我们给出以下定义：
+
+\begin{definition}[数列极限的算术化定义] \label{def:lim-num-seq}
+    设 $\{a_n\}$ 为一数列，若存在数 $a$ 满足对任意 $\eps > 0$，存在 $N = N(\eps) > 0$ 使得对任意 $n > N$ 均成立 $|a_n - a| < \eps$，则称数列 $\{a_n\}$ \textbf{收敛}\index{shoulian@收敛}，此时称 $a$ 为数列 $\{a_n\}$ 的\textbf{极限}\index{jixian@极限}，记为 $\lim\limits_{n \to +\infty} a_n = a$ 或 $a_n \to a$. 
+
+    用符号语言表达即： $\{a_n\}$ 收敛 $\Longleftrightarrow \exists a, \forall \eps > 0, \exists N > 0, \forall n > N, |a_n - a| < \eps$. 
+\end{definition}
+
+\begin{remark}
+    以上定义中的 $N$ 一般取值为正整数，但有时为方便使用，我们可以取 $N$ 为正有理数或正实数，$\eps$ 一般取值为正实数，但由于我们还未严格构造实数，$\eps$ 可以只取正有理数，后面我们会看到两者实际上是等价的. 
+
+    关于数列的下标范围，我们通常采用正整数，即从 1 开始，但有时为便于叙述，也可从 0 开始. 
+
+    直观来看，上面的定义即只要 $n$ 充分大，$a_n$ 与 $a$ 的距离可以任意近. 
+\end{remark}
+
+若数列 $\{a_n\}$ 不收敛，我们称数列 $\{a_n\}$ \textbf{发散}\index{fasan@发散}. 将上述定义转化为逆否命题可以得到以下对数列发散的等价描述. 
+
+\begin{proposition} \label{prop:1.1.1}
+    数列 $\{a_n\}$ 发散当且仅当对任意数 $a$，存在 $\eps_0 > 0$ 使得对任意 $N > 0$ 存在 $n > N$ 满足 $|a_n - a| \geqslant \eps_0$. 
+\end{proposition}
+
+上面由 $\eps$-$N$ 语言给出的数列极限的算术化定义将模糊的“任意接近”转化为可检验的不等式，这对整个分析理论的严格性起到了奠基的作用. 
+
+下面给出了几个简单的关于数列极限的例子. 
+
+\begin{example}[数列极限的例子]
+    \ 
+    \begin{enumerate}[label=(\alph*)]
+        \item 设 $a_n = 1/n$，对任意 $\eps > 0$，取 $N = 1 / \eps$，则对任意 $n > N$ 有 $|a_n - 0| = a_n < 1 / N = \eps$，由定义~\ref{def:lim-num-seq} 知 $a_n \to 0$. 
+
+        \item 设有理数 $q = a / b\ (a \in \mathbb Z, b \in \mathbb N \setminus \{0\})$ 满足 $0 < |q| < 1$，则 $1 \leqslant |a| \leqslant b - 1$. 令 $b_n = q^n$，从直观上看应该有 $b_n \to 0$. 事实上，对任意 $\eps > 0$，我们希望 $|q^n| < \eps$，即 $|a|^n < \eps b^n$，取 $N = \frac{|a|}{\eps} - |a|$ 即有 $|a|^n < \eps(|a|^n + n|a|^{n - 1}) < \eps (|a| + 1)^n \leqslant \eps b^n,\ \forall n > \max\{N, 2\}$. 
+
+        \item 设 $c_n = (-1)^n$，对任意数 $a$，若 $a \geqslant 0$，对任意 $N > 0$，存在奇数 $n > N$，则 $|c_n - a| = |-1 - a| = 1 + a \geqslant 1$；若 $a \leqslant 0$，对任意 $N > 0$，存在偶数 $n > N$，则 $|c_n - a| = |1 - a| = 1 - a \geqslant 1$，取 $\eps_0 = 1$，由命题~\ref{prop:1.1.1} 知 $\{c_n\}$ 发散. 
+    \end{enumerate}
+\end{example}
+
+在前面数列极限的定义的基础上，我们考察序列极限所依赖的数学结构：事实上，前面定义的关键是 $|a_n - a|$，即 $a_n$ 与 $a$ 的\textbf{距离}，这启发我们极限的定义似乎只依赖“距离”这一概念. 于是我们引入以下定义：
+
+\begin{definition}[度量空间的定义] \label{def:metric-space}
+    一个\textbf{度量空间}（Metric Space）\index{duliang@度量!duliangkongjian@度量空间}是一个集合 $S$ 配以一个函数 $d:S \times S \to \mathbb{R}$ 满足
+    \begin{enumerate}[label=(\alph*)]
+        \item 正定性：$d(x, y) \geqslant 0,\ \forall x, y \in S$，且 $d(x, y) = 0$ 当且仅当 $x = y$；
+        \item 对称性：$d(x, y) = d(y, x),\ \forall x, y \in S$；
+        \item 三角不等式：$d(x, z) \leqslant d(x, y) + d(y, z),\ \forall x, y, z \in S$. 
+    \end{enumerate}
+    $d$ 称为 $S$ 上的\textbf{距离函数}或\textbf{度量}\index{duliang@度量}. 此时记该度量空间为 $(S, d)$，在度量明确时，也可将度量空间 $(S, d)$ 简记为 $S$. 
+\end{definition}
+
+\begin{remark}
+    对 $S$ 的任意子集 $X \subset S$，$(X, d|_X)$ 显然也是一个度量空间，称为 $(S, d)$ 的（度量）子空间. 
+\end{remark}
+
+度量是从平面、空间中的距离抽象出来的数学概念，三角不等式正是距离的核心性质. 简单来讲，度量空间就是一个被赋予距离的集合. 在数学上，“空间”即一个被赋予特定的数学结构的集合，我们后面还会看到更多类型的空间，如拓扑空间、赋范线性空间、内积空间等. 
+
+下面是一些常见的度量空间的例子. 
+
+\begin{example}[度量空间的例子] \label{ex:metric-space}
+    \ 
+    \begin{enumerate}[label=(\alph*)]
+        \item 实数集 $\mathbb R$ 配以通常的距离 $d(x, y) = |x - y|$ 构成度量空间，其中三角不等式可由绝对值函数的三角不等式得到. 
+
+        \item 有理数集 $\mathbb Q$ 配以通常的距离 $d(x, y) = |x - y|$ 构成度量空间，因为 $(\mathbb Q, d)$ 可看作 $(\mathbb R, d)$ 的子空间. 
+
+        \item $\mathbb R^2 = \mathbb R \times \mathbb R$ 配以欧式距离 $d((x_1, y_1), (x_2, y_2)) = \sqrt{(x_1 - x_2)^2 + (y_1 - y_2)^2}$ 构成度量空间，三角不等式在此即为平面几何中的三角形不等式. 
+        
+        \item 对任意集合 $S$，我们可以定义度量 $d(x, y) = \begin{cases}
+            0, & x = y \\
+            1, & x \neq y
+        \end{cases}$. 这一度量称为离散度量，即每个点的附近都只有自身，从而每个点都是孤立点. 
+    \end{enumerate}
+\end{example}
+
+与定义~\ref{def:lim-num-seq} 类比，我们可以给出度量空间中的点列收敛的定义：
+
+\begin{definition}[度量空间中点列极限的定义] \label{def:lim-seq-ms}
+    设 $(S, d)$ 为一度量空间，$\{x_n\} \subset S$ 为 $S$ 中的点列，若存在 $x \in S$ 满足对任意 $\eps > 0$，存在 $N = N(\eps) > 0$ 使得对任意 $n > N$ 均成立 $d(x_n, x) < \eps$，则称点列 $\{x_n\}$ \textbf{收敛}\index{shoulian@收敛}，此时称 $x$ 为点列 $\{x_n\}$ 的\textbf{极限}\index{jixian@极限}，记为 $\lim\limits_{n \to +\infty} x_n = x$ 或 $x_n \to x$. 
+\end{definition}
+
+与前面类似，若点列 $\{x_n\}$ 不收敛，则称点列 $\{x_n\}$ \textbf{发散}\index{fasan@发散}. 我们同样有与命题~\ref{prop:1.1.1} 类似的等价描述：
+
+\begin{proposition}
+    度量空间 $(S, d)$ 中的点列 $\{x_n\} \subset S$ 发散当且仅当对任意 $x \in S$，存在 $\eps_0 > 0$ 使得对任意 $N > 0$ 存在 $n > N$ 满足 $d(x_n, x) \geqslant \eps_0$. 
+\end{proposition}
+
+下面的例子表明度量空间上的点列是否收敛与度量的选取有关. 
+
+\begin{example}
+    设 $\mathbb Q$ 上的数列 $\{a_n\}$ 满足 $a_n = 1 / n$，在通常的度量下，$a_n \to 0$，但若取离散度量，则对任意 $a \in \mathbb Q$，$\{a_n\}$ 中除至多一项外都满足 $d(a_n, a) = 1$，从而 $\{a_n\}$ 不收敛. 事实上，在离散度量下，点列收敛当且仅当其除有限项外均为常值. 
+\end{example}
+
+接下来我们讨论\textbf{函数极限}. 
+
+考虑定义在 $\mathbb R$ 的某个子集上的实值函数 $f$. 我们要求 $f$ 在一点 $a$ 的“附近”有定义，但不要求 $f$ 在 $a$ 点处有定义，我们希望给出在 $x$ 趋于 $a$ 时 $f$ 的极限的定义. 首先我们需要明确“附近”的概念，其对应的数学概念是\textbf{邻域}. 
+
+\begin{definition}[$\mathbb R$ 上的邻域的定义] \label{def:nbh-R}
+    对 $x \in \mathbb R$，集合 $U \subset \mathbb R$ 称为 $x$ 的一个\textbf{邻域}\index{linyu@邻域}，若存在 $\delta > 0$ 使得以 $x$ 为中心的开区间 $(x - \delta, x + \delta)$ 包含于 $U$，即 $(x - \delta, x + \delta) \subset U$. 
+
+    对 $+\infty$，我们规定集合 $U \subset \mathbb R$ 称为 $+\infty$ 的一个邻域，若存在 $\delta > 0$ 使得开区间 $(1/\delta, +\infty)$ 包含于 $U$，即 $(1/\delta, +\infty) \subset U$. 类似可定义 $-\infty$ 的邻域. 
+\end{definition}
+
+\begin{remark} \label{rem:1.1.3}
+    根据以上定义，任意以 $x$ 为中心的开区间 $(x - \delta, x + \delta)$ 都是 $x$ 的一个邻域，我们通常取这样的开区间作为“标准”的邻域，记为 $U(x, \delta)$. 类似地，记 $U(+\infty, \delta) = (1/\delta, +\infty), U(-\infty, \delta) = (-\infty, -1/\delta)$. 
+
+    我们可以利用邻域的语言重述定义~\ref{def:lim-num-seq}：设 $\{a_n\}$ 为一数列，若存在数 $a$ 满足对任意 $\eps > 0$，存在 $\delta > 0$ 使得对任意 $n \in U(+\infty, \delta)$ 均成立 $a_n \in U(a, \eps)$，则称数列 $\{a_n\}$ 收敛，此时称 $a$ 为数列 $\{a_n\}$ 的极限，记为 $\lim\limits_{n \to +\infty} a_n = a$ 或 $a_n \to a$. 此时该定义可覆盖 $a = \pm \infty$ 的情形. 对 $a = \pm \infty$ 的情形，我们认为 $\{a_n\}$ 的极限存在，但 $\{a_n\}$ 发散. 此后提到数列 $\{a_n\}$ 收敛，含义为 $\{a_n\}$ 的极限存在且有限. 
+\end{remark}
+
+为方便叙述，对集合 $V \subset \mathbb R$，若存在 $x$ 的一个邻域 $U$ 使得 $V = U \setminus \{x\}$，则称 $V$ 是 $x$ 的一个\textbf{去心邻域}\index{linyu@邻域!quxinlinyu@去心邻域}. 
+
+类比序列极限的定义，函数极限应满足当 $x$ 足够接近 $a$ 时 $f(x)$ 与 $f$ 在 $a$ 处的极限值的距离可以任意小，于是我们给出以下定义：
+
+\begin{definition}[函数极限的算术化定义] \label{def:lim-func}
+    设 $f$ 为定义在 $\mathbb R$ 的某个子集上的实值函数且在 $a \in \mathbb R$ 的一个去心邻域上有定义，若存在 $L \in \mathbb R$ 满足对任意 $\eps > 0$，存在 $\delta > 0$ 使得对任意 $x \in U(a, \delta) \setminus \{a\}$ 均成立 $|f(x) - L| < \eps$，则称 $f$ 在 $a$ 处的\textbf{极限}\index{jixian@极限}为 $L$，记为 $\lim\limits_{x \to a} f(x) = L$ 或 $f(x) \to L \,(x \to a)$. 否则称 $f$ 在 $a$ 处的\textbf{极限不存在}. 
+\end{definition}
+
+我们注意到 $|f(x) - L| < \eps \Longleftrightarrow f(x) \in U(L, \eps)$，进一步，
+\begin{align*}
+    |f(x) - L| < \eps, \ \forall x \in U(a, \delta) \setminus \{a\} 
+&\Longleftrightarrow f(U(a, \delta) \setminus \{a\}) \subset U(L, \eps) \\
+&\Longleftrightarrow U(a, \delta) \setminus \{a\} \subset f^{-1}(U(L, \eps)), 
+\end{align*}
+于是我们可以用邻域的语言重述定义~\ref{def:lim-func}：
+
+\begin{definition} \label{def:lim-func-nbh}
+    设 $f$ 为定义在 $\mathbb R$ 的某个子集上的实值函数且在 $a \in \mathbb R$ 的一个去心邻域 $V$ 上有定义，若存在 $L \in \mathbb R$ 满足对任意 $\eps > 0$，存在 $\delta > 0$ 使得 $U(a, \delta) \setminus \{a\} \subset f^{-1}(U(L, \eps))$，则称 $f$ 在 $a$ 处的极限为 $L$，记为 $\lim\limits_{x \to a} f(x) = L$ 或 $f(x) \to L \,(x \to a)$. 否则称 $f$ 在 $a$ 处的\textbf{极限不存在}. 
+\end{definition}
+
+\begin{remark}
+    一般来说，为保证 $f$ 在 $U(a, \delta) \setminus \{a\}$ 上有定义，我们默认 $\delta$ 足够小使得 $U(a, \delta) \setminus \{a\} \subset V$. 
+
+    用邻域的语言重述后，$a$ 与 $L$ 均可取 $\pm \infty$，且对 $L = \pm \infty$ 的情形，我们认为 $f$ 的极限存在. 
+    
+    由邻域的定义（定义~\ref{def:nbh-R}），上面的定义中可将对任意 $U(L, \eps)$ 替换为对 $L$ 的任意邻域 $U$. 
+\end{remark}
+
+由于点 $a$ 可将实数轴分为两部分，于是我们可以定义\textbf{单侧极限}\index{jixian@极限!dancejixian@单侧极限}：
+
+\begin{definition}[单侧极限的定义] \label{def:lim-func-oneside}
+    设 $f$ 为定义在 $\mathbb R$ 的某个子集上的实值函数且存在 $a \in \mathbb R$ 的一个去心邻域 $V$ 使得 $f$ 在 $V \cap (a, +\infty)$ 上有定义，若存在 $L \in \mathbb R$ 满足对任意 $\eps > 0$，存在 $\delta > 0$ 使得对任意 $x \in U(a, \delta) \cap (a, +\infty)$ 均成立 $|f(x) - L| < \eps$，则称 $f$ 在 $a$ 处的\textbf{右极限}为 $L$，记为 $\lim\limits_{x \to a^+} f(x) = L$，并记 $f(a+) = \lim\limits_{x \to a^+} f(x)$. 类似可以定义\textbf{左极限}. 
+\end{definition}
+
+关于单侧极限与一般的极限的关系，我们有以下命题：
+
+\begin{proposition}[单侧极限与极限的关系]
+    \label{prop:relation-one-side-lim}
+    设 $f$ 为定义在 $\mathbb R$ 的某个子集上的实值函数且在 $a \in \mathbb R$ 的一个去心邻域 $U$ 上有定义，则 $\lim\limits_{x \to a} f(x)$ 存在当且仅当左极限与右极限均存在且相等，即 $f(x+) = f(x-)$. 
+\end{proposition}
+
+\begin{proof}
+    必要性显然，因为若极限存在且为 $L$，则限制在 $U \cap (a, +\infty)$ 与 $U \cap (-\infty, a)$ 上自然得到左右极限均为 $L$. 
+    
+    对于充分性，设左右极限均存在且同为 $L$，则对任意 $\eps > 0$，存在 $\delta_1 > 0$ 使得当 $x \in U(a, \delta_1) \cap (a, +\infty)$ 时有 $|f(x) - L| < \eps$；存在 $\delta_2 > 0$ 使得当 $x \in U(a, \delta_2) \cap (-\infty, a)$ 时有 $|f(x) - L| < \eps$. 取 $\delta = \min\{\delta_1, \delta_2\} > 0$，则当 $x \in U(a, \delta) \setminus \{a\}$ 时，$x$ 必属于 $U(a, \delta_1) \cap(a, +\infty)$ 与 $U(a, \delta_2) \cap (-\infty, a)$ 之一，均有 $|f(x) - L| < \eps$，故 $f$ 在 $a$ 处的极限存在且为 $L$. 
+\end{proof}
+
+% {\color{red}[补充例子]}
+
+接下来我们将函数极限的定义拓展到度量空间上的函数. 通过类比定义~\ref{def:nbh-R}，我们给出度量空间上的邻域的定义：
+\begin{definition}[度量空间上的邻域的定义] \label{def:nbh-ms}
+    设 $(S, d)$ 为一度量空间，对 $x \in S$，集合 $U \subset S$ 称为 $x$ 的一个\textbf{邻域}\index{linyu@邻域}，若存在 $r > 0$ 使得以 $x$ 为中心的\textbf{开球}\index{kaiqiu@开球} $B_r(x) := \{y \in S \mid d(y, x) < r\}$ 包含于 $U$，即 $B_r(x) \subset U$. 
+\end{definition}
+
+与注记~\ref{rem:1.1.3} 中类似，我们仍将“标准”的邻域 $B_r(x)$ 记为 $U(x, r)$，并可以用邻域的语言重述定义~\ref{def:lim-seq-ms}. 同样也可定义去心邻域. 然后我们可以给出度量空间上的函数极限的定义：
+
+\begin{definition}[度量空间上的函数极限的算术化定义] 
+    设 $(X, d_X)$ 与 $(Y, d_Y)$ 为度量空间，$S \subset X$，函数 $f:S \to Y$ 在 $x_0 \in X$ 的一个去心邻域上有定义，若存在 $y_0 \in Y$ 满足对任意 $\eps > 0$，存在 $\delta > 0$ 使得对任意 $x \in U(x_0, \delta) \setminus \{x_0\}$ 均成立 $d_Y(f(x), y_0) < \eps$，则称 $f$ 在 $x_0$ 处的\textbf{极限}\index{jixian@极限}为 $y_0$，记为 $\lim\limits_{x \to x_0} f(x) = y_0$ 或 $f(x) \to y_0 \,(x \to x_0)$. 否则称 $f$ 在 $x_0$ 处的\textbf{极限不存在}. 
+\end{definition}
+
+同样地，我们可以用邻域的语言重述该定义：
+
+\begin{definition} \label{def:lim-func-ms-nbh}
+    设 $(X, d_X)$ 与 $(Y, d_Y)$ 为度量空间，$S \subset X$，函数 $f:S \to Y$ 在 $x_0 \in X$ 的一个去心邻域上有定义，若存在 $y_0 \in Y$ 满足对任意 $\eps > 0$，存在 $\delta > 0$ 使得 $U(x_0, \delta) \setminus \{x_0\} \subset f^{-1}(U(y_0, \eps))$，则称 $f$ 在 $x_0$ 处的\textbf{极限}为 $y_0$，记为 $\lim\limits_{x \to x_0} f(x) = y_0$ 或 $f(x) \to y_0 \,(x \to x_0)$. 否则称 $f$ 在 $x_0$ 处的\textbf{极限不存在}. 
+\end{definition}
+
+由于一般的度量空间中一点 $x_0$ 不一定能够将度量空间分为两部分，所以我们无法在一般的度量空间上定义单侧极限，这体现了 $\mathbb R$ 作为存在序关系的度量空间的特殊性. 
+
+% {\color{red}[补充例子?]}
+
+通过对比注记~\ref{rem:1.1.3} 对数列极限的重述与函数极限的定义，我们可以注意到序列极限与函数极限的定义在形式上具有许多相似之处，那么二者之间是否有关联呢？下面的定理展示了序列极限与函数极限的联系. 
+
+\begin{theorem}[Heine 定理] \label{thm:Heine} \index{Heine dingli@Heine 定理}
+    设 $(X, d_X)$ 与 $(Y, d_Y)$ 为度量空间，$S \subset X$，函数 $f:S \to Y$ 在 $x_0 \in X$ 的一个去心邻域上有定义，则 $\lim\limits_{x \to x_0} f(x) = y_0$ 当且仅当对任意收敛到 $x_0$ 的序列 $\{x_n\} \subset S \setminus \{x_0\}$ 均成立 $\lim\limits_{n \to +\infty} f(x_n) = y_0$. 
+\end{theorem}
+
+\begin{proof}
+    先证明必要性. 设 $\lim\limits_{x \to x_0} f(x) = y_0$，任取收敛到 $x_0$ 的序列 $\{x_n\} \subset S \setminus \{x_0\}$. 因为 $\lim\limits_{x \to x_0} f(x) = y_0$，所以对任意 $\eps > 0$，存在 $\delta > 0$ 使得对任意 $x \in U(x_0, \delta) \setminus \{x_0\}$ 均成立 $d_Y(f(x), y_0) < \eps$，又因为 $x_n \to x_0$，存在 $N > 0$ 使得对任意 $n > N$ 成立 $d_X(x_n, x_0) < \delta$，即 $x_n \in U(x_0, \delta) \setminus \{x_0\}$，从而对任意 $n > N$ 有 $d(f(x_n), y_0) < \eps$，故 $f(x_n) \to y_0$. 
+
+    再证明充分性. 我们使用反证法. 设对任意收敛到 $x_0$ 的序列 $\{x_n\} \subset S \setminus \{x_0\}$ 均成立 $\lim\limits_{n \to +\infty} f(x_n) = y_0$，假设 $f(x) \nrightarrow y_0$，则存在 $\eps_0 > 0$，对任意 $\delta > 0$，存在 $x = x(\delta) \in U(x_0, \delta) \setminus \{x_0\}$ 使得 $d_Y(f(x), y_0) \geqslant \eps_0$，令 $x_n = x(1/n)$，可以得到序列 $\{x_n\} \subset S \setminus \{x_0\}$ 满足对任意 $n \geqslant 1$ 均成立 $d_Y(f(x_n), y_0) \geqslant \eps_0$，从而 $f(x_n) \nrightarrow y_0$，但由构造过程知 $\{x_n\} \subset S \setminus \{x_0\}$ 且 $x_n \to x_0$，因此与条件矛盾，故 $f(x) \to y_0\,(x \to x_0)$. 
+\end{proof}
+
+\begin{remark}
+    将上面给出的证明用邻域的语言重述可知：若在定理~\ref{thm:Heine} 中取 $(X, d_X)$ 为 $\mathbb R$ 的（度量）子空间，则定理对 $x_0 = \pm \infty$ 也成立；取 $(Y, d_Y)$ 为 $\mathbb R$ 的（度量）子空间，则定理对 $y_0 = \pm \infty$ 也成立. 
+\end{remark}
+
+Heine 定理表明函数极限与序列极限在某种意义上是等价的，是连接序列极限与函数极限之间的桥梁. 
+
+接下来我们引入另一个重要概念：\textbf{子列}. 
+
+\begin{definition}[子列的定义]
+    自然数列 $\{n_k\} \subset \mathbb N$ 称为\textbf{自然数列的子列}，若 $\{n_k\}$ 是严格递增的. 序列 $\{x_{n_k}\}$ 称为序列 $\{x_n\}$ 的一个\textbf{子列}\index{zilie@子列}，若 $\{n_k\}$ 是自然数列的子列. 
+\end{definition}
+
+\begin{remark}
+    从直观上看，子列是从原序列中抽取一部分并按原序列中的顺序排列得到的序列. 
+\end{remark}
+
+由 Heine 定理（定理~\ref{thm:Heine}）可以得到以下简单推论：
+
+\begin{corollary} \label{cor:Heine-subseq}
+    设 $(S, d)$ 为度量空间，其上的点列 $\{x_n\} \subset S$ 满足 $x_n \to x$ 当且仅当对任意 $\{x_n\}$ 的子列 $\{x_{n_k}\}$ 均成立 $x_{n_k} \to x\,(k \to +\infty)$. 
+\end{corollary}
+
+\begin{proof}
+    将 $\mathbb N$ 看作度量空间（取通常的度量），定义函数 $f:\mathbb N \to S, n \mapsto x_n$，对 $+\infty$ 应用 Heine 定理，可知 $\lim\limits_{n \to +\infty} f(n) = x$ 存在当且仅当对任意趋于 $+\infty$ 的序列 $\{n_k\}$，$\lim\limits_{k \to +\infty} f(n_k) = x$，容易证明这等价于对任意趋于 $+\infty$ 的严格递增序列 $\{n_k\}$，$\lim\limits_{k \to +\infty} f(n_k) = x$，而 $f(n) = x_n, f(n_k) = x_{n_k}$，从而命题得证. 
+\end{proof}
+
+\begin{remark}
+    数列 $\{a_n\}$ 趋于 $+\infty$ 的定义由注记~\ref{rem:1.1.3} 给出. 
+\end{remark}
+
+推论~\ref{cor:Heine-subseq} 给出了判断序列发散的一个充分条件：若 $\{x_n\}$ 有两个极限不相同的子列，则 $\{x_n\}$ 发散. 
+
+
+
+\section{极限的性质} \label{sec:1.2}
+
+在 \ref{sec:1.1} 节中我们给出了序列极限与函数极限的定义，接下来我们讨论极限的性质. 
+
+我们仍从数列极限开始. 数列极限具有以下四个基本性质：
+
+\begin{proposition}[数列极限的基本性质] \label{prop:lim-num-seq}
+    设 $\{a_n\}$ 为一数列，我们有
+    \begin{enumerate}[label=(\alph*)]
+        \item 唯一性：若 $\{a_n\}$ 的极限存在（可以为 $\pm\infty$），则极限唯一；
+        \item 有界性：若 $\{a_n\}$ 收敛，则 $\{a_n\}$ 有界，即存在 $M > 0$ 使得对任意 $n \geqslant 1$ 都有 $|a_n| \leqslant M$；
+        \item 保序性：若 $a_n \to a$ 且对任意 $n \geqslant 1$ 有 $a_n \geqslant 0$，则 $a \geqslant 0$；
+        \item 夹逼定理\index{jiabidingli@夹逼定理}：若存在数列 $\{b_n\}, \{c_n\}$，使得 $b_n \leqslant a_n \leqslant c_n,\ \forall n \geqslant 1$ 且 $b_n \to a, c_n \to a$，则 $a_n \to a$. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    我们依次证明. 
+    \begin{enumerate}[label=(\alph*)]
+        \item 设 $a_n \to a$ 且 $a_n \to b$，若 $a \neq b$，易知存在 $\eps_1, \eps_2 > 0$ 使得 $U(a, \eps_1) \cap U(b, \eps_2) = \varnothing$，由定义~\ref{def:lim-num-seq}，存在 $N_1 > 0$ 使得对任意 $n > N_1$ 成立 $a_n \in U(a, \eps_1)$，存在 $N_2 > 0$ 使得对任意 $n > N_2$ 成立 $a_n \in U(b, \eps_2)$，取 $n > \max\{N_1, N_2\}$，则 $a_n \in U(a, \eps_1) \cap U(b, \eps_2)$，这与条件矛盾，故 $a = b$. 
+
+        \item 设 $a_n \to a$，取 $\eps = 1$，由定义~\ref{def:lim-num-seq}，存在 $N > 0$ 使得对任意 $n > N$ 有 $|a_n - a| < \eps = 1$，则对 $n > N$ 有 $|a_n| \leqslant |a_n - a| + |a| < 1 + |a|$，再设 $M_1 = \max\{|a_n| \mid 1 \leqslant n \leqslant N\}$，由于 $M_1$ 为有限个数的最大值，所以 $M_1$ 为有限数，从而对 $M = \max\{M_1, 1 + |a|\}$ 有 $|a_n| \leqslant M, \ \forall n \geqslant 1$. 
+
+        \item 我们采用反证法. 假设 $a < 0$，取 $\eps = - a / 2$，由定义~\ref{def:lim-num-seq}，存在 $N > 0$ 使得对任意 $n > N$ 成立 $|a_n - a| < \eps$，则 $a_n < a + \eps = a / 2 < 0$，这与 $a_n \geqslant 0$ 矛盾，故假设不成立，则 $a \geqslant 0$. 
+
+        \item 由定义~\ref{def:lim-num-seq}，对任意 $\eps > 0$ 存在 $N > 0$ 使得对任意 $n > N$ 成立 $|b_n - a| < \eps, |c_n - a| < \eps$，则 
+        $$
+        -\eps < b_n - a \leqslant a_n - a \leqslant c_n - a < \eps, 
+        $$
+        即 $|a_n - a| < \eps$，故 $a_n \to a$. \qedhere
+    \end{enumerate}
+\end{proof}
+
+\begin{remark}
+    对 (a) 的证明中的“易知”部分，当 $a, b \in \mathbb R$ 时可取 $\eps_1 = \eps_2 = |a - b| / 3$，当 $a, b$ 中至少有一个为 $\pm \infty$ 时，由注记~\ref{rem:1.1.3} 同样可得. 这一断言实际上用到了 $\mathbb R$ 以及其子空间的 Hausdorff 性质：任意两个不同点可被不相交的邻域分离. 邻域的语言让我们避免了复杂的分类讨论. 
+
+    根据极限的定义，极限与数列前有限项的取值无关，从而上面的 (c) (d) 的条件中的不等式可改为对任意 $n \geqslant N$ 成立. 
+
+    (c) 的条件若改为 $a_n > 0$，不一定有 $a > 0$，即数列极限可以保持非严格的不等号，但不保持严格不等号. 
+\end{remark}
+
+对于度量空间上的点列，由于度量空间不一定具有序关系，命题~\ref{prop:lim-num-seq} 中的 (c) 和 (d) 无法推广到度量空间上，因此我们只有以下命题：
+
+\begin{proposition}[度量空间上点列极限的基本性质] \label{prop:lim-seq-ms}
+    设 $\{x_n\}$ 为度量空间 $(S, d)$ 中的点列，我们有
+    \begin{enumerate}[label=(\alph*)]
+        \item 唯一性：若 $\{x_n\}$ 的极限存在，则极限唯一；
+        \item 有界性：若 $\{x_n\}$ 收敛，则 $\{x_n\}$ 有界，即对任意 $y \in S$，存在 $M = M(y) > 0$ 使得对任意 $n \geqslant 1$ 都有 $d(x_n, y) \leqslant M$. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    命题的证明与命题~\ref{prop:lim-num-seq} 类似，关键是三角不等式的应用. 
+    \begin{enumerate}[label=(\alph*)]
+        \item 设 $x_n \to x$ 且 $x_n \to y$，若 $x \neq y$，取 $\eps = d(x, y) / 3 > 0$，则 $U(x, \eps) \cap U(y, \eps) = \varnothing$（由三角不等式得到），由定义~\ref{def:lim-seq-ms}，存在 $N_1 > 0$ 使得对任意 $n > N_1$ 成立 $x_n \in U(x, \eps)$，存在 $N_2 > 0$ 使得对任意 $n > N_2$ 成立 $x_n \in U(y, \eps)$，取 $n > \max\{N_1, N_2\}$，则 $x_n \in U(x, \eps) \cap U(y, \eps)$，这与条件矛盾，故 $x = y$. 
+
+        \item 任取 $y \in S$. 设 $x_n \to x$，取 $\eps = 1$，由定义~\ref{def:lim-seq-ms}，存在 $N > 0$ 使得对任意 $n > N$ 有 $d(x_n, x) < \eps = 1$，则对 $n > N$ 有 $d(x_n, y) \leqslant d(x_n, x) + d(x, y) < 1 + d(x, y)$，再设 $M_1 = \max\{d(x_n, y) \mid 1 \leqslant n \leqslant N\}$，由于 $M_1$ 为有限个数的最大值，所以 $M_1$ 为有限数，从而对 $M = \max\{M_1, 1 + d(x, y)\}$ 有 $d(x_n, y) \leqslant M, \ \forall n \geqslant 1$. \qedhere
+    \end{enumerate}
+\end{proof}
+
+\begin{remark}
+    (b) 中关于有界的叙述中“对任意 $y \in S$”可以改为“对某个 $y \in S$”，二者的等价性可由三角不等式得到. 
+\end{remark}
+
+Heine 定理已经向我们展示了序列极限与函数极限的关系，因此下面的函数极限的基本性质的成立是自然的. 
+
+\begin{proposition}[函数极限的基本性质] \label{prop:lim-func}
+    设 $f$ 为定义在度量空间 $(S, d)$ 的某个子集上的实值函数且在 $x_0 \in S$ 的一个去心邻域上有定义，我们有
+    \begin{enumerate}[label=(\alph*)]
+        \item 唯一性：若 $f$ 在 $x_0$ 处的极限存在（可以为 $\pm\infty$），则极限唯一；
+        \item 局部有界性：若 $f$ 在 $x_0$ 处的极限存在且有限，则存在 $x_0$ 的邻域 $U$ 使得 $f$ 在 $U \setminus \{x_0\}$ 上有界，即存在 $M > 0$ 使得对任意 $x \in U \setminus \{x_0\}$ 均成立 $|f(x)| \leqslant M$；
+        \item 保序性：若 $\lim\limits_{x \to x_0} f(x) = L$ 且存在 $x_0$ 的一个邻域 $U$ 使得对任意 $x \in U \setminus \{x_0\}$ 成立 $f(x) \geqslant 0$，则 $L \geqslant 0$；
+        \item 夹逼定理\index{jiabidingli@夹逼定理}：若存在函数 $g, h$，使得在 $x_0$ 的一个去心邻域上成立 $g(x) \leqslant f(x) \leqslant h(x)$ 且 $\lim\limits_{x \to x_0} g(x) = \lim\limits_{x \to a} h(x) = L$，则 $\lim\limits_{x \to x_0} f(x) = L$. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    证明的关键是利用 Heine 定理（定理~\ref{thm:Heine}）将函数极限转化为序列极限. 
+
+    \begin{enumerate}[label=(\alph*)]
+        \item 若 $f(x) \to L_1$ 且 $f(x) \to L_2$，由 Heine 定理，对任意收敛到 $x_0$ 的序列 $\{x_n\}$ 有 $f(x_n) \to L_1$ 且 $f(x_n) \to L_2$，由命题~\ref{prop:lim-num-seq} 的 (a) 知必有 $L_1 = L_2$. 
+
+        \item 设 $f(x) \to L$，取 $\eps = 1$，由定义~\ref{def:lim-func}，存在 $\delta > 0$ 使得对任意 $x \in U(x_0, \delta) \setminus \{x_0\}$ 成立 $|f(x) - L| < \eps$，则 $|f(x)| \leqslant |f(x) - L| + |L| \leqslant 1 + |L|$，取 $U = U(x_0, \delta), M = 1 + |L|$ 即可. 
+
+        \item 由 Heine 定理，对任意收敛到 $x_0$ 的序列 $\{x_n\} \subset U \setminus \{x_0\}$ 有 $f(x_n) \to L$，又 $f(x_n) \geqslant 0$，由命题~\ref{prop:lim-num-seq} 的 (c) 知 $L \geqslant 0$. 
+
+        \item 由 Heine 定理，对所给去心邻域上任意收敛到 $x_0$ 的序列 $\{x_n\}$ 有 $g(x_n) \leqslant f(x_n) \leqslant h(x_n)$ 且 $g(x_n) \to L, h(x_n) \to L$，由命题~\ref{prop:lim-num-seq} 的 (d) 知 $f(x_n) \to L$，由 $\{x_n\}$ 的任意性，再次利用 Heine 定理知 $\lim\limits_{x \to x_0} f(x) = L$. \qedhere
+    \end{enumerate}
+\end{proof}
+
+\begin{remark}
+    若取 $(S, d)$ 为 $\mathbb R$ 的度量子空间，则对单侧极限也有类似的性质，且命题对 $a = \pm \infty$ 也成立. 
+\end{remark}
+
+我们同样有度量空间上的函数极限的性质：
+
+\begin{proposition}[度量空间上函数极限的基本性质] \label{prop:lim-func-ms}
+    设 $(X, d_X)$ 与 $(Y, d_Y)$ 为度量空间，$S \subset X$，函数 $f:S \to Y$ 在 $x_0 \in X$ 的一个去心邻域上有定义，我们有
+    \begin{enumerate}[label=(\alph*)]
+        \item 唯一性：若 $f$ 在 $x_0$ 处的极限存在，则极限唯一；
+        \item 局部有界性：若 $f$ 在 $x_0$ 处的极限存在，则存在 $x_0$ 的邻域 $U$ 使得 $f$ 在 $U \setminus \{x_0\}$ 上有界，即对任意 $y \in X$，存在 $M = M(y) > 0$ 使得对任意 $x \in U \setminus \{a\}$ 均成立 $d(f(x), y) \leqslant M$. 
+    \end{enumerate}
+\end{proposition}
+
+命题的证明是类似的，这里不再赘述. 
+
+由于数可以进行四则运算，所以我们再来考察极限与四则运算的可交换性. 对于数列极限，我们有以下命题：
+
+\begin{proposition}[数列极限与四则运算的可交换性] \label{prop:lim-num-seq-swap-op}
+    设数列 $\{a_n\}, \{b_n\}$ 收敛且 $\lim\limits_{n \to +\infty} a_n = a, \lim\limits_{n \to +\infty} b_n = b$，$\lambda \in \mathbb R$，我们有
+    \begin{enumerate}[label=(\alph*)]
+        \item $a_n + b_n, \lambda a_n, a_n b_n$ 均收敛，且 $\lim\limits_{n \to +\infty} a_n + b_n = a + b, \lim\limits_{n \to +\infty} \lambda a_n = \lambda a, \lim\limits_{n \to +\infty} a_n b_n = ab$；
+
+        \item 若 $b_n \neq 0, b \neq 0$，则 $\dfrac{a_n}{b_n}$ 收敛，且 $\lim\limits_{n \to +\infty} \dfrac{a_n}{b_n} = \dfrac{a}{b}$. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    我们依次证明. 
+    \begin{enumerate}[label=(\alph*)]
+        \item 对于加法，对任意 $\eps > 0$，存在 $N_1, N_2 > 0$ 使得 $n > N_1$ 时 $|a_n - a| < \eps/2$，$n > N_2$ 时 $|b_n - b| < \eps/2$.  取 $N = \max\{N_1, N_2\}$，则
+        \[
+        |(a_n + b_n) - (a + b)| \leqslant |a_n - a| + |b_n - b| < \eps,\ \forall n > N, 
+        \]
+        故 $a_n + b_n \to a + b$.  
+
+        数乘情形显然：对任意 $\eps > 0$，若 $\lambda = 0$ 则结论平凡；若 $\lambda \neq 0$，存在 $N$ 使得对任意 $n > N$ 成立 $|a_n - a| < \eps/|\lambda|$，从而 $|\lambda a_n - \lambda a| < \eps$.  
+
+        对于乘法，我们有
+        \[
+        |a_n b_n - ab| = |a_n(b_n - b) + b(a_n - a)| \leqslant |a_n| \cdot |b_n - b| + |b| \cdot |a_n - a|, 
+        \]
+        由命题~\ref{prop:lim-num-seq} 的 (b)，$\{a_n\}$ 有界，设 $|a_n| \leqslant M$.  对任意 $\eps > 0$，存在 $N$ 使得对任意 $n > N$ 成立 $|a_n - a| < \eps/(2|b| + 1)$ 且 $|b_n - b| < \eps/(2M + 1)$，于是
+        \[
+        |a_n b_n - ab| \leqslant M \cdot \frac{\eps}{2M + 1} + |b| \cdot \frac{\eps}{2|b| + 1} < \eps,
+        \]
+        故 $a_n b_n \to ab$.  
+
+        \item 先证 $\dfrac{1}{b_n} \to \dfrac{1}{b}$. 由于 $b \neq 0$，取 $\eps_0 = |b|/2$，存在 $N_1$ 使得 $n > N_1$ 时 $|b_n - b| < |b|/2$，则 $|b_n| > |b|/2$.  对任意 $\eps > 0$，存在 $N_2$ 使得 $n > N_2$ 时 $|b_n - b| < \eps |b|^2 / 2$.  取 $N = \max\{N_1, N_2\}$，则
+        \[
+        \left|\frac{1}{b_n} - \frac{1}{b}\right| = \frac{|b_n - b|}{|b_n b|} < \frac{\eps |b|^2 / 2}{(|b|/2)|b|} = \eps,
+        \]
+        故 $\dfrac{1}{b_n} \to \dfrac{1}{b}$.  再由 (a) 的结果，有 $\dfrac{a_n}{b_n} = a_n \cdot \dfrac{1}{b_n} \to a \cdot \dfrac{1}{b} = \dfrac{a}{b}$.  \qedhere
+    \end{enumerate}
+\end{proof}
+
+\begin{remark}
+    由 Heine 定理可知以上数列极限的性质对函数极限也成立，只需将数列换为定义在度量空间 $(S, d)$ 的某个子集上的实值函数. 
+
+    此外，通过多次应用上述命题，我们可以得到极限与有限次四则运算是可交换的. 
+\end{remark}
+
+事实上，在之后的章节中我们会看到许多涉及极限的问题都与极限与某种运算的可交换性有关，如积分、求导等. 
+
+
+\section{实数与完备化} \label{sec:1.3}
+
+我们将在这一节中从有理数出发严格构造实数. 我们先来考察有理数列 $\{a_n\} \subset \mathbb Q$ 满足 
+$$
+a_1 = 1,\quad a_{n + 1} = \dfrac{1}{2} \bigg( a_n + \dfrac{2}{a_n} \bigg), n \geqslant 1. 
+$$
+我们有 
+$$
+a_{n + 1}^2 - 2 = \dfrac{1}{4} \bigg( a_n + \dfrac{2}{a_n} \bigg)^2 - 2 = \dfrac{(a_n^2 - 2)^2}{4a_n^2},\ n \geqslant 1, 
+$$
+于是 $a_n^2 \geqslant 2, n \geqslant 2$，代回上式有
+$$
+a_{n + 1}^2 - 2 = \dfrac{(a_n^2 - 2)^2}{4a_n^2} \leqslant \dfrac{(a_n^2 - 2)^2}{8},\ n \geqslant 2, 
+$$
+同时我们有 $a_{n + 1} - a_n = \dfrac{2 - a_n^2}{2a_n} \leqslant 0,\ n \geqslant 2$，此时易得 $|a_n^2 - 2| \leqslant 1,\ n \geqslant 2$，于是
+$$
+|a_{n + 1}^2 - 2| = a_{n + 1}^2 - 2 \leqslant \dfrac{|a_n^2 - 2|}{8},\ n \geqslant 2, 
+$$
+则 $$
+0 \leqslant |a_n^2 - 2| \leqslant \bigg(\dfrac{1}{8}\bigg)^{n - 2} |a_2^2 - 2| \leqslant \bigg(\dfrac{1}{8}\bigg)^{n - 2} \to 0, 
+$$
+由夹逼定理（命题~\ref{prop:lim-num-seq}(d)）可知 $\lim\limits_{n \to +\infty} |a_n^2 - 2| = 0$，即 $\lim\limits_{n \to +\infty} a_n^2 = 2$. 若 $\lim\limits_{n \to +\infty} a_n = r \in \mathbb Q$，则由命题~\ref{prop:lim-num-seq-swap-op}，有 $r^2 = 2$，但我们知道不存在这样的有理数，所以此时数列 $\{a_n\}$ 在 $\mathbb Q$ 中不收敛. 这表明 $\mathbb Q$ 上有些看似应当收敛的数列不存在极限，也就是说 $\mathbb Q$ 是有“洞”的. 这就促使我们构造一个更好的数集，使那些看似应当收敛的数列都在该数集中存在极限. 因此，我们需要考察 $\mathbb Q$ 上的收敛序列的内在性质. 
+
+我们从极限的定义出发：设 $\{a_n\} \subset \mathbb Q$ 收敛于 $q \in \mathbb Q$，对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $n > N$ 均成立 $|a_n - q| < \eps$，则对任意 $n, m > N$，有 
+$$
+|a_n - a_m| \leqslant |a_n - q| + |a_m - q| < 2\eps, 
+$$
+也就是说，此时项数大于 $N$ 的所有项都落在某个宽度不超过 $4\eps$ 的区间内，从而只要 $N$ 充分大，数列中项数超过 $N$ 的项的分布范围可以任意小. 这给出了数列收敛的一个必要条件，且这一条件与极限值无关，只用到了数列自身的性质. 反之，若这一条件成立，从直观上看，这样的数列应当收敛. 然而，我们可以验证本节开头讨论的数列满足这样的性质，但数列不收敛. 这启发我们利用这一必要条件来构造新的数集. 
+
+我们先将前面得到的必要条件提炼出来：
+
+\begin{definition}[$\mathbb Q$ 上的 Cauchy 列] \label{def:Cauchy-seq-Q}
+    若有理数列 $\{a_n\}$ 满足对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $n, m > N$ 均成立 $|a_n - a_m| < \eps$，则称 $\{a_n\}$ 为 \textbf{Cauchy 序列}或 \textbf{Cauchy 列}\index{Cauchy lie@Cauchy 列}. 
+\end{definition}
+
+我们在前面的讨论中得到数列 $\{a_n\}$ 是 Cauchy 列是 $\{a_n\}$ 收敛的必要条件，我们希望这成为充要条件. 我们还需要以下观察：每一个在 $\mathbb Q$ 上收敛的序列均唯一对应一个极限，这启发我们将“数”与“序列”对应起来，但前面的对应不是一一对应，因此我们引入等价类的概念. 
+
+\begin{definition}[等价关系与等价类的定义]
+    集合 $X$ 上的一个\textbf{关系}\index{guanxi@关系} $R$ 是 $X \times X$ 的一个子集，当 $(x, y) \in R$ 时记 $xRy$. 关系 $R$ 称为\textbf{等价关系}\index{guanxi@关系!dengjiaguanxi@等价关系}，若 $R$ 满足：
+    \begin{enumerate}[label=(\alph*)]
+        \item 自反性：$xRx,\ \forall x \in X$；
+        \item 对称性：若 $xRy$，则 $yRx$；
+        \item 传递性：若 $xRy, yRz$，则 $xRz$. 
+    \end{enumerate}
+    等价关系一般用 $\sim$ 表示，即 $xRy$ 记作 $x \sim y$. 
+
+    若集合 $X$ 上有等价关系 $\sim$，对 $x \in X$，定义 $[x] := \{y \in X \mid x \sim y\}$ 为 $x$ 的\textbf{等价类}，并记 $X/\sim \,= \{[x] \mid x \in X\}$，称为 $X$ 关于 $\sim$ 的\textbf{商集}\index{shangji@商集}. 
+\end{definition}
+
+然后我们对所有的有理 Cauchy 列定义等价关系，将所有在形式上“极限相等”的序列看作等价的，从而在直观上看，每个等价类都对应唯一一个极限. 于是我们可以定义 $\mathbb R$ 如下：
+
+\begin{definition}[$\mathbb R$ 的 Cauchy 列定义] \label{def:R-Cauchy-seq}
+    记 $X$ 为有理 Cauchy 列全体，在 $X$ 上定义等价关系 $\sim$，满足：对有理 Cauchy 列 $\{a_n\}, \{b_n\} \subset \mathbb Q$，$\{a_n\} \sim \{b_n\}$ 当且仅当 $\lim\limits_{n \to +\infty} |a_n - b_n| = 0$. 
+
+    定义 $\mathbb R$ 为 $X$ 关于 $\sim$ 的商集，即 
+    $$
+    \mathbb R = X / \sim = \{[\{a_n\}] \mid \{a_n\} \subset \mathbb Q \text{为 Cauchy 列}\}. 
+    $$
+\end{definition}
+
+\begin{remark}
+    $\sim$ 的传递性由极限与加法的可交换性（命题~\ref{prop:lim-num-seq-swap-op}(a)）保证
+\end{remark}
+
+我们现在仅在集合的意义下定义了 $\mathbb R$，还需在 $\mathbb R$ 上定义序关系、加法、乘法以及距离. 
+
+\begin{definition} \label{def:order-R}
+    在 $\mathbb R$ 上定义关系 $<_{\mathbb R}$，满足对 $x = [\{a_n\}], y = [\{b_n\}] \in \mathbb R$，$x <_{\mathbb R} y$ 当且仅当存在正有理数 $\eps > 0$ 和 $N > 0$ 使得对任意 $n > N$ 有 
+    $$
+    a_n - b_n \leqslant -\eps. 
+    $$
+    在此基础上记 $x \leqslant_{\mathbb R} y$ 若 $x <_{\mathbb R} y$ 或 $x = y$. 
+\end{definition}
+
+对关系 $\leqslant_{\mathbb R}$，我们有以下命题：
+
+\begin{proposition} \label{prop:order-R}
+    $\leqslant_{\mathbb R}$ 是良定的（与代表元的选取无关），且 $\leqslant_{\mathbb R}$ 为 $\mathbb R$ 上的一个线序（全序），满足：
+    \begin{enumerate}[label=(\alph*)]
+        \item 自反性：$x \leqslant_{\mathbb R} x,\ \forall x \in \mathbb R$；
+        \item 反对称性：若 $x \leqslant_{\mathbb R} y,\, y \leqslant_{\mathbb R} x$，则 $x = y$；
+        \item 传递性：若 $x \leqslant_{\mathbb R} y,\, y \leqslant_{\mathbb R} z$，则 $x \leqslant_{\mathbb R} z$；
+        \item 连结性：对任意 $x, y \in \mathbb R$，$x \leqslant_{\mathbb R} y$ 与 $y \leqslant_{\mathbb R} x$ 至少有一个成立. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{remark}
+    为了记号的简便性，此后我们将 $\leqslant_\mathbb R$ 也记为 $\leqslant$，并当 $x \leqslant y$ 时记 $y \geqslant x$. 
+\end{remark}
+
+\begin{proof}
+    首先验证良定性. 设 $x = [\{a_n\}], y = [\{b_n\}] \in \mathbb R$ 且在这组代表元下 $x \leqslant_\mathbb R y$，若还有 $x = [\{a_n'\}], y = [\{b_n'\}]$，我们验证对新的代表元也有 $x \leqslant_\mathbb R y$. $x = y$ 的情形是平凡的，因此不妨设 $x <_\mathbb R y$. 由定义~\ref{def:order-R}，存在有理数 $\eps > 0$ 和 $N_1 > 0$ 使得对任意 $n > N_1$ 有 
+    $$
+    a_n - b_n \leqslant -\eps, 
+    $$
+    又由定义~\ref{def:R-Cauchy-seq}，
+    $$
+    \lim\limits_{n \to +\infty} |a_n' - a_n| = 0, \quad \lim\limits_{n \to +\infty} |b_n' - b_n| = 0, 
+    $$
+    存在 $N_2 > 0$ 使得对任意 $n > N_2$ 均成立
+    $$
+    |a_n' - a_n| < \eps / 3, \quad |b_n' - b_n| < \eps / 3, 
+    $$
+    取 $\eps' = \eps / 3, N = \max\{N_1, N_2\}$，则对任意 $n > N$ 均成立
+    $$
+    a_n' - b_n' = (a_n - b_n) + (a_n' - a_n) - (b_n' - b_n) \leqslant -\eps + \eps / 3 + \eps / 3 = -\eps', 
+    $$
+    由定义~\ref{def:order-R} 知对代表元 $\{a_n'\}$ 和 $\{b_n'\}$ 也成立 $x <_\mathbb R y$. 
+
+    然后我们证明 $\leqslant_\mathbb R$ 的性质. 
+
+    \begin{enumerate}[label=(\alph*)]
+        \item 由 $x = x$ 直接得到. 
+        \item 假设 $x \neq y$，则 $x <_\mathbb R y, y <_\mathbb R x$，设 $x = [\{a_n\}], y = [\{b_n\}]$，由定义~\ref{def:order-R}，存在有理数 $\eps_1, \eps_2 > 0$ 和 $N_1, N_2 > 0$，使得
+        $$
+        a_n - b_n \leqslant -\eps_1,\, \forall n > N_1,\quad b_n - a_n \leqslant -\eps_2,\, \forall n > N_2, 
+        $$
+        则对任意 $n > \max\{N_1, N_2\}$ 有 
+        $$
+        \eps_2 \leqslant a_n - b_n \leqslant -\eps_1 < 0, 
+        $$
+        这与 $\eps_2 > 0$ 矛盾. 
+
+        \item 若 $x = y$ 与 $y = z$ 至少有一个成立，结论显然成立，因此不妨设 $x <_\mathbb R y, y <_\mathbb R z$. 设 $x = [\{a_n\}], y = [\{b_n\}], z = [\{c_n\}]$，由定义~\ref{def:order-R}，存在有理数 $\eps_1, \eps_2 > 0$ 和 $N_1, N_2 > 0$，使得
+        $$
+        a_n - b_n \leqslant -\eps_1,\, \forall n > N_1,\quad b_n - c_n \leqslant -\eps_2,\, \forall n > N_2, 
+        $$
+        取 $\eps = \eps_1 + \eps_2, N = \max\{N_1, N_2\}$，则对任意 $n > N$ 有 
+        $$
+        a_n - c_n  = (a_n - b_n) + (b_n - c_n) \leqslant \eps_1 + \eps_2 = \eps, 
+        $$
+        从而 $x <_\mathbb R z$. 
+
+        \item 对 $x = [\{a_n\}], y = [\{b_n\}]$，假设 $x \leqslant_{\mathbb R} y$ 与 $y \leqslant_{\mathbb R} x$ 均不成立，则 $x \neq y$，且对任意有理数 $\eps > 0$ 和 $N > 0$，存在 $n > N$ 使得 $a_n - b_n > -\eps$；对任意有理数 $\eps > 0$ 和 $N > 0$，存在 $n > N$ 使得 $b_n - a_n > -\eps$. 由
+        $$
+        |(a_n - b_n) - (a_m - b_m)| \leqslant |a_n - a_m| + |b_n - b_m|
+        $$
+        可知 $\{a_n - b_n\}$ 也为 Cauchy 列，由定义~\ref{def:Cauchy-seq-Q}，对任意有理数 $\eps > 0$，存在 $N > 0$ 使得对任意 $n, m > N$ 成立
+        $$
+        |(a_n - b_n) - (a_m - b_m)| < \eps / 2, 
+        $$
+        而由假设可知存在 $l, m > N$ 使得
+        $$
+        a_l - b_l > -\eps / 2, \quad a_m - b_m < \eps / 2, 
+        $$
+        则对任意 $n > N$ 有
+        \begin{align*}
+            a_n - b_n &= (a_l - b_l) + ((a_n - b_n) - (a_l - b_l)) > -\eps / 2 - \eps / 2 = -\eps,  \\
+            a_n - b_n &= (a_m - b_m) + ((a_n - b_n) - (a_m - b_m)) < \eps / 2 + \eps / 2 = \eps, 
+        \end{align*}
+        即
+        $$
+        |a_n - b_n| < \eps, 
+        $$
+        由定义~\ref{def:lim-num-seq}，$\lim\limits_{n \to +\infty} |a_n - b_n| = 0$，则 $x = y$，矛盾. \qedhere
+    \end{enumerate}
+\end{proof}
+
+\begin{definition}
+    在 $\mathbb R$ 上定义运算如下：
+    \begin{enumerate}[label=(\alph*)]
+        \item 加法：对 $x = [\{a_n\}], y = [\{b_n\}]$，定义 $x + y = [\{a_n + b_n\}]$；
+        \item 乘法：对 $x = [\{a_n\}], y = [\{b_n\}]$，定义 $x \cdot y = [\{a_n \cdot b_n\}]$；
+    \end{enumerate}
+\end{definition}
+
+由于篇幅限制，对于下面有关 $\mathbb R$ 上的加法与乘法的性质的命题，在此略去证明，只给出证明概要. 
+
+\begin{proposition} \label{prop:plus-R}
+    $\mathbb R$ 上的加法是良定的，且满足以下公理：
+    \begin{enumerate}[label=(\alph*)]
+        \item 存在加法零元 $0 \in \mathbb R$，使得对任意 $x \in \mathbb R$ 有 $0 + x = x + 0 = x$；
+        \item 对任意 $x \in \mathbb R$ 存在加法逆元 $-x \in \mathbb R$，使得 $x + (-x) = (-x) + x = 0$；
+        \item 结合律：对任意 $x, y, z \in \mathbb R$，有 $x + (y + z) = (x + y) + z$；
+        \item 交换律：对任意 $x, y \in \mathbb R$，有 $x + y = y + x$；
+        \item 若 $x \leqslant y$，则对任意 $z \in \mathbb R$ 有 $x + z \leqslant y + z$. 
+    \end{enumerate}
+    此时可以定义减法：$x - y := x + (-y)$. 
+\end{proposition}
+
+
+{
+\renewcommand{\qedsymbol}{}
+\begin{proof}[证明概要]
+    (a) 中加法零元即 $[S_0]$，其中 $S_0 = \{0, 0, 0, \dots\}$ 为常值 Cauchy 列. 
+    (b) 中 $x = [\{a_n\}]$ 的加法逆元为 $[\{-a_n\}]$. 
+    (c) (d) 可由 $\mathbb Q$ 上的加法的运算律得到.  
+    (e) 可由定义~\ref{def:order-R} 直接验证（与命题~\ref{prop:order-R} 的证明类似，将等于的情形单独处理）. 
+\end{proof}
+}
+
+\begin{proposition} \label{prop:times-R}
+    $\mathbb R$ 上的乘法是良定的，且满足以下公理：
+    \begin{enumerate}[label=(\alph*)]
+        \item 存在乘法幺元 $1 \in \mathbb R \setminus \{0\}$，使得对任意 $x \in \mathbb R$ 有 $1 \cdot x = x \cdot 1 = x$；
+        \item 对任意 $x \in \mathbb R \setminus \{0\}$ 存在乘法逆元 $x^{-1} \in \mathbb R$，使得 $x \cdot x^{-1} = x^{-1} \cdot x = 1$；
+        \item 结合律：对任意 $x, y, z \in \mathbb R$，有 $x \cdot (y \cdot z) = (x \cdot y) \cdot z$；
+        \item 交换律：对任意 $x, y \in \mathbb R$，有 $x \cdot y = y \cdot x$；
+        \item 分配律：对任意 $x, y, z \in \mathbb R$，有 $(x + y) \cdot z = x \cdot z + y \cdot z,\, z \cdot (x + y) = z \cdot x + z \cdot y$；
+        \item 若 $0 \leqslant x,\, 0 \leqslant y$，则 $0 \leqslant x \cdot y$. 
+    \end{enumerate}
+    此时可以定义除法：$x / y = x \cdot y^{-1}$. 
+\end{proposition}
+
+{
+\renewcommand{\qedsymbol}{}
+\begin{proof}[证明概要]
+    (a) 中乘法幺元即 $[S_1]$，其中 $S_1 = \{1, 1, 1, \dots\}$ 为常值 Cauchy 列. 
+    (b) 中 $x = [\{a_n\}] \neq 0$ 的乘法逆元为 $[\{1 / a_n\}]$（$a_n$ 的非零性由 $x \neq 0$ 保证）. 
+    (c) (d) (e) 可由 $\mathbb Q$ 上的乘法的运算律得到.  
+    (f) 可由定义~\ref{def:order-R} 验证（与命题~\ref{prop:order-R} 的证明类似，将等于的情形单独处理，需要用到 Cauchy 列的有界性）. 
+\end{proof}
+}
+
+\begin{definition} \label{def:abs-func-R}
+    在 $\mathbb R$ 上定义绝对值函数 
+    $$
+    | \cdot |:\mathbb R \to \mathbb R, \ [\{a_n\}] \mapsto [\{|a_n|\}]. 
+    $$
+    
+    等价地，$|x| = \begin{cases}
+        x, & x \geqslant 0; \\
+        -x, & x \leqslant 0.
+    \end{cases}$
+\end{definition}
+
+\begin{proposition}
+    $\mathbb R$ 上的绝对值函数 $|\cdot|$ 满足三角不等式：
+    $$
+    |x + y| \leqslant |x| + |y|,\ \forall x, y \in \mathbb R, 
+    $$
+    从而 $|\cdot|$ 诱导了 $\mathbb R$ 上的度量 $d(x, y) := |x - y|$. 
+\end{proposition}
+
+\begin{proof}
+    由定义容易证明对 $x, y \in \mathbb R$，$x \leqslant y$ 当且仅当 $0 \leqslant y - x$. 任取 $x = [\{a_n\}], y = [\{b_n\}] \in \mathbb R$，记 $c_n = |a_n| + |b_n| - |a_n + b_n|$，则只需证明 $[\{c_n\}] \geqslant 0$. 假设 $[\{c_n\}] \geqslant 0$ 不成立，由命题~\ref{prop:order-R} 的 (d) 可知此时必有 $[\{c_n\}] < 0$，则存在有理数 $\eps > 0$ 和 $N > 0$ 使得对任意 $n > N$ 有 $c_n < -\eps < 0$，但由 $\mathbb Q$ 上的绝对值不等式可知 $c_n \geqslant 0,\,\forall n \in \mathbb N$，矛盾. 
+\end{proof}
+
+\begin{remark}
+    $\mathbb Q$ 可通过单射 $\varphi:\mathbb Q \to \mathbb R, q \mapsto [S_q]$ 等距嵌入 $\mathbb R$，其中 $S_q = \{q, q, q, \dots\}$ 为常值 Cauchy 列，从而可将 $\mathbb Q$ 看作 $\mathbb R$ 的一个子集. 这里的等距嵌入的含义是对任意 $p, q \in \mathbb Q$，$|\varphi(p) - \varphi(q)| = \varphi(|p - q|)$. 容易验证在嵌入的意义下，前面定义的序关系和运算与 $\mathbb Q$ 上的序关系和运算相容，即 $\varphi$ 与 $\mathbb Q$ 上的运算可交换. 此时 $\mathbb Q$ 成为 $\mathbb R$ 的可列稠密子集（定义与证明可参考之后的定义~\ref{def:dense-subset-ms} 和命题~\ref{prop:completion-embedding-ms}）. 
+\end{remark}
+
+在 $\mathbb R$ 上定义了序关系、加法、乘法以及距离之后，$\mathbb R$ 成为一个\textbf{完备的有序域}，其中完备性由以下定理给出. 
+
+\begin{theorem}[Cauchy 收敛准则] \label{thm:Cauchy-convergence} \index{Cauchy shoulianzhunze@Cauchy 收敛准则}
+    $\mathbb R$ 上的序列 $\{x_n\} \subset \mathbb R$ 收敛当且仅当 $\{x_n\}$ 为 Cauchy 列. 
+\end{theorem}
+
+在证明定理~\ref{thm:Cauchy-convergence} 之前，我们先证明下面的引理. 为便于叙述，对有理数 $q \in \mathbb Q$，我们将常值 Cauchy 列 $S_q$ 对应的实数 $[S_q]$ 记为 $q^\mathbb R$. 容易验证，对 $p, q \in \mathbb Q$，$p < q$ 当且仅当 $p^\mathbb R <_\mathbb R q^\mathbb R$. 
+
+\begin{lemma} \label{lem:dist-Cauchy-seq-Q}
+    设 $x = [\{a_n\}] \in \mathbb R$，则对任意有理数 $\eps > 0$，存在 $N > 0$ 使得对任意 $k > N$ 均成立 
+    $$
+    |x - a_k^\mathbb R| = [\{|a_n - a_k|\}_{n \in \mathbb N}] < \eps^{\mathbb R}. 
+    $$
+\end{lemma}
+
+\begin{proof}
+    由定义~\ref{def:Cauchy-seq-Q}，对任意有理数 $\eps > 0$，存在 $N > 0$ 使得对任意 $n, m > N$ 有 $|a_n - a_m| < \eps / 2$. 取定 $k > N$，由定义~\ref{def:order-R} 和定义~\ref{def:abs-func-R}，我们只需要证明存在有理数 $\eps_0 > 0$ 和 $N' > 0$ 使得对任意 $n > N'$ 有 $|a_n - a_k| - \eps \leqslant -\eps_0$，取 $\eps_0 = \eps / 2, N' = N$ 即可. 
+\end{proof}
+
+现在我们给出定理~\ref{thm:Cauchy-convergence} 的证明. 
+
+\begin{proof}[定理~\ref{thm:Cauchy-convergence} 的证明]
+    必要性已在前面的讨论中得到，所以只需证明充分性. 设 $\{x_n\}$ 为 $\mathbb R$ 上的 Cauchy 列，且 $x_n = [\{q_{n, k}\}_{k \in \mathbb N}]$，我们希望找到一个有理 Cauchy 列为 $\{x_n\}$ 的极限. 
+    
+    
+    由引理~\ref{lem:dist-Cauchy-seq-Q}，对每个 $n \in \mathbb N$，存在 $k = k(n)$ 使得 
+    \begin{equation} \label{eq:1.3.5.1}
+        |x_n - q_{n, k(n)}^\mathbb R| < (2^{-n})^\mathbb R. 
+    \end{equation}
+    又因为 $\{x_n\}$ 是 Cauchy 列，对任意有理数 $\eps > 0$，存在正整数 $N > 0$ 使得对任意 $n, m > N$ 成立
+    $$
+    |x_n - x_m| < (\eps / 2)^\mathbb R, \quad 2^{-n} + 2^{-m} < 2^{1 - N} < \eps / 2, 
+    $$
+    则利用三角不等式有
+    \begin{align*}
+        |q_{n, k(n)}^\mathbb R - q_{m, k(m)}^\mathbb R| &\leqslant |x_n - x_m| + |x_n - q_{n, k(n)}^\mathbb R| + |x_m - q_{m, k(m)}^\mathbb R| \\
+        &< |x_n - x_m| + (2^{-n})^\mathbb R + (2^{-m})^\mathbb R < \eps^\mathbb R, 
+    \end{align*}
+    即
+    $$
+    |q_{n, k(n)} - q_{m, k(m)}| < \eps, 
+    $$
+    从而 $\{q_{n, k(n)}\}_{n \in \mathbb N}$ 是有理 Cauchy 列. 
+    
+    令 $x = [\{q_{n, k(n)}\}_{n \in \mathbb N}] \in \mathbb R$，再证 $x_n \to x$. 对任意有理数 $\eps > 0$，由引理~\ref{lem:dist-Cauchy-seq-Q} 和式~(\ref{eq:1.3.5.1}) 可知存在正整数 $N > 0$ 使得对任意 $n > N$ 均成立
+    $$
+    |x - q_{n, k(n)}^\mathbb R| < (\eps / 2)^\mathbb R, \quad |x_n - q_{n, k(n)}^\mathbb R| < (2^{-N})^\mathbb R < (\eps / 2)^\mathbb R, 
+    $$
+    利用三角不等式即有
+    $$
+    |x_n - x| \leqslant |x_n - q_{n, k(n)}^\mathbb R| + |x - q_{n, k(n)}^\mathbb R| < \eps^\mathbb R, 
+    $$
+    同时由定义~\ref{def:order-R} 容易证明对任意正实数 $\eps > 0^\mathbb R$，存在有理数 $\eps_0 > 0$ 使得 $\eps_0^\mathbb R < \eps$，从而对任意正实数 $\eps > 0^\mathbb R$，存在正整数 $N > 0$ 使得对任意 $n > N$ 均成立
+    $$
+    |x_n - x| < \eps, 
+    $$
+    根据定义~\ref{def:lim-num-seq}（实数版本），$x_n \to x$，序列 $\{x_n\}$ 收敛. 
+\end{proof}
+
+\begin{remark}
+    在以上证明中 $\mathbb Q$ 和 $\mathbb R$ 上的绝对值函数均用 $|\cdot|$ 表示，应注意区分两种绝对值函数的取值集合. 
+\end{remark}
+
+构造 $\mathbb R$ 的过程可以认为是对 $\mathbb Q$ 做扩张，其关键是将 Cauchy 列的等价类视作元素，并通过等价类构成的集合构造新的空间，这一过程称为\textbf{完备化}\index{wanbeihua@完备化}. 我们注意到 Cauchy 列的概念可以推广到度量空间，于是有以下定义：
+
+\begin{definition}[度量空间上的 Cauchy 列] \label{def:Cauchy-seq-ms}
+    若度量空间 $(S, d)$ 上的点列 $\{x_n\}$ 满足对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $n, m > N$ 均成立 $d(x_n, x_m) < \eps$，则称 $\{x_n\}$ 为 \textbf{Cauchy 序列}或 \textbf{Cauchy 列}\index{Cauchy lie@Cauchy 列}. 
+\end{definition}
+
+以及度量空间的完备性的定义：
+
+\begin{definition}[度量空间的完备性的定义]
+    度量空间 $(S, d)$ 称为\textbf{完备的}\index{wanbei@完备}，若任意 Cauchy 列 $\{x_n\} \subset S$ 收敛. 
+\end{definition}
+
+\begin{remark}
+    此时对任意点列 $\{x_n\} \subset S$，$\{x_n\}$ 收敛当且仅当 $\{x_n\}$ 是 Cauchy 列，即 Cauchy 收敛准则成立，从而度量空间完备当且仅当 Cauchy 收敛准则成立. 
+\end{remark}
+
+类比 $\mathbb Q$ 的完备化，我们有以下命题：
+
+\begin{proposition} \label{prop:completion-ms}
+    设 $(S, d)$ 为度量空间，记 $X$ 为 $S$ 上的 Cauchy 列全体，在 $X$ 上定义等价关系 $\sim$，满足：对 Cauchy 列 $\{x_n\}, \{y_n\} \subset S$，$\{x_n\} \sim \{y_n\}$ 当且仅当 $\lim\limits_{n \to +\infty} d(x_n, y_n) = 0$. 记 $\widetilde{S} = X / \sim$，并在 $\widetilde{S}$ 上定义度量 $\tilde{d}([\{x_n\}], [\{y_n\}]) := \lim\limits_{n \to +\infty} d(x_n, y_n)$，则 $(\widetilde{S}, \tilde{d})$ 为完备的度量空间，称为 $(S, d)$ 的完备化空间. 
+\end{proposition}
+
+\begin{remark}
+    由于我们已经构造了 $\mathbb R$，$\lim\limits_{n \to +\infty} d(x_n, y_n)$ 采用 $\mathbb R$ 中的极限，这与定义~\ref{def:metric-space} 中 $d$ 为实值函数相符，且由 $|d(x_n, y_n) - d(x_m, y_m)| \leqslant |d(x_n, y_n) - d(x_m, y_n)| + |d(x_m, y_n) - d(x_m, y_m)| \leqslant d(x_n, x_m) + d(y_n, y_m)$ 可知 $\{d(x_n, y_n)\}$ 为 Cauchy 列，结合定理~\ref{thm:Cauchy-convergence} 可知 $\lim\limits_{n \to +\infty} d(x_n, y_n)$ 总存在. 利用类似的方法可以证明 $\tilde{d}$ 是良定的. 关于 $\tilde{d}$ 的三角不等式可利用极限的保序性（命题~\ref{prop:lim-num-seq} (c)）由关于 $d$ 的三角不等式取极限得到. 
+\end{remark}
+
+为便于叙述，对 $x \in S$，我们将每一项均为 $x$ 的常值 Cauchy 列 $S_x$ 对应的 $\widetilde{S}$ 中的点 $[S_x]$ 记为 $\widetilde{x}$. 与 $\mathbb R$ 上的情形类似，我们先证明以下引理：
+
+\begin{lemma} \label{lem:dist-Cauchy-seq-ms}
+    设 $z = [\{x_n\}] \in \widetilde{S}$，则对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $k > N$ 均成立 
+    $$
+    \tilde{d}(z, \widetilde{x}_k) = \lim\limits_{n \to +\infty} d(x_n, x_k) < \eps. 
+    $$
+\end{lemma}
+
+\begin{proof}
+    由定义~\ref{def:Cauchy-seq-ms}，对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $n, m > 0$ 有 $d(x_n, x_m) < \eps / 2$. 取定 $k > N$，则对任意 $n > N$ 有 $d(x_n, x_k) < \eps / 2$，令 $n \to +\infty$，由极限的保序性（命题~\ref{prop:lim-num-seq} (c)）可知
+    \begin{equation*}
+        \tilde{d}(z, \widetilde{x}_k) = \lim\limits_{n \to +\infty} d(x_n, x_k) \leqslant \eps / 2 < \eps. \tag*{\qedhere}
+    \end{equation*}
+\end{proof}
+
+现在我们给出命题~\ref{prop:completion-ms} 的证明，证明过程与定理~\ref{thm:Cauchy-convergence} 类似. 
+
+\begin{proof}[命题~\ref{prop:completion-ms} 的证明]
+    设 $\{z_n\}$ 为 $\widetilde{S}$ 上的 Cauchy 列，且 $z_n = [\{x_{n, k}\}_{k \in \mathbb N}]$，我们希望找到一个 $S$ 上的 Cauchy 列为 $\{z_n\}$ 的极限. 
+
+    由引理~\ref{lem:dist-Cauchy-seq-ms}，对每个 $n \in \mathbb N$，存在 $k = k(n)$ 使得 
+    \begin{equation} \label{eq:1.3.8.1}
+        d(z_n, \widetilde{x}_{n, k(n)}) < 2^{-n}. 
+    \end{equation}
+    又因为 $\{z_n\}$ 是 Cauchy 列，对任意 $\eps > 0$，存在正整数 $N > 0$ 使得对任意 $n, m > N$ 成立
+    $$
+    d(z_n, z_m) < \eps / 2, \quad 2^{-n} + 2^{-m} < 2^{1 - N} < \eps / 2, 
+    $$
+    则利用三角不等式有
+    \begin{align*}
+        d(x_{n, k(n)}, x_{m, k(m)}) &= d(\widetilde{x}_{n, k(n)}, \widetilde{x}_{m, k(m)}) \\
+        &\leqslant d(z_n, z_m) + d(z_n, \widetilde{x}_{n, k(n)}) + d(z_m, \widetilde{x}_{m, k(m)}) \\
+        &< d(z_n, z_m) + 2^{-n} + 2^{-m} < \eps, 
+    \end{align*}
+    从而 $\{x_{n, k(n)}\}_{n \in \mathbb N}$ 是 $S$ 上的 Cauchy 列. 
+    
+    令 $z = [\{x_{n, k(n)}\}_{n \in \mathbb N}] \in \widetilde{S}$，再证 $z_n \to z$. 对任意 $\eps > 0$，由引理~\ref{lem:dist-Cauchy-seq-ms} 和式~(\ref{eq:1.3.8.1}) 可知存在正整数 $N > 0$ 使得对任意 $n > N$ 均成立
+    $$
+    d(z, \widetilde{x}_{n, k(n)}) < \eps / 2, \quad d(z_n, \widetilde{x}_{n, k(n)}) < 2^{-N} < \eps / 2, 
+    $$
+    利用三角不等式即有
+    $$
+    d(z_n, z) \leqslant d(z_n, \widetilde{x}_{n, k(n)}) + d(z, \widetilde{x}_{n, k(n)}) < \eps, 
+    $$
+    根据定义~\ref{def:lim-seq-ms}，$z_n \to z$，序列 $\{z_n\}$ 收敛. 
+\end{proof}
+
+前面的命题仅仅告诉我们由一个度量空间可以构造出一个完备的度量空间，我们还希望新的空间与原空间具有一定的关系，因此我们引入以下定义：
+
+\begin{definition}[度量空间的稠密子集的定义] \label{def:dense-subset-ms}
+    设 $(S, d)$ 为一度量空间，子集 $A \subset S$ 称为 $S$ 的一个\textbf{稠密子集}\index{choumiziji@稠密子集}，若对任意 $x \in S$ 以及任意 $x$ 的邻域 $U$，$A \cap U \neq \varnothing$. 
+\end{definition}
+
+然后我们有以下命题：
+
+\begin{proposition} \label{prop:completion-embedding-ms}
+    设 $(S, d)$ 为度量空间，$(\widetilde{S}, \tilde{d})$ 为 $(S, d)$ 的完备化空间，定义嵌入映射 
+    $$
+    \varphi:S \to \widetilde{S},\ x \mapsto [S_x], 
+    $$
+    其中 $S_x := \{x, x, x, \dots\}$ 为常值 Cauchy 列，则 $\varphi$ 为等距嵌入，即 $\varphi$ 为单射，且对任意 $x, y \in S$ 有 $d(x, y) = \tilde{d}(\varphi(x), \varphi(y))$. 同时 $\varphi(S)$ 为 $(\widetilde{S}, \tilde{d})$ 的稠密子集. 
+\end{proposition}
+
+\begin{proof}
+    我们首先证明 $\varphi$ 为等距嵌入. 由 $d$ 的正定性可知 $\varphi$ 的保距性蕴含 $\varphi$ 是单射，因此只需证明 $\varphi$ 保距，这可直接由下式得到：
+    $$
+    \tilde{d}([S_x], [S_y]) = \lim\limits_{n \to +\infty} d(x, y) = d(x, y). 
+    $$
+
+    然后我们证明 $\varphi(S)$ 为 $(\widetilde{S}, \tilde{d})$ 的稠密子集. 对任意 $z = [\{x_n\}] \in \widetilde{S}$ 及 $z$ 的任意邻域 $U$，取开球 $B_\eps(z) = U(z, \eps) \subset U \,(\eps > 0)$，由引理~\ref{lem:dist-Cauchy-seq-ms}，存在 $k$ 使得 $\tilde{d}(z, \widetilde{x}_k) < \eps$，即 $\widetilde{x}_k \in U(z, \eps) \subset U$，则 $\varphi(S) \cap U \neq \varnothing$，这样就证明了 $\varphi(S)$ 的稠密性. 
+\end{proof}
+
+\begin{remark}
+    在等距嵌入的意义下，我们可以将 $S$ 与 $\varphi(S)$ 等同起来，从而将 $S$ 视为 $\widetilde{S}$ 的子集，之后我们将不再区分 $S$ 与 $\varphi(S)$. 
+\end{remark}
+
+在完成前面的构造之后，我们可以将 $\mathbb R$ 视为一个抽象的集合，而不必处处依赖其作为有理 Cauchy 列等价类的具体构造，后续的推理可以完全建立在命题~\ref{prop:order-R}（序公理）、命题~\ref{prop:plus-R}（加法与域公理）和命题~\ref{prop:times-R}（乘法与域公理）所刻画的序关系、加法与乘法，以及由绝对值函数（可由序关系给出，参见定义~\ref{def:abs-func-R} 中的等价描述）诱导的度量之上. 这些公理连同完备性（Cauchy 收敛准则）在保序域同构的意义下唯一地刻画了实数系（由于该证明与数学分析的主题关系不大，这里不再给出证明），这保证了以公理为基础的抽象推理是充分的，而我们前面的构造则给出了满足以上所有公理的对象的存在性. 
+
+\section{实数系基本定理} \label{sec:1.4}
+
+在 \ref{sec:1.3} 节中，我们用 Cauchy 收敛准则（定理~\ref{thm:Cauchy-convergence}）刻画了 $\mathbb R$ 的完备性，在这一节中，我们给出 Cauchy 收敛准则的几个等价命题，这些命题连同 Cauchy 收敛准则一起被称为\textbf{实数系基本定理}. 由这些命题可以引出许多重要的概念. 
+
+我们首先叙述这些命题以及相关的概念，并从 Cauchy 收敛准则出发证明这些命题. 
+
+先证明以下引理：
+
+\begin{lemma} \label{lem:metric-cont}
+    设 $(S, d)$ 为度量空间，点列 $\{x_n\} \subset S$ 收敛于 $x$，则对任意 $y \in S$，$d(x, y) = \lim\limits_{n \to +\infty} d(x_n, y)$. 
+\end{lemma}
+
+\begin{proof}
+    由定义~\ref{def:lim-seq-ms}，$\lim\limits_{n \to +\infty} d(x_n, x) = 0$. 由三角不等式，$0 \leqslant |d(x_n, y) - d(x, y)| \leqslant d(x_n, x)$，于是由夹逼定理（命题~\ref{prop:lim-num-seq}(d)）可知 $\lim\limits_{n \to +\infty} |d(x_n, y) - d(x, y)| = 0$. 
+\end{proof}
+
+我们首先给出闭区间套定理，由于其只依赖完备性，所以我们直接叙述其在完备度量空间中的推广形式——闭球套定理. 
+
+\begin{theorem}[闭球套定理] \label{thm:nested-close-balls} \index{biqiutaodingli@闭球套定理}
+    设 $(S, d)$ 为完备的度量空间，记 $\overline{B_r(x)} = \{y \in S \mid d(y, x) \leqslant r\}$ 为以 $x$ 为中心的闭球，若闭球列 $\{B_n\} := \{\overline{B_{r_n}(x_n)}\}$ 满足以下条件：
+    \begin{enumerate}[label=(\alph*)]
+        \item $B_{n + 1} \subset B_n,\ \forall n \in \mathbb N$；
+        \item $\lim\limits_{n \to +\infty} r_n = 0$，
+    \end{enumerate}
+    则存在唯一 $x \in S$ 满足 $x \in B_n,\ \forall n \in \mathbb N$，即 $\bigcap\limits_{n \in \mathbb N} B_n = \{x\}$. 
+\end{theorem}
+
+\begin{proof}
+    由于 $\lim\limits_{n \to +\infty} r_n = 0$，对任意 $\eps > 0$，存在 $N > 0$ 使得 $r_N < \eps / 2$，则对任意 $n, m > N$，由于 $x_n, x_m \in B_N$，利用三角不等式，$d(x_n, x_m) \leqslant d(x_n, x_N) + d(x_m, x_N) \leqslant 2r_N < \eps$，从而 $\{x_n\}$ 为 Cauchy 列，由 Cauchy 收敛准则，存在 $x \in S$ 使得 $x_n \to x$. 
+
+    固定 $n \in \mathbb N$，由引理~\ref{lem:metric-cont} 和极限的保序性（命题~\ref{prop:lim-num-seq}(c)），$d(x, x_n) = \lim\limits_{m \to +\infty} d(x_m, x_n) \leqslant r_n$，所以 $x \in B_n$. 这样就证明了存在性. 若还有 $x' \in S$ 满足条件，则 $d(x', x_n) \leqslant r_n \to 0$，从而 $x_n \to x'$，由极限的唯一性（命题~\ref{prop:lim-num-seq}(a)） 可知 $x' = x$，所以满足条件的 $x$ 唯一. 
+\end{proof}
+
+\begin{remark}
+    定理~\ref{thm:nested-close-balls} 在 $\mathbb R$ 上的情形即为闭区间套定理，此时闭球退化为闭区间. 
+\end{remark}
+
+\begin{theorem}[Bolzano-Weierstrass 定理] \label{thm:Bolzano-Weierstrass} \index{Bolzano-Weierstrass dingli@Bolzano-Weierstrass 定理}
+    任意 $\mathbb R$ 上的有界数列都存在收敛子列. 
+\end{theorem}
+
+\begin{proof}
+    我们利用定理~\ref{thm:nested-close-balls} 证明. 设 $\{a_n\} \subset \mathbb R$ 有界，则存在闭区间 $[b_0, c_0]$ 使得 $\{a_n\} \subset [b_0, c_0]$. 区间 $[b_0, \frac{b_0 + c_0}{2}]$ 与 $[\frac{b_0 + c_0}{2}, c_0]$ 中至少有一个包含 $\{a_n\}$ 的无穷多项，令 $[b_1, c_1]$ 为包含 $\{a_n\}$ 的无穷多项的那一个，然后对 $[b_1, c_1]$ 重复上述过程，可以得到闭区间列 $\{[b_k, c_k]\}$ 满足：
+    \begin{enumerate}[label=(\alph*)]
+        \item $[b_{k + 1}, c_{k + 1}] \subset [b_k, c_k],\ \forall k \in \mathbb N$；
+        \item $c_{k + 1} - b_{k + 1} = (c_k - b_k) / 2$，从而 $\lim\limits_{k \to +\infty} c_k - b_k = 0$；
+        \item 对任意 $k \in \mathbb N$，$[b_k, c_k]$ 包含 $\{a_n\}$ 的无穷多项. 
+    \end{enumerate}
+    将闭区间 $[b_k, c_k]$ 看作闭球 $\overline{B_{r_k}(x_k)}$，其中 $r_k = (c_k - b_k) / 2, x_n = (b_k + c_k) / 2$，由定理~\ref{thm:nested-close-balls}，存在唯一 $a \in \mathbb R$ 满足 $a \in [b_k, c_k],\ \forall k \in \mathbb N$. 此时由于每个闭区间 $[b_k, c_k]$ 都包含 $\{a_n\}$ 的无穷多项，我们可以归纳地选取下标 $n_1 < n_2 < \cdots$ 使得 $a_{n_k} \in [b_k, c_k]$ 对每个 $k$ 成立，则 $|a_{n_k} - a| \leqslant c_k - b_k \to 0$，从而子列 $\{a_{n_k}\}$ 收敛于 $a$. 
+\end{proof}
+
+\begin{remark}
+    对一般的完备度量空间，定理~\ref{thm:Bolzano-Weierstrass} 不一定成立. 如令 $\ell^2 = \{\{a_n\} \subset \mathbb R \mid \sum\limits_{n = 1}^{+\infty} a_n^2 < \infty\}$ 为 $\mathbb R$ 上的平方收敛序列全体，配以度量 $d(\{a_n\}, \{b_n\}) = \sum\limits_{n = 1}^{+\infty} |a_n - b_n|^2$，其上的点列 $\{e_n\}$ 有界，其中 $e_n$ 为只有第 $n$ 项为 1，其余项为 0 的数列，但由于对任意 $n, m$ 都有 $d(e_n, e_m) = \sqrt{2}$，所以 $\{e_n\}$ 无收敛子列. 
+\end{remark}
+
+由定理~\ref{thm:Bolzano-Weierstrass} 可得到聚点原理. 我们先给出聚点的定义：
+
+\begin{definition}[聚点的定义]
+    设 $(S, d)$ 为度量空间，$A \subset S$，点 $x \in S$ 称为 $A$ 的\textbf{聚点}\index{judian@聚点}，若任意 $x$ 的去心邻域 $V$ 中都存在 $A$ 中的点，即 $V \cap A \neq \varnothing$. 
+\end{definition}
+
+\begin{theorem}[聚点原理] \label{thm:accumulation-point} \index{judianyuanli@聚点原理}
+    任意 $\mathbb R$ 的有界无限子集都有聚点. 
+\end{theorem}
+
+\begin{proof}
+    从该子集中选取一个无重复的数列 $\{a_n\}$ 并应用定理~\ref{thm:Bolzano-Weierstrass} 即可. 
+\end{proof}
+
+显然由聚点原理也可以得到 Bolzano-Weierstrass 定理，因此两者等价. 
+
+接下来我们引入两个重要概念：\textbf{上（下）界}与\textbf{确界}\index{quejie@确界}. 
+
+\begin{definition}[确界的定义] \label{def:sup-inf}
+    对 $\mathbb R$ 的子集 $A \subset \mathbb R$，若 $\alpha \in \mathbb R$ 满足对任意 $x \in A$ 成立 $x \leqslant \alpha$，则称 $\alpha$ 为 $A$ 的一个\textbf{上界}. 类似可定义\textbf{下界}. 
+    
+    若 $A$ 存在最小上界 $\alpha_0$，即 $\alpha_0$ 为 $A$ 的上界，且 $\alpha_0 \leqslant \alpha$ 对任意 $A$ 的上界 $\alpha$ 成立，则称 $\alpha_0$ 为 $A$ 的\textbf{上确界}，记为 $\sup A$. 类似可定义 $A$ 的\textbf{下确界}，记为 $\inf A$. 
+
+    当 $A$ 无上界时，规定 $\sup A = +\infty$；当 $A = \varnothing$ 时，规定 $\sup A = -\infty$. 当 $A$ 无下界时，规定 $\inf A = -\infty$；当 $A = \varnothing$ 时，规定 $\inf A = +\infty$. 
+\end{definition}
+
+\begin{remark}
+    需要注意的是，$\sup A$ 与 $\inf A$ 不一定属于 $A$. 
+
+    记 $-A = \{-x \mid x \in A\}$，则 $\sup (-A) = -\inf A, \inf(-A) = -\sup A$，这表明上确界与下确界在某种意义上是对偶的. 
+
+    我们可以将 $\sup$ 与 $\inf$ 视为 $\mathcal{P}(\mathbb R) \to \overline{\mathbb R}$ 的函数，其在每点的取值的存在性由后面的确界存在定理（定理~\ref{thm:sup-inf-exist}）保证. 
+\end{remark}
+
+确界有以下等价定义：
+
+\begin{definition}[确界的等价定义] \label{def:sup-inf-equiv}
+    若 $\alpha_0 \in \overline{\mathbb R}$ 为非空集合 $A \subset \mathbb R$ 的上界，且对任意 $\eps > 0$，$U(\alpha_0, \eps) \cap A \neq \varnothing$，则称 $\alpha_0$ 为 $A$ 的\textbf{上确界}. 类似可给出 $A$ 的\textbf{下确界}的等价定义. 
+\end{definition}
+
+\begin{remark}
+    根据这一等价定义，非空集合 $A$ 的上界 $\alpha_0$ 为上确界当且仅当存在序列 $\{a_n\} \subset A$ 使得 $a_n \to \alpha_0$. 
+\end{remark}
+
+基于上界与下界的概念，我们给出单调收敛定理：
+
+\begin{theorem}[单调收敛定理] \label{thm:monotone-convergence} \index{dandiaoshouliandingli@单调收敛定理}
+    若 $\mathbb R$ 上的数列 $\{a_n\}$ 单调递增且有上界，则 $\{a_n\}$ 收敛. 
+\end{theorem}
+
+\begin{proof}
+    我们利用定理~\ref{thm:Bolzano-Weierstrass} 证明. 设 $\{a_n\} \subset \mathbb R$ 单调递增且有上界，则显然 $\{a_n\}$ 有界（取下界为 $a_1$ 即可），由定理~\ref{thm:Bolzano-Weierstrass}，$\{a_n\}$ 有收敛子列 $\{a_{n_k}\}$. 设 $a_{n_k} \to a$，由极限的保序性可知 $a \geqslant a_{n_k}$，结合 $\{a_n\}$ 递增可知 $a \geqslant a_n$. 由于 $\{a_n\}$ 递增，对任意 $n > n_k$ 有 $|a_n - a| = a - a_n \leqslant a - a_{n_k}$，由此容易验证 $a_n \to a$. 
+\end{proof}
+
+\begin{remark}
+    将 $a_n$ 替换为 $-a_n$，我们可以证明：若 $\mathbb R$ 上的数列 $\{a_n\}$ 单调递减且有下界，则 $\{a_n\}$ 收敛. 
+
+    根据单调收敛定理，任意单调的实数列的极限都存在（可以为 $\pm \infty$）. 
+\end{remark}
+
+基于确界的概念，我们给出确界存在定理：
+
+\begin{theorem}[确界存在定理] \label{thm:sup-inf-exist} \index{quejiecunzaidingli@确界存在定理}
+    若 $\mathbb R$ 的子集非空且有上界，则其有上确界. 
+\end{theorem}
+
+\begin{proof}
+    我们利用定理~\ref{thm:nested-close-balls} 证明. 
+    
+    设 $A \subset \mathbb R$ 非空且有上界 $M$，记 $U_A \neq \varnothing$ 为 $A$ 的所有上界构成的集合，$U_A^c$ 为其关于 $\mathbb R$ 的补集，则 $U_A,U_A^c$ 均非空（分别由 $A$ 有上界和 $A$ 非空给出）. 由定义~\ref{def:sup-inf} 易知 $U_A$ 满足若 $\alpha \in U_A$，则 $[\alpha, +\infty) \subset U_A$（向上封闭性）；$U_A^c$ 满足若 $a \in U_A^c$，则 $(-\infty, a] \subset U_A^c$（向下封闭性）. 
+    
+    取 $a_1 \in U_A^c, b_1 \in U_A$，则 $a_1 < b_1$，于是得到闭区间 $[a_1, b_1]$. 与定理~\ref{thm:Bolzano-Weierstrass} 的证明类似，我们利用二分法归纳构造：设已经构造了闭区间 $[a_n, b_n]$，若 $\frac{a_n + b_n}{2} \in U_A$，则令 $[a_{n + 1}, b_{n + 1}] = [a_n, \frac{a_n + b_n}{2}]$；若 $\frac{a_n + b_n}{2} \in U_A^c$，则令 $[a_{n + 1}, b_{n + 1}] = [\frac{a_n + b_n}{2}, b_n]$. 此时闭区间列 $\{[a_n, b_n]\}$ 满足：
+    \begin{enumerate}[label=(\alph*)]
+        \item $[a_{n + 1}, b_{n + 1}] \subset [a_n, b_n],\ \forall n \in \mathbb N$；
+        \item $b_{n + 1} - a_{n + 1} = (b_n - a_n) / 2$，从而 $\lim\limits_{n \to +\infty} b_n - a_n = 0$；
+        \item $a_n \in U_A^c, b_n \in U_A,\ \forall n \in \mathbb N$. 
+    \end{enumerate}
+    由定理~\ref{thm:nested-close-balls}，存在唯一 $\alpha_0 \in \mathbb R$ 使得 $\alpha_0 \in [a_n, b_n],\ \forall n \in \mathbb N$，由极限的保序性和 $b_n \in U_A$，有
+    $$
+    \alpha_0 = \lim\limits_{n \to +\infty} b_n \geqslant x,\ \forall x \in A, 
+    $$
+    故 $\alpha_0 \in U_A$. 同时由构造过程知 $a_n \to \alpha_0, a_n < \alpha_0$，则对任意 $a < \alpha_0$，存在 $n$ 使得 $a \leqslant a_n \in U_A^c$，由 $U_A^c$ 的向下封闭性可知 $a \in U_A^c$，所以 $\alpha_0$ 为 $U_A$ 的最小元，即 $A$ 的上确界存在. 
+\end{proof}
+
+\begin{remark}
+    从直观上看，以上证明中闭区间列 $\{[a_n, b_n]\}$ 的构造过程即在每次二分时选取包含 $U_A$ 与 $U_A^c$ 的分界点的一半区间，从而由闭球套定理最终得到分界点. 
+
+    将子集 $A$ 中的元素 $x$ 均替换为 $-x$，我们可以证明：若 $\mathbb R$ 的子集非空且有下界，则其有下确界. 
+\end{remark}
+
+确界存在定理（定理~\ref{thm:sup-inf-exist}）使我们能够对任意实数集的子集取上确界与下确界，因此我们可以用确界与极限重述 Cauchy 列的定义如下：
+
+\begin{definition}[Cauchy 列定义的确界重述] \label{def:Cauchy-seq-sup}
+    度量空间 $(S, d)$ 上的点列 $\{x_n\}$ 称为 \textbf{Cauchy 序列}或 \textbf{Cauchy 列}，若 
+    $$
+    \lim_{N \to +\infty} \sup_{n, m > N} d(x_n, x_m) = 0. 
+    $$
+\end{definition}
+
+\begin{remark}
+    记号 $\sup\limits_{n, m > N} d(x_n, x_m)$ 是可以理解的，其表示 $\sup \{d(x_n, x_m) \mid n, m > N\}$，之后我们也会使用其他类似的记号. 
+\end{remark}
+
+我们还可以由确界的概念引入数列的\textbf{上极限}与\textbf{下极限}：
+
+\begin{definition}[数列的上极限与下极限的定义] \label{def:limsup-liminf}
+    设数列 $\{a_n\} \subset \mathbb R$，定义 $\{a_n\}$ 的\textbf{上极限}\index{shangjixian@上极限}为
+    $$
+    \varlimsup_{n \to +\infty} a_n = \limsup_{n \to +\infty} a_n := \lim_{n \to +\infty} \sup_{k > n} a_k, 
+    $$
+    类似定义 $\{a_n\}$ 的\textbf{下极限}\index{xiajixian@下极限}为
+    $$
+    \varliminf_{n \to +\infty} a_n = \liminf_{n \to +\infty} a_n := \lim_{n \to +\infty} \inf_{k > n} a_k. 
+    $$
+\end{definition}
+
+\begin{remark}
+    确界存在定理（定理~\ref{thm:sup-inf-exist}）保证 $\sup_{k > n} a_k$ 和 $\inf_{k > n} a_k$ 对每个 $n$ 都存在，而由定义~\ref{def:sup-inf} 可知 $\sup_{k > n} a_k$ 与 $\inf_{k > n} a_k$ 均关于 $n$ 单调，从而由单调收敛定理（定理~\ref{thm:monotone-convergence}）可知上极限与下极限总存在（可以为 $\pm \infty$），从而无论数列是否收敛，我们都可以使用上极限与下极限. 
+\end{remark}
+
+下面的引理说明上极限与下极限可被数列的子列逼近. 
+
+\begin{lemma} \label{lem:limsup-liminf-subseq}
+    设数列 $\{a_n\} \subset \mathbb R$，则存在子列 $\{a_{n_k}\}$ 使得 
+    $$
+    \lim\limits_{k \to +\infty} a_{n_k} = \varlimsup\limits_{n \to +\infty} a_n. 
+    $$
+\end{lemma}
+
+\begin{proof}
+    我们使用邻域的语言以覆盖极限为 $\pm\infty$ 的情形，同时采用与定理~\ref{thm:Cauchy-convergence} 的证明类似的对角线技巧. 
+
+    记 
+    $$
+    x_n = \sup\limits_{k > n} a_k,\quad x = \varlimsup\limits_{n \to +\infty} a_n = \lim\limits_{n \to +\infty} x_n, 
+    $$
+    由定义~\ref{def:sup-inf-equiv}，对每个 $n \in \mathbb N$，存在 $k(n) > n$ 使得 $a_{k(n)} \in U(x_n, 2^{-n})$. 对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $n > N$，
+    $$
+    x_n \in U(x, \eps / 2),\quad 2^{-n} < \eps / 2,\quad 2^{-n} < 1 / \eps, 
+    $$
+    则对任意 $n > N$，有 $U(x_n, 2^{-n}) \subset U(x, \eps)$（直接利用定义~\ref{def:nbh-R} 验证），从而 $a_{k(n)} \in U(x, \eps)$，于是 $\lim\limits_{n \to +\infty} a_{k(n)} = x$，取 $\{k(n)\}_{n \in \mathbb N}$ 的递增子列 $\{n_k\}$，得到 $\{a_n\}$ 的子列 $\{a_{n_k}\}$，且由推论~\ref{cor:Heine-subseq} 有 $\lim\limits_{k \to +\infty} a_{n_k} = x$. 
+\end{proof}
+
+引理~\ref{lem:limsup-liminf-subseq} 结合推论~\ref{cor:Heine-subseq} 可知实数列极限存在的一个必要条件是上极限等于下极限. 事实上，这一条件也是充分的. 
+
+\begin{proposition}
+    设数列 $\{a_n\} \subset \mathbb R$，则 $\{a_n\}$ 极限存在当且仅当 $\varlimsup\limits_{n \to +\infty} a_n = \varliminf\limits_{n \to +\infty} a_n$. 
+\end{proposition}
+
+\begin{proof}
+    只需再证明充分性. 设 $\varlimsup\limits_{n \to +\infty} a_n = \varliminf\limits_{n \to +\infty} a_n$，则有
+    \begin{align*}
+        0 \leqslant \lim_{N \to +\infty} \sup_{n, m > N} |a_n - a_m| \leqslant \lim_{N \to +\infty} \bigg( \sup_{n > N} a_n - \inf_{n > N} a_n \bigg) = \varlimsup\limits_{N \to +\infty} a_N - \varliminf\limits_{N \to +\infty} a_N = 0, 
+    \end{align*}
+    即
+    $$
+    \lim_{N \to +\infty} \sup_{n, m > N} |a_n - a_m| = 0, 
+    $$
+    由定义~\ref{def:Cauchy-seq-sup} 可知 $\{a_n\}$ 为 Cauchy 列，从而由定理~\ref{thm:Cauchy-convergence} 可知 $\{a_n\}$ 收敛. 
+\end{proof}
+
+我们还可以定义实值函数的上极限与下极限：
+
+\begin{definition}[函数的上极限与下极限的定义]
+    设 $(S, d)$ 为度量空间，$X \subset S$，函数 $f:X \to \mathbb R$ 在 $x_0 \in S$ 的一个去心邻域上有定义. 定义 $f$ 在 $x_0$ 处的\textbf{上极限}\index{shangjixian@上极限}为
+    $$
+    \varlimsup_{x \to x_0} f(x) = \limsup_{x \to x_0} f(x) := \lim_{\delta \to 0^+} \sup_{x \in U(x_0, \delta) \setminus \{x_0\}} f(x), 
+    $$
+    类似定义 $f$ 在 $x_0$ 处的\textbf{下极限}\index{xiajixian@下极限}为
+    $$
+    \varliminf_{x \to x_0} f(x) = \liminf_{x \to x_0} f(x) := \lim_{\delta \to 0^+} \inf_{x \in U(x_0, \delta) \setminus \{x_0\}} f(x). 
+    $$
+\end{definition}
+
+与数列的上极限与下极限类似，函数的上极限与下极限总存在（可以为 $\pm\infty$），且函数极限存在当且仅当上极限等于下极限. 
+
+至此，我们已经叙述并从 Cauchy 收敛准则出发证明了一系列实数系基本定理，同时引出了相关的概念，接下来我们证明以上各定理与 Cauchy 收敛准则的等价性. 
+
+我们先整理一下已有的逻辑关系：
+
+\begin{center}
+    \begin{tikzpicture}
+        \node (1) at (0, 0) {Cauchy 收敛准则};
+        \node (2) at (0, -2) {闭球套定理};
+        \node (3) at (-0, -4) {B-W 定理};
+        \node (4) at (-3.5, -4) {聚点原理};
+        \node (5) at (-0, -6) {单调收敛定理};
+        \node (6) at (3.5, -4) {确界存在定理};
+
+        \draw[thick, ->] (1) -- (2);
+        \draw[thick, ->] (2) -- (3);
+        \draw[thick, ->] (3) -- (5);
+        \draw[thick, ->] (2) -- (6);
+        \draw[thick, <->] (3) -- (4);
+    \end{tikzpicture}
+\end{center}
+
+我们先来证明在度量空间上闭球套定理与 Cauchy 收敛准则的等价性. 
+
+\begin{proposition}
+    在度量空间上，闭球套定理 $\Longrightarrow$ Cauchy 收敛准则. 
+\end{proposition}
+
+\begin{proof}
+    设 $\{x_n\}$ 为度量空间 $(S, d)$ 上的 Cauchy 列，我们利用闭球套定理证明 $\{x_n\}$ 收敛. 
+    
+    记 $r_k = 2^{-k}$，由定义~\ref{def:Cauchy-seq-ms}，对每个 $k$，存在 $n_k > 0$ 使得对任意 $n > n_k$，有 $d(x_n, x_{n_k}) < r_k / 2$，且我们可以归纳地选取 $n_k$ 使得 $n_k$ 关于 $k$ 递增，则 $d(x_{n_{k + 1}}, x_{n_k}) < r_k / 2 = r_{k + 1}$，从而利用三角不等式有 
+    $$
+    \overline{B_{r_{k + 1}}(x_{n_{k + 1}})} \subset \overline{B_{r_k}(x_{n_k})}, 
+    $$
+    又 $r_k \to 0$，由闭球套定理，存在唯一 $x \in S$ 使得 $x \in \overline{B_{r_k}(x_{n_k})},\ \forall k \in \mathbb N$，即 
+    $$
+    d(x, x_{n_k}) \leqslant r_k,\ \forall k \in \mathbb N, 
+    $$
+    从而 $\lim\limits_{k \to +\infty} d(x, x_{n_k}) = 0$，则 $x_{n_k} \to x$. 由定义~\ref{def:Cauchy-seq-ms}，对任意 $\eps > 0$，存在 $N > 0$ 使得对任意 $n, m > N$ 成立 $d(x_n, x_m) < \eps / 2$，取 $n_k > N$ 使得 $d(x_{n_k}, x) < \eps / 2$，则对任意 $n > N$，
+    $$
+    d(x_n, x) \leqslant d(x_n, x_{n_k}) + d(x_{n_k}, x) < \eps, 
+    $$
+    所以 $x_n \to x$，$\{x_n\}$ 收敛. 
+\end{proof}
+
+我们再来证明在 $\mathbb R$ 上由单调收敛定理可以得到闭球套定理（闭区间套定理）. 
+
+\begin{proposition}
+    在 $\mathbb R$ 上，单调收敛定理 $\Longrightarrow$ 闭球套定理. 
+\end{proposition}
+
+\begin{proof}
+    设闭区间列 $\{[a_n, b_n]\}$ 满足 $[a_{n + 1}, b_{n + 1}] \subset [a_n, b_n], \lim\limits_{n \to +\infty} (b_n - a_n) = 0$，我们用单调收敛定理证明存在唯一 $x \in \mathbb R$ 同时属于每个区间. 
+
+    由条件可知 $\{a_n\}$ 递增且有上界 $b_1$，$\{b_n\}$ 递减且有下界 $a_1$，则由单调收敛定理，存在 $a, b \in \mathbb R$ 使得 $a_n \to a, b_n \to b$，又因为 $\lim\limits_{n \to +\infty} (b_n - a_n) = 0$，所以 $a = b$，令 $x = a = b$，则对任意 $n \in \mathbb N$ 有 $a_n \leqslant x \leqslant b_n$，即 $x \in [a_n, b_n]$，这样就证明了存在性. 而若还有 $x' \in \mathbb R$ 满足 $x' \in [a_n, b_n],\ \forall n \in \mathbb N$，则 $a_n \leqslant x' \leqslant b_n,\ \forall n \in \mathbb N$，令 $n \to +\infty$，由极限的保序性可知 $x \leqslant x' \leqslant x$，则 $x' = x$，这样就证明了唯一性. 
+\end{proof}
+
+最后我们证明在 $\mathbb R$ 上由确界存在定理可以得到单调收敛定理. 
+
+\begin{proposition}
+    在 $\mathbb R$ 上，确界存在定理 $\Longrightarrow$ 单调收敛定理. 
+\end{proposition}
+
+\begin{proof}
+    设数列 $\{a_n\} \subset \mathbb R$ 单调递增且有上界，我们用确界存在定理证明 $\{a_n\}$ 收敛. 
+
+    由确界存在定理，$\{a_n\}$ 存在上确界 $\alpha = \sup\limits_{n \in \mathbb N} a_n \in \mathbb R$，由定义~\ref{def:sup-inf-equiv}，对任意 $\eps > 0$，存在 $N > 0$ 使得 $a_N > \alpha - \eps$，则对任意 $n > N$，有 $|a_n - \alpha| = \alpha - a_n \leqslant \alpha - a_N < \eps$，所以 $a_n \to \alpha$，$\{a_n\}$ 收敛. 
+\end{proof}
+
+综合上面的三个命题以及已有的逻辑关系，我们可以得到以下实数系基本定理相互等价：
+\begin{enumerate}[label=(\alph*)]
+    \item Cauchy 收敛准则；
+    \item 闭球套定理；
+    \item Bolzano-Weierstrass 定理；
+    \item 聚点原理；
+    \item 单调收敛定理；
+    \item 确界存在定理. 
+\end{enumerate}
+
+
+\section{连续函数与拓扑}
+
+连续函数是数学分析中重要的研究对象，我们将在这一节中看到“连续”这一概念真正依赖的拓扑结构，并讨论连续函数的基本性质. 同时，我们将在这一节中给出一些常用的点集拓扑的基本概念. 
+
+首先我们定义函数\textbf{在一点处连续}：
+
+\begin{definition}[函数在一点处连续的定义]
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，函数 $f:X \to Y$，对 $x_0 \in X$，若 $\lim\limits_{x \to x_0} f(x) = f(x_0)$，则称 $f$ 在 $x_0$ 处\textbf{连续}\index{lianxu@连续}，此时 $x_0$ 称为 $f$ 的\textbf{连续点}\index{lianxudian@连续点}. 
+\end{definition}
+
+\begin{remark}
+    从直观上看，$f$ 在 $x_0$ 处连续即只要 $x$ 足够接近 $x_0$，$f(x)$ 可以任意接近 $f(x_0)$. 
+
+    与函数极限的定义不同，这里我们直接将 $X$ 作为 $f$ 的定义域，因此对于只在度量空间的一个子集上有定义的函数，我们将该子集作为定义中的度量空间 $X$，从而函数在每个定义域中的孤立点上连续. 
+\end{remark}
+
+利用 Heine 定理（定理~\ref{thm:Heine}），我们有以下命题：
+
+\begin{proposition}[极限与连续的可交换性] \label{prop:cont-swap-lim}
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，函数 $f:X \to Y$ 在 $x_0$ 处连续，则对任意极限为 $x_0$ 的序列 $\{x_n\} \subset X$，有
+    $$
+    \lim\limits_{n \to +\infty} f(x_n) = f(x_0). 
+    $$
+\end{proposition}
+
+进一步，我们可以定义在整个度量空间上连续的函数：
+
+\begin{definition}[度量空间上的连续函数的定义]
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，函数 $f:X \to Y$，若对任意 $x_0 \in X$，$f$ 在 $x_0$ 处连续，则称 $f$ 在 $X$ 上\textbf{连续}\index{lianxu@连续}. 
+    
+    $X \to Y$ 的连续函数全体记为 $C(X;Y)$，当 $Y = \mathbb R$ 时简记为 $C(X)$. 
+\end{definition}
+
+我们用邻域的语言展开定义：
+\begin{align*}
+    \text{$f$ 在 $X$ 上连续} &\Longleftrightarrow \forall x_0 \in X, \forall \text{$f(x_0)$ 的邻域 $U$}, \exists \text{$x_0$ 的邻域 $U'$}, \text{s.t.} U' \subset f^{-1}(U), 
+\end{align*}
+即对任意 $x_0 \in X$，$f(x_0)$ 的任意邻域的原像为 $x_0$ 的邻域，这一叙述只与邻域有关. 我们希望将这一叙述进一步简化，这就促使我们考虑这样一类集合，其为其中每个点的邻域，我们将这类集合称为\textbf{开集}. 于是我们给出以下定义：
+
+\begin{definition}[度量空间上开集的定义] \label{def:open-set-ms}
+    设 $(S, d)$ 为度量空间，集合 $U \subset S$ 称为 $S$ 上的\textbf{开集}\index{kaiji@开集}，若对任意 $x \in U$，$U$ 为 $x$ 的邻域，即存在 $r > 0$ 使得开球 $B_r(x) \subset U$. 规定空集也为开集. 
+\end{definition}
+
+\begin{remark}
+    $S$ 上有两个平凡的开集：$\varnothing$ 和 $S$. 
+
+    利用三角不等式容易验证，$S$ 上的任意开球 $B_r(x)$ 均为 $S$ 上的开集，这也是我们称其为开球的原因. 
+    
+    每个开集 $U \subset S$ 都可以写为若干个开球之并：对每个 $x \in U$，取开球 $B_x \subset U$，则有 $U = \bigcup\limits_{x \in U} B_x$. 
+\end{remark}
+
+从前面的讨论中可以得到，对任意 $Y$ 上的开集 $U \subset Y$，任取 $x_0 \in f^{-1}(U)$，由于 $U$ 为 $f(x_0)$ 的邻域，所以 $f^{-1}(U)$ 为 $x_0$ 的邻域，从而 $f^{-1}(U)$ 为 $X$ 上的开集，因此 $f:X \to Y$ 连续的一个必要条件是任意 $Y$ 上的开集的原像为 $X$ 上的开集. 事实上，这一条件也是充分的，于是下面的命题给出了连续函数的一个简洁的等价刻画. 
+
+\begin{proposition}[度量空间上的连续函数的等价刻画] \label{prop:cont-func-open-set-ms}
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，则函数 $f:X \to Y$ 在 $X$ 上连续当且仅当对任意 $Y$ 上的开集 $U \subset Y$，$f^{-1}(U)$ 为 $X$ 上的开集. 
+\end{proposition}
+
+\begin{proof}
+    只需再证充分性. 对任意 $x_0 \in X$，对任意 $\eps > 0$，由于 $U(f(x_0), \eps)$ 为 $Y$ 上的开集，由条件可知 $f^{-1}(U(f(x_0), \eps))$ 为 $X$ 上的开集，又因为 $x_0 \in f^{-1}(U(f(x_0), \eps))$，所以存在 $\delta > 0$ 使得 $U(x_0, \delta) \subset f^{-1}(U(f(x_0), \eps))$，由定义~\ref{def:lim-func-ms-nbh}，$\lim\limits_{x \to x_0} f(x) = f(x_0)$，于是 $f$ 在 $X$ 上连续. 
+\end{proof}
+
+从命题~\ref{prop:cont-func-open-set-ms} 中我们可以看到，连续函数的定义可以只依赖开集这一概念，因此我们希望将开集这一概念抽象出来，用于定义一种新的空间，从而在新的空间上定义连续函数. 为此，我们需要考察开集的基本性质. 
+
+\begin{proposition}[度量空间上开集的性质]
+    设 $(S, d)$ 为度量空间，则 $S$ 上任意多个开集的并集仍为开集，有限个开集的交集仍为开集. 
+\end{proposition}
+
+\begin{proof}
+    设 $\{U_i\}_{i \in I}$ 为一系列 $S$ 上的开集，其中 $I$ 为指标集，则对任意 $x \in \bigcup\limits_{i \in I} U_i$，设 $x \in U_i$，则存在开球 $B_r(x) \subset U_i \subset \bigcup\limits_{i \in I} U_i$，所以 $\bigcup\limits_{i \in I} U_i$ 为开集. 
+
+    设 $U_1, \dots, U_n$ 为 $S$ 上的开集，对任意 $x \in \bigcap\limits_{i \in I} U_i$，存在 $r_1, \dots, r_n > 0$ 使得 $B_{r_i}(x) \subset U_i$，令 $r = \min\{r_1, \dots, r_n\} > 0$，则 $B_r(x) \subset \bigcap\limits_{i \in I} U_i$，所以 $\bigcap\limits_{i \in I} U_i$ 为开集. 
+\end{proof}
+
+\begin{remark}
+    无限个开集的交不一定是开集，例如对 $U_n = (-1 / n, 1 / n)$， $\bigcap\limits_{n \geqslant 1} U_n = \{0\}$，不为开集. 
+\end{remark}
+
+根据上面的性质，我们抽象出以下定义：
+
+\begin{definition}[拓扑与拓扑空间的定义]
+    设 $X$ 为非空集合，$X$ 的一个子集族 $\mathcal{T} \subset \mathcal{P}(X)$ 称为 $X$ 上的一个\textbf{拓扑}\index{tuopu@拓扑}，若其满足
+    \begin{enumerate}[label=(\alph*)]
+        \item $\varnothing, X \in \mathcal{T}$；
+        \item $\mathcal{T}$ 关于任意并封闭，即 $\mathcal{T}$ 中任意多个元素的并集仍在 $\mathcal{T}$ 中；
+        \item $\mathcal{T}$ 关于有限交封闭，即 $\mathcal{T}$ 中有限个元素的交集仍在 $\mathcal{T}$ 中. 
+    \end{enumerate}
+    集合 $X$ 配以拓扑 $\mathcal{T}$ 称为一个\textbf{拓扑空间}\index{tuopu@拓扑!tuopukongjian@拓扑空间}，记为 $(X, \mathcal{T})$，$\mathcal{T}$ 中的元素称为拓扑空间 $(X, \mathcal{T})$ 上的\textbf{开集}\index{kaiji@开集}. 在拓扑明确时，可将拓扑空间 $(X, \mathcal{T})$ 简记为 $X$. 
+\end{definition}
+
+下面是一些拓扑空间的例子. 
+
+\begin{example}[拓扑空间的例子]
+    \ 
+    \begin{enumerate}[label=(\alph*)]
+        \item $\{X, \varnothing\}$ 为 $X$ 上的拓扑，称为平凡拓扑. 
+        \item $\mathcal{P}(X)$ 为 $X$ 上的拓扑，称为离散拓扑. 
+        \item 一个度量空间 $(S, d)$ 上的开集全体构成一个拓扑，称为由度量 $d$ 诱导的度量拓扑，记为 $\mathcal{T}_d$. 例~\ref{ex:metric-space} 的 (d) 中的离散度量诱导的度量拓扑即为离散拓扑. 但是并非所有拓扑都是由度量诱导的. 
+    \end{enumerate}
+\end{example}
+
+我们再定义一些基本概念，由于度量自动诱导一个拓扑，这些概念也可以在度量空间中使用. 后续我们将多次用到这些基本概念. 
+
+\begin{definition}[拓扑空间上闭集的定义]
+    设 $(X, \mathcal{T})$ 为拓扑空间，子集 $A \subset X$ 称为\textbf{闭集}\index{biji@闭集}，若 $A^c \in \mathcal{T}$. 
+\end{definition}
+
+\begin{remark}
+    由开集的性质可知闭集关于任意交和有限并封闭. 
+
+    $X$ 上有两个平凡的闭集：$\varnothing$ 和 $X$. 
+\end{remark}
+
+\begin{definition}[拓扑空间上邻域的定义]
+    设 $(X, \mathcal{T})$ 为拓扑空间，对 $x \in X$，子集 $U \subset X$ 称为 $x$ 的一个\textbf{邻域}\index{linyu@邻域}，若存在开集 $V \in \mathcal{T}$ 使得 $x \in V$ 且 $V \subset U$. 
+\end{definition}
+
+\begin{remark}
+    容易验证，以上定义与定义~\ref{def:nbh-ms} 相容. 
+
+    由以上定义可知每个开集都是其中每个点的邻域. 
+
+    由于拓扑空间中可以定义邻域，因此我们也可以在拓扑空间中定义极限，但拓扑空间中极限的性质较差，甚至可能不具有唯一性（如在平凡拓扑下），所以我们不在拓扑空间中讨论极限. 
+\end{remark}
+
+\begin{definition}[集合的内部与闭包的定义] \label{def:interior-closure}
+    设 $(X, \mathcal{T})$ 为拓扑空间，$A \subset X$ 为 $X$ 的子集. 定义 $A$ 的\textbf{内部}\index{neibu@内部}为包含于 $A$ 的最大开集，即所有包含于 $A$ 的开集的并，记为 $A^\circ$. 定义 $A$ 的\textbf{闭包}\index{bibao@闭包}为包含 $A$ 的最小闭集，即所有包含 $A$ 的闭集的交，记为 $\overline{A}$. 
+\end{definition}
+
+\begin{remark}
+    以上定义依赖开集对任意并的封闭性以及闭集对任意交的封闭性，体现了数学中一种常用的定义方法：若某类集合对任意交封闭，则可定义包含给定集合的最小的该类集合；若对任意并封闭，则可定义包含于给定集合的最大的该类集合. 我们后续还会见到许多类似的定义，如生成 $\sigma$ 代数这一概念的定义. 
+
+    容易证明，$A$ 为开集当且仅当 $A = A^\circ$，$A$ 为闭集当且仅当 $A = \overline{A}$. 
+\end{remark}
+
+上面的定义略显抽象，我们通过下面的命题给出内部与闭包的常用等价刻画：
+
+\begin{proposition}[集合的内部与闭包的等价刻画] \label{prop:interior-closure-nbh}
+    设 $(X, \mathcal{T})$ 为拓扑空间，$A \subset X$ 为 $X$ 的子集. 对 $x \in X$，$x \in A^\circ$ 当且仅当 $A$ 为 $x$ 的邻域，$x \in \overline{A}$ 当且仅当对任意 $x$ 的邻域 $U$，$U \cap A \neq \varnothing$. 
+\end{proposition}
+
+\begin{proof}
+    根据定义~\ref{def:interior-closure}，$x \in A^\circ$ 当且仅当存在开集 $U \subset A$ 使得 $x \in U$，即 $A$ 为 $x$ 的邻域. 
+
+    由定义~\ref{def:interior-closure}，
+    $$
+    \overline{A} = \bigcap\limits_{U^c \supset A} U^c = \bigcap\limits_{U \subset A^c} U^c, 
+    $$
+    则 
+    $$
+    (\overline{A})^c = \big( \bigcap\limits_{U \subset A^c} U^c \big)^c = \bigcup\limits_{U \subset A^c} U = (A^c)^\circ, 
+    $$
+    其中 $U$ 表示开集. 于是 $x \in \overline{A}$ 当且仅当 $x \notin (A^c)^\circ$，当且仅当对任意包含 $x$ 的开集 $U$，$U \not\subset A^c$，即 $U \cap A \neq \varnothing$（由对内部的等价刻画可得），显然这等价于对任意 $x$ 的邻域 $U$，$U \cap A \neq \varnothing$. 
+\end{proof}
+
+\begin{remark} \label{rem:1.5.7}
+    在上面的证明中，我们得到 $(\overline{A})^c = (A^c)^\circ$，将 $A$ 与 $A^c$ 互换，有 $A^\circ = (\overline{A^c})^c$，即 $A^\circ$ 与 $\overline{A^c}$ 互补. 
+
+    由以上等价刻画可知，$x \in \overline{A}$ 当且仅当 $x \in A$ 或 $x$ 为 $A$ 的聚点. 进一步，$A$ 为闭集当且仅当 $A$ 包含其所有聚点. 
+\end{remark}
+
+利用闭包的概念，我们可以重新定义稠密子集的概念：
+
+\begin{definition}[稠密子集的拓扑定义]
+    设 $(X, \mathcal{T})$ 为拓扑空间，$A \subset X$ 称为 $X$ 的\textbf{稠密子集}\index{choumiziji@稠密子集}，若 $\overline{A} = X$. 
+\end{definition}
+
+利用内部与闭包的概念，我们定义集合的边界：
+
+\begin{definition}
+    设 $(X, \mathcal{T})$ 为拓扑空间，$A \subset X$ 为 $X$ 的子集，$A$ 的\textbf{边界}\index{bianjie@边界}定义为 $\overline{A} \setminus A^\circ$，记为 $\partial A$. 
+\end{definition}
+
+由命题~\ref{prop:interior-closure-nbh} 容易得到边界的等价刻画：
+
+\begin{proposition}[集合的边界的等价刻画]
+    设 $(X, \mathcal{T})$ 为拓扑空间，$A \subset X$ 为 $X$ 的子集，则 $x \in \partial A$ 当且仅当对任意 $x$ 的邻域 $U$，$U \cap A \neq \varnothing$ 且 $U \cap A^c \neq \varnothing$. 
+\end{proposition}
+
+一个拓扑空间中的拓扑可在子集上诱导出子集上的一个拓扑，从而使子集也成为拓扑空间，于是我们给出拓扑子空间的定义：
+
+\begin{definition}[拓扑子空间的定义]
+    设 $(X, \mathcal{T})$ 为拓扑空间，$A \subset X$ 为 $X$ 的子集，定义 
+    $$
+    \mathcal{T}_A = \{U \cap A \mid U \in \mathcal{T}\}, 
+    $$
+    则 $(A, \mathcal{T}_A)$ 为拓扑空间，称为 $(X, \mathcal{T})$ 的\textbf{拓扑子空间}，$\mathcal{T}_A$ 称为拓扑 $\mathcal{T}$ 在子集 $A$ 上诱导的\textbf{子空间拓扑}\index{tuopu@拓扑!zikongjiantuopu@子空间拓扑}. 为与 $\mathcal{T}$ 中的元素区分，我们将 $\mathcal{T}_A$ 中的元素称为 $A$ 的相对开集或 $A$ 上的开集. 
+\end{definition}
+
+\begin{remark} \label{rem:1.5.8}
+    $\mathcal{T}_A$ 为拓扑可由 $\bigcup\limits_{i \in I} (U_i \cap A) = \big(\bigcup\limits_{i \in I} U_i\big) \cap A$ 以及 $\bigcap\limits_{i \in I} (U_i \cap A) = \big(\bigcap\limits_{i \in I} U_i\big) \cap A$ 得到. 
+
+    可以验证，对度量空间 $(S, d)$ 的子集 $A$，度量 $d|_A$ 在 $A$ 上诱导的度量拓扑 $\mathcal{T}_{d|_A}$ 恰为 $d$ 在 $S$ 上诱导的度量拓扑 $\mathcal{T}_{d}$ 在子集 $A$ 上诱导的子空间拓扑. 
+
+    设 $B \subset A \subset X$，容易证明，$\mathcal{T}_A$ 在 $B$ 上诱导的子空间拓扑与 $\mathcal{T}$ 在 $B$ 上诱导的子空间拓扑 $\mathcal{T}_B$ 是相同的. 因此在讨论拓扑空间的嵌套子集时，我们不必区分子空间拓扑是由哪个集合上的拓扑诱导的，而可以认为子空间拓扑都是由原空间上的拓扑诱导的. 
+\end{remark}
+
+此后对拓扑空间的子集，我们对其赋予子空间拓扑，从而将其看作拓扑空间. 
+
+下面是一些子空间拓扑的例子. 
+
+\begin{example}[子空间拓扑的例子]
+    \ 
+    \begin{enumerate}[label = (\alph*)]
+        \item 在 $\mathbb R$ 上的度量拓扑在区间 $I = [0, 1)$ 上诱导的子空间拓扑下，对任意 $0 < a \leqslant 1$，$[0, a)$ 为 $I$ 上的开集，因为 $[0, a) = (-\infty, a) \cap I$，而 $(-\infty, a)$ 为 $\mathbb R$ 上的开集. 
+        \item 若 $A \subset X$ 为开集，则 $B \subset A$ 为子空间拓扑 $\mathcal{T}_A$ 下的开集当且仅当 $B$ 为 $X$ 上的开集；若 $A \subset X$ 为闭集，则 $B \subset A$ 为子空间拓扑 $\mathcal{T}_A$ 下的闭集当且仅当 $B$ 为 $X$ 上的闭集. 
+    \end{enumerate}
+\end{example}
+
+根据命题~\ref{prop:cont-func-open-set-ms}，我们给出拓扑空间上的连续映射的定义：
+
+\begin{definition}[拓扑空间上的连续映射的定义] \label{def:continuous-map-topo}
+    设 $(X, \mathcal{T}_X), (Y, \mathcal{T}_Y)$ 为拓扑空间，映射 $f:X \to Y$ 称为\textbf{连续}\index{lianxu@连续}的，若对任意 $U \in \mathcal{T}_Y$，$f^{-1}(U) \in \mathcal{T}_X$. 
+\end{definition}
+
+\begin{remark}
+    上述定义也可写为：映射 $f:X \to Y$ 称为连续的，若 $f^{-1}(\mathcal{T}_Y) \subset \mathcal{T}_X$，其中 $f^{-1}(\mathcal{T}_Y)$ 表示 $\{f^{-1}(U) \mid U \in \mathcal{T}_Y\}$
+
+    简单来说，上述定义即开集的原像是开集. 我们还可以证明，$f$ 连续当且仅当闭集的原像是闭集. 
+
+    需要注意的是，若 $X$ 或 $Y$ 是某个拓扑空间的子空间，定义中的“开集”应为子空间拓扑下的开集，而不是原空间拓扑下的开集. 
+
+    我们通过原像而不是像来定义连续映射，是因为原像保持集合的交与并，而像通常不保持集合的交. 
+\end{remark}
+
+容易证明，连续映射的复合也是连续映射，连续映射在子空间上的限制也是连续的. 
+
+接下来我们讨论连续映射的基本性质. 但在那之前，我们需要定义一些重要的拓扑性质. 
+
+首先我们定义“连通”. 直观上的连通，有两种可能的含义：其一是图形不能被分为相互不相连的两部分，其二是图形上任意两点都可以用图形上的曲线连接. 这两种性质在拓扑学中分别被抽象为“\textbf{连通性}”和“\textbf{道路连通性}”. 
+
+\begin{definition}[连通的定义]
+    拓扑空间 $(X, \mathcal{T})$ 称为\textbf{连通}\index{liantong@连通}的，若其不能被分解为两个不相交的非空开集的并. 
+\end{definition}
+
+\begin{remark}
+    由于我们已经定义了子空间拓扑，所以我们也可以对拓扑空间的子集定义连通性，只需将以上定义应用于子空间拓扑. 拓扑空间的连通子集称为连通集. 
+\end{remark}
+
+我们有以下对连通的等价刻画：
+
+\begin{proposition}[连通的等价刻画]
+    设 $(X, \mathcal{T})$ 为拓扑空间，以下等价：
+    \begin{enumerate}[label = (\alph*)]
+        \item $X$ 是连通的；
+        \item $X$ 不能被分解为两个非空不相交的闭集的并；
+        \item $X$ 中既开又闭的集合只有 $\varnothing$ 和 $X$. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    (a) 与 (b) 显然等价（取补集即可）. 而 $X$ 中存在既开又闭的非空真子集 $A$ 当且仅当 $A$ 与 $A^c$ 都是开集，这等价于 $X = A \cup A^c$ 不连通，所以 (a) 与 (c) 等价. 
+\end{proof}
+
+为了定义道路连通，我们需要先定义“道路”. 
+
+\begin{definition}[道路的定义]
+    设 $(X, \mathcal{T})$ 为拓扑空间，连续映射 $\gamma:[0, 1] \to X$ 称为 $X$ 上的一条\textbf{道路}\index{daolu@道路}. $\gamma(0)$ 与 $\gamma(1)$ 分别称为 $\gamma$ 的起点与终点，我们称 $\gamma$ 为 $X$ 上一条连接 $\gamma(0)$ 与 $\gamma(1)$ 的道路. 
+\end{definition}
+
+\begin{remark}
+    在以上定义中，$[0, 1]$ 上的拓扑取 $\mathbb R$ 上的度量拓扑在 $[0, 1]$ 上诱导的子空间拓扑. 
+
+    “道路”实际上是从“曲线”这一概念抽象出来的. 
+\end{remark}
+
+\begin{definition}[道路连通的定义] \label{def:path-connected}
+    拓扑空间 $(X, \mathcal{T})$ 称为\textbf{道路连通}\index{daoluliantong@道路连通}的，若任意 $x, y \in X$，存在 $X$ 上连接 $x$ 与 $y$ 的道路. 
+\end{definition}
+
+\begin{remark}
+    我们同样可以利用子空间拓扑对拓扑空间的子集定义道路连通性，拓扑空间的道路连通子集称为道路连通集. 
+\end{remark}
+
+由定义~\ref{def:continuous-map-topo} 容易证明，道路连通的拓扑空间是连通的，但反之不一定成立. 
+
+下面的例子给出了 $\mathbb R$ 上的连通集的具体形式：
+
+\begin{example} \label{ex:connected-set-R}
+    $\mathbb R$ 上的连通集必为区间. 
+    
+    显然所有的区间是道路连通的，从而是连通的（对任意 $a, b \in I$，$\gamma(t) = (1 - t)a + tb$ 为 $I$ 上连接 $a, b$ 的道路）. 反之，设 $A \subset \mathbb R$ 连通，则对任意 $a, b \in A$，$A$ 包含 $a, b$ 之间的每个实数. 否则，不妨设 $a < b$，则存在 $a < c < b$ 使得 $c \notin A$，则 $A = (A \cap (-\infty, c)) \cup (A \cap (c, +\infty))$ 将 $A$ 分解为两个不相交的非空开集之并，这与 $A$ 连通矛盾. 因此，$A$ 包含 $\inf A$ 与 $\sup A$ 之间的每个实数，从而 $A$ 必然形如 $(\inf A, \sup A), (\inf A, \sup A], [\inf A, \sup A)$ 或 $[\inf A, \sup A]$，从而 $A$ 为区间. 
+\end{example}
+
+下面我们定义一个极其重要的概念：\textbf{紧致性}（紧性）. 这一概念是分析学的核心概念之一，我们在后面的章节会看到它的巨大作用. 
+
+在定义拓扑空间的紧致性之前，我们需要定义覆盖：
+
+\begin{definition}[覆盖的定义]
+    设 $(X, \mathcal{T})$ 为拓扑空间，子集族 $\mathcal{U} \subset \mathcal{P}(X)$ 称为 $X$ 的一个\textbf{覆盖}\index{fugai@覆盖}，若 $\bigcup\limits_{U \in \mathcal{U}} U = X$. 
+    
+    若覆盖 $\mathcal{U}$ 为有限集，则称 $\mathcal{U}$ 为\textbf{有限覆盖}. 若覆盖 $\mathcal{U}$ 中的集合均为开集，则称 $\mathcal{U}$ 为\textbf{开覆盖}. 
+    
+    对覆盖 $\mathcal{U}$，若子族 $\mathcal{U}' \subset \mathcal{U}$ 也为 $X$ 的一个覆盖，则称 $\mathcal{U}'$ 为 $\mathcal{U}$ 的一个\textbf{子覆盖}. 
+\end{definition}
+
+然后我们定义拓扑空间的紧致性. 
+
+\begin{definition}[紧致的定义] \label{def:compact}
+    拓扑空间 $(X, \mathcal{T})$ 称为\textbf{紧致}\index{jinzhi@紧致}的，若 $X$ 的任意开覆盖都存在有限子覆盖. 
+\end{definition}
+
+\begin{remark}
+    我们同样可以利用子空间拓扑对拓扑空间的子集定义紧致性，拓扑空间的紧致子集称为紧集. 
+\end{remark}
+
+容易证明以下命题：
+
+\begin{proposition} \label{prop:closed-subset-compact}
+    紧致的拓扑空间的闭子集也是紧致的. 
+\end{proposition}
+
+至此，我们已经建立了我们所需要的所有概念，可以正式开始讨论拓扑空间上连续映射的性质. 
+
+拓扑空间上的连续映射有以下性质：
+
+\begin{theorem}[拓扑空间上的连续映射的性质] \label{thm:continuous-map-topo}
+    设 $f$ 为拓扑空间上的连续映射，则
+    \begin{enumerate}[label = (\alph*)]
+        \item $f$ 将连通集映射到连通集；
+        \item $f$ 将道路连通集映射到道路连通集；
+        \item $f$ 将紧集映射到紧集. 
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    设 $f:X \to Y$，不妨设 $f(X) = Y$. 
+    \begin{enumerate}[label = (\alph*)]
+        \item 设 $X$ 连通，只需证明 $Y$ 连通. 假设 $Y$ 不连通，则存在 $Y$ 的非空真子集 $A$ 使得 $A$ 与 $A^c$ 均为开集，由定义~\ref{def:continuous-map-topo}，$f^{-1}(A)$ 与 $f^{-1}(A^c)$ 均为开集，且 $f^{-1}(A) \cup f^{-1}(A^c) = f^{-1}(A \cup A^c) = X$，从而 $X$ 被分解为两个非空开集之并，这与 $X$ 连通矛盾. 
+
+        \item 设 $X$ 道路连通，只需证明 $Y$ 道路连通. 对任意 $y_1, y_2 \in Y$，取 $x_1, x_2 \in X$ 使得 $f(x_1) = y_1, f(x_2) = y_2$，由定义~\ref{def:path-connected}，存在 $X$ 上的道路 $\gamma$，使得 $\gamma(0) = x_1, \gamma(1) = x_2$，于是 $\widetilde{\gamma} = f \circ \gamma$ 为 $Y$ 上的道路，且 $\widetilde{\gamma}(0) = y_1, \widetilde{\gamma}(1) = y_2$，所以 $Y$ 是道路连通的. 
+
+        \item 设 $X$ 是紧致的，只需证明 $Y$ 紧致. 对任意 $Y$ 的开覆盖 $\mathcal{U}$，由定义~\ref{def:continuous-map-topo}，$f^{-1}(\mathcal{U})$ 为 $X$ 的开覆盖，由定义~\ref{def:compact}，$f^{-1}(\mathcal{U})$ 存在有限子覆盖 $f^{-1}(\mathcal{U}')$，其中 $\mathcal{U}' \subset \mathcal{U}$ 且 $\mathcal{U}'$ 为有限集，此时容易验证 $\mathcal{U}'$ 为 $Y$ 的开覆盖，从而 $\mathcal{U}'$ 为 $\mathcal{U}$ 的有限子覆盖，这就证明了 $Y$ 是紧致的. \qedhere
+    \end{enumerate}
+\end{proof}
+
+简单来说，连续映射保持连通性、道路连通性与紧致性. 所谓拓扑性质，正是那些在连续映射下不变的性质，因此我们说连通性、道路连通性与紧致性是拓扑性质. 
+
+拓扑空间中的紧致性的定义略显抽象，下面我们给出一个在度量空间中与紧致性等价的性质. 
+
+\begin{definition}[度量空间的列紧性的定义]
+    度量空间 $(S, d)$ 称为\textbf{列紧}\index{liejin@列紧}的，若任意 $S$ 上的序列都存在收敛子列. 
+\end{definition}
+
+\begin{remark}
+    利用度量子空间的概念，我们可以对度量空间的子集定义列紧性. 
+\end{remark}
+
+利用命题~\ref{prop:cont-swap-lim} 可以证明，度量空间上的连续函数将列紧集映射到列紧集. 
+
+下面的定理给出了度量空间中紧致性与列紧性的等价性，因此我们之后在度量空间中不再单独提到列紧集. 
+
+\begin{theorem} \label{thm:compact-equiv-seqcompact-ms}
+    设 $(S, d)$ 为度量空间，则 $S$ 是紧致的当且仅当 $S$ 是列紧的. 
+\end{theorem}
+
+\begin{proof}
+    定理的证明比较复杂，我们分多个步骤证明. 
+
+    \begin{enumerate}[label = (\arabic*)]
+        \item 紧致的度量空间 $(S, d)$ 是列紧的. 
+        
+        设 $\{x_n\} \subset S$ 为 $S$ 上的点列. 首先证明存在 $x \in S$ 使得任意 $x$ 的邻域都包含 $\{x_n\}$ 的无穷多项. 否则，对每个 $x \in S$，取 $x$ 的开邻域 $U_x$ 使得 $U_x$ 只包含 $\{x_n\}$ 的有限项，则 $\{U_x\}_{x \in S}$ 为 $S$ 的一个开覆盖，但 $\{U_x\}_{x \in S}$ 的任意有限子族都无法覆盖 $\{x_n\}$ 的所有项，进而无法覆盖 $S$，因此 $\{U_x\}_{x \in S}$ 不存在有限子覆盖，这与 $S$ 紧致矛盾. 
+
+        此时取 $x \in S$ 使得任意 $x$ 的邻域都包含 $\{x_n\}$ 的无穷多项，令 $B_n = B_{1 / n}(x)$，取 $n_1$ 使得 $x_{n_1} \in B_1$，然后归纳地取 $n_{k + 1}$ 使得 $x_{n_{k + 1}} \in B_{k + 1}$ 且 $n_{k + 1} > n_k$，这样就得到了 $\{x_n\}$ 的一个收敛于 $x$ 的子列 $\{x_{n_k}\}$. 因此 $S$ 是列紧的. 
+
+        反方向的证明则更加复杂. 
+
+        \item 列紧的度量空间 $(S, d)$ 是\textbf{完全有界}\index{wanquanyoujie@完全有界}的，即对任意 $\delta > 0$，存在有限子集 $A \subset S$ 使得开球族 $\{B_\delta(x)\}_{x \in A}$ 为 $S$ 的一个覆盖. 
+        
+        我们用反证法. 否则，存在 $\delta_0 > 0$，对任意 $S$ 的有限子集 $A$，存在 $x \in S$ 使得 $d(x, y) \geqslant \delta_0,\ \forall y \in A$. 用归纳法构造序列 $\{x_n\}$：任取 $x_1 \in S$，假设已选取 $x_1, \dots, x_n$，取 $x_{n + 1} \in S$ 使得 $d(x_{n + 1}, x_i) \geqslant \delta_0,\ \forall 1 \leqslant i \leqslant n$. 序列 $\{x_n\}$ 满足 $d(x_i, x_j) \geqslant \delta_0,\ \forall i \neq j$，显然 $\{x_n\}$ 无收敛子列，这与 $S$ 列紧矛盾. 
+
+        \item 设 $\mathcal{U}$ 是列紧度量空间 $(S, d)$ 的一个开覆盖，且 $S \notin \mathcal{U}$，定义 $\varphi_\mathcal{U}:S \to \mathbb R,\ x \mapsto \sup\limits_{U \in \mathcal{U}} d(x, U^c)$，其中 $d(x, U^c) := \inf\limits_{u \in U^c} d(x, u)$，则 $\varphi_\mathcal{U}$ 连续且有最小值 $L(\mathcal{U}) > 0$. $L(\mathcal{U})$ 称为 $\mathcal{U}$ 的 \textbf{Lebesgue 数}. 
+        
+        先证 $\varphi_\mathcal{U}$ 连续. 对 $x, y \in S$，
+        $$
+        d(y, U^c) = \inf\limits_{u \in U^c} d(y, u) \leqslant \inf\limits_{u \in U^c} (d(x, u) + d(x, y)) = d(x, U^c) + d(x, y), 
+        $$
+        则
+        $$
+        \varphi_\mathcal{U}(y) = \sup\limits_{U \in \mathcal{U}} d(y, U^c) \leqslant \sup\limits_{U \in \mathcal{U}} (d(x, U^c) + d(x, y)) = \varphi_\mathcal{U}(x) + d(x, y), 
+        $$
+        利用度量的对称性即有 $|\varphi_\mathcal{U}(x) - \varphi_\mathcal{U}(y)| \leqslant d(x, y)$，由此可知 $\varphi_\mathcal{U}$ 连续. 
+
+        由定义~\ref{def:sup-inf-equiv}，存在序列 $\{x_n\} \subset S$ 使得 $\varphi_\mathcal{U}(x_n) \to \inf\limits_{x \in S} \varphi_\mathcal{U}(x) > -\infty$. 由于 $S$ 是列紧的，$\{x_n\}$ 存在收敛子列 $\{x_{n_k}\}$，设 $x_{n_k} \to x_0 \in S$，则由命题~\ref{prop:cont-swap-lim}，
+        $$
+        \varphi_\mathcal{U}(x_0) = \lim\limits_{k \to +\infty} \varphi_\mathcal{U}(x_{n_k}) = \inf\limits_{x \in S} \varphi_\mathcal{U}(x), 
+        $$
+        即 $\varphi_\mathcal{U}$ 在 $x_0$ 处取到最小值. 由于 $\mathcal{U}$ 为 $S$ 的开覆盖，存在 $U \in \mathcal{U}$ 使得 $x_0 \in U$，容易证明 $d(x_0, U^c) > 0$，则 $L(\mathcal{U}) = \varphi_\mathcal{U}(x_0) \geqslant d(x_0, U^c) > 0$. 
+
+        \item 列紧的度量空间 $(S, d)$ 是紧致的. 
+        
+        设 $\mathcal{U}$ 为 $S$ 的一个开覆盖，不妨设 $S \notin \mathcal{U}$（否则 $\{S\}$ 即为 $\mathcal{U}$ 的一个有限子覆盖）. 取 $0 < \delta < L(\mathcal{U})$，并取有限子集 $A = \{x_1, \dots, x_n\} \subset S$ 使得开球族 $\{B_\delta(x_i) \mid 1 \leqslant i \leqslant n\}$ 为 $S$ 的一个覆盖，则由 $L(\mathcal{U})$ 的定义可知，对每个 $i$，存在 $U_i \in \mathcal{U}$ 使得 $d(x_i, U_i^c) > \delta$，从而 $B_\delta(x_i) \subset U_i$，则 $\bigcup\limits_{i = 1}^{n} U_i \supset \bigcup\limits_{i = 1}^{n} B_\delta(x_i) = X$，所以 $\{U_i \mid 1 \leqslant i \leqslant n\}$ 为 $\mathcal{U}$ 的一个子覆盖. \qedhere
+    \end{enumerate}
+\end{proof}
+
+下面的例子给出了 $\mathbb R$ 上的紧集的具体形式：
+
+\begin{example} \label{ex:compact-set-R}
+    $\mathbb R$ 上的紧集必为有界闭集. 
+
+    由 Bolzano-Weierstrass 定理和注记~\ref{rem:1.5.7} 可知 $\mathbb R$ 上的有界闭集都是列紧的，从而是紧的. 反之，设 $A \subset \mathbb R$ 为紧集，则 $A$ 有界（否则存在趋于无穷的序列），同时，对 $A$ 的每个聚点 $x$，$A$ 上存在趋于 $x$ 的序列，由于 $A$ 是列紧的，必有 $x \in A$，于是 $A$ 包含其所有聚点，从而 $A$ 是闭集. 
+\end{example}
+
+在度量空间上，我们在一般的连续性之外，还可以定义\textbf{一致连续性}：
+
+\begin{definition}[一致连续的定义]
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，称函数 $f:X \to Y$ 在 $X$ 上\textbf{一致连续}\index{yizhilianxu@一致连续}，若对任意 $\eps > 0$，存在 $\delta = \delta(\eps) > 0$，使得对任意 $x_1, x_2 \in X$ 满足 $d_X(x_1, x_2) < \delta$ 均成立 $d_Y(f(x_1), f(x_2)) < \eps$. 
+\end{definition}
+
+这里的“一致”，即存在一个只与 $\eps$ 有关，而与位置无关的 $\delta$，使得只要两点间距离小于 $\delta$，即有两点对应的函数值的距离小于 $\eps$. 
+
+我们可以用确界与极限重述以上定义：
+
+\begin{definition}[一致连续的定义的重述]
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，称函数 $f:X \to Y$ 在 $X$ 上\textbf{一致连续}，若 
+    $$
+    \lim_{\delta \to 0^+} \sup_{d_X(x_1, x_2) < \delta} d_Y(f(x_1), f(x_2)) = 0. 
+    $$
+\end{definition}
+
+下面的定理表明紧集上的连续函数必是一致连续的. 
+
+\begin{theorem}[Heine-Cantor 定理] \label{thm:Heine-Cantor} \index{Heine-Cantor dingli@Heine-Cantor 定理}
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，且 $X$ 是紧致的，函数 $f:X \to Y$ 连续，则 $f$ 在 $X$ 上一致连续. 
+\end{theorem}
+
+\begin{proof}[证明 1]
+    我们采用反证法. 假设 $f$ 不一致连续，则存在 $\eps_0 > 0$，对任意 $\delta > 0$，存在 $x, y \in X$ 满足 
+    $$
+    d_X(x, y) < \delta,\quad d_Y(f(x), f(y)) \geqslant \eps_0, 
+    $$
+    取 $\delta = 1 / n$，得到相应的 $x_n, y_n$，则序列 $\{x_n\}, \{y_n\}$ 满足 
+    $$
+    d_X(x_n, y_n) < 1 / n,\quad d_Y(f(x_n), f(y_n)) \geqslant \eps_0, 
+    $$
+    由定理~\ref{thm:compact-equiv-seqcompact-ms}，$X$ 是列紧的，因此 $\{x_n\}$ 存在收敛子列 $\{x_{n_k}\}$，设 $x_{n_k} \to z \in X$，则 $d_X(y_{n_k}, z) \leqslant d_X(x_{n_k}, z) + d_X(x_{n_k}, y_{n_k}) \to 0$，从而也有 $y_{n_k} \to z$，由命题~\ref{prop:cont-swap-lim}，
+    $$
+    \lim_{k \to +\infty} f(x_{n_k}) = \lim_{k \to +\infty} f(y_{n_k}) = f(z), 
+    $$
+    于是
+    \begin{align*}
+        \varlimsup_{k \to +\infty} d_Y(f(x_{n_k}), f(y_{n_k})) \leqslant \varlimsup_{k \to +\infty} \big( d_Y(f(x_{n_k}), f(z)) + d_Y(f(y_{n_k}), f(z)) \big) = 0, 
+    \end{align*}
+    这与 $d_Y(f(x_{n_k}), f(y_{n_k})) \geqslant \eps_0$ 矛盾. 
+\end{proof}
+
+% 旧证明
+\begin{proof}[证明 2]
+    对任意 $\eps > 0$，由于 $f$ 连续，对每个 $x \in X$，存在 $\delta_x > 0$ 使得对任意 $y \in B_{\delta_x}(x)$ 成立 $d_Y(f(x), f(y)) < \eps / 2$，则由三角不等式，对任意 $y_1, y_2 \in B_{\delta_x}(x)$，
+    $$
+    d_Y(f(y_1), f(y_2)) \leqslant d_Y(f(x), f(y_1)) + d_Y(f(x), f(y_2)) < \eps. 
+    $$
+    由于 $X$ 是紧致的，可取开覆盖 $\mathcal{U} = \{B_{\delta_x}(x)\}_{x \in X}$ 的 Lebesgue 数 $L(\mathcal{U})$，取 $0 < \delta < L(\mathcal{U})$，则对任意 $x_1, x_2 \in X$ 满足 $d_X(x_1, x_2) < \delta$，由 $L(\mathcal{U})$ 的定义可知，存在 $U = B_{\delta_x}(x) \in \mathcal{U}$ 使得 $d_X(x_1, U^c) > \delta$，则 $x_1, x_2 \in U = B_{\delta_x}(x)$，从而 $d_Y(f(x_1), f(x_2)) < \eps$，所以 $f$ 在 $X$ 上一致连续. 
+\end{proof}
+
+\begin{remark}
+    证明 1 利用了列紧性，证明 2 则利用了紧致性的覆盖性质. 
+
+    非紧的集合上的连续函数不一定是一致连续的，例如 $f(x) = x^2$ 在 $\mathbb R$ 上不是一致连续的，因为对任意 $\delta > 0$，
+    $$
+    \sup\limits_{|x_1 - x_2| < \delta} |f(x_1) - f(x_2)| = +\infty; 
+    $$
+    而 $g(x) = x$ 在 $\mathbb R$ 上是一致连续的，因为 
+    $$
+    \lim\limits_{\delta \to 0^+} \sup\limits_{|x_1 - x_2| < \delta} |g(x_1) - g(x_2)| \leqslant \lim\limits_{\delta \to 0^+} \delta = 0. 
+    $$
+\end{remark}
+
+最后我们回到定义在 $\mathbb R$ 上的实值函数. 
+
+利用命题~\ref{prop:lim-num-seq-swap-op} 容易证明\textbf{四则运算}保持连续性：设 $f, g$ 为定义在 $\mathbb R$ 上的实值函数，若 $f, g$ 均在 $x_0$ 处连续，则 $f + g, \lambda f, fg$ 均在 $x_0$ 处连续；若还有 $g(x_0) \neq 0$，则 $f / g$ 在 $x_0$ 处连续. 
+
+由例~\ref{ex:connected-set-R} 和例~\ref{ex:compact-set-R} 可知，$\mathbb R$ 上连通的紧集必为闭区间，应用定理~\ref{thm:continuous-map-topo} 可知 $\mathbb R$ 上的连续函数将闭区间映射为闭区间，结合 Heine-Cantor 定理（定理~\ref{thm:Heine-Cantor}），我们可以得到\textbf{定义在闭区间上的实值连续函数的基本性质}：
+
+\begin{theorem}[连续函数基本定理] \label{thm:continuous-func-close-set}
+    设 $f:[a, b] \to \mathbb R$ 连续，则 $f$ 具有以下性质：
+    \begin{enumerate}[label = (\alph*)]
+        \item 有界性：$f$ 有界，即存在 $M > 0$ 使得对任意 $x \in [a, b]$ 成立 $|f(x)| \leqslant M$；
+        \item 最值存在性：$f$ 能够取到最大值与最小值，即存在 $x_1, x_2 \in [a, b]$ 使得 $f(x_1) = \inf\limits_{x \in [a, b]} f(x),\ f(x_2) = \sup\limits_{x \in [a, b]} f(x)$；
+        \item 介值性：$f$ 能取到最大值与最小值之间的任意值，特别地，$f$ 能取到 $f(a)$ 与 $f(b)$ 之间的任意值；
+        \item 一致连续性：$f$ 在 $[a, b]$ 上一致连续. 
+    \end{enumerate}
+\end{theorem}
+
+在这一节中我们看到，拓扑是“连续”这一概念真正依赖的数学结构，定义在闭区间上的连续函数的性质实际上是连续函数保持连通性与紧性的具体体现. 
+
+\section{内积、范数与度量}
+
+在数学分析中，我们所研究的空间（如 $\mathbb R^n$）往往具有比度量更加复杂的结构，因此在这一节中，我们将简要地介绍两个在数学分析中常见的能够诱导度量的数学结构：范数和内积，它们都依赖空间的线性结构. 
+
+我们先简要给出\textbf{线性空间}的定义：
+
+\begin{definition}[线性空间的定义] \index{xianxingkongjian@线性空间}
+    设 $F$ 是域，我们称集合 $V$ 上有一个 $F$ \textbf{线性空间}结构，若存在两个运算（加法 $+$ 与数乘 $\cdot$）满足如下条件：
+    \begin{enumerate}[label = (\arabic*)]
+        \item 加法运算 $+$ 是一个映射 $V \times V \to V,\ (\alpha, \beta) \mapsto \alpha + \beta$，满足
+        \begin{enumerate}
+            \item 加法交换律：对任意 $\alpha, \beta \in V$，$\alpha + \beta = \beta + \alpha$；  
+            \item 加法结合律：对任意 $\alpha, \beta, \gamma \in V$，$(\alpha + \beta) + \gamma = \alpha + (\beta + \gamma)$；  
+            \item 存在加法零元：存在一个元素 $0_V \in V$ 使得对任意 $\alpha \in V$，$0_V + \alpha = \alpha + 0_V = \alpha$；  
+            \item 存在加法逆元：对任意 $\alpha \in V$，存在一个元素 $\beta \in V$ 使得 $\alpha + \beta = \beta + \alpha = 0_V$，此 $\beta$ 记为 $-\alpha$. 
+        \end{enumerate}
+
+        \item 数乘运算 $\cdot$ 是一个映射 $F \times V \to V,\ (c, \alpha) \mapsto c \cdot \alpha = c \alpha$，满足
+        \begin{enumerate}
+            \item 单位乘法：对任意 $\alpha \in V$，$1_F \alpha = \alpha$；  
+            \item 数乘结合律：对任意 $c, c' \in F$ 及 $\alpha \in V$，$(cc') \alpha = c(c' \alpha) = c' (c \alpha)$；  
+            \item 分配律 1：对任意 $c \in F$ 及 $\alpha, \beta \in V$，$c(\alpha + \beta) = c \alpha + c \beta$；  
+            \item 分配律 2：对任意 $c, c' \in F$ 及 $\alpha \in V$，$(c + c') \alpha = c \alpha + c' \alpha$.   
+        \end{enumerate}
+    \end{enumerate}
+    记这个线性空间为 $(V/F, +, \cdot)$，在加法与数乘结构明确时，简记为 $V/F$ 或 $V$，称 $V$ 是\textbf{域 $F$ 上的线性空间}或 $F$ \textbf{线性空间}. 
+\end{definition}
+
+下面是一些例子：
+
+\begin{example}[线性空间的例子]
+    \ 
+    \begin{enumerate}[label = (\alph*)]
+        \item 取加法与数乘均为 $\mathbb R$ 上的乘法，$\mathbb R$ 可看作 $\mathbb Q$ 线性空间. 
+        \item $\mathbb R^n$ 配以通常的向量加法与数乘成为 $\mathbb R$ 线性空间. 
+        \item $C(\mathbb R)$ 配以加法 $(f + g)(x) = f(x) + g(x)$ 和数乘 $(cf)(x) = c \cdot f(x)$ 成为 $\mathbb R$ 线性空间. 
+    \end{enumerate}
+\end{example}
+
+在这一节中，$F$ 代表 $\mathbb R$ 或 $\mathbb C$. 
+
+接下来我们给出\textbf{范数}\index{fanshu@范数}的定义：
+
+\begin{definition}[范数的定义]
+    设 $V$ 为 $F$ 线性空间，一个 $V$ 上的\textbf{范数}是一个映射 $\|\cdot\|:V \to \mathbb R$，满足
+    \begin{enumerate}[label = (\alph*)]
+        \item $\|c\alpha\| = |c| \cdot \|\alpha\|,\ \forall c \in F, \alpha \in V$，其中 $|\cdot|$ 为 $F$ 上的绝对值函数（$\mathbb C$ 上为模长）；
+        \item $\|\alpha\| > 0,\ \forall \alpha \neq 0 \in V$；
+        \item 三角不等式：$\|\alpha + \beta\| \leqslant \|\alpha\| + \|\beta\|,\ \forall \alpha, \beta \in V$. 
+    \end{enumerate}
+    一个 $F$ 线性空间 $V$ 配以其上的一个范数，称为\textbf{赋范线性空间}\index{fanshu@范数!fufanxianxingkongjian@赋范线性空间}. 
+\end{definition}
+
+\begin{remark}
+    条件 (a) 蕴含 $\|0_V\| = 0$. 
+\end{remark}
+
+设 $V$ 为 $F$ 线性空间，$V$ 上的范数 $\|\cdot\|$ 可以诱导度量 
+$$
+d:V \times V \to \mathbb R,\ (\alpha, \beta) \mapsto \|\alpha - \beta\|, 
+$$
+其中三角不等式如下给出：
+$$
+d(\alpha, \beta) = \|\alpha - \beta\| = \|(\alpha - \gamma) + (\gamma - \beta)\| \leqslant \|\alpha - \gamma\| + \|\gamma - \beta\| = d(\alpha, \gamma) + d(\gamma, \beta). 
+$$
+由范数诱导的度量具有\textbf{平移不变性}与\textbf{齐次性}，即对任意 $\alpha, \beta, \gamma \in V, c \in F$，有
+$$
+d(\alpha + \gamma, \beta + \gamma) = d(\alpha, \beta),\quad d(c\alpha, c\beta) = c \cdot d(\alpha, \beta). 
+$$ 
+
+由于范数可以诱导度量，我们可以在赋范线性空间上讨论极限、完备性等概念. 完备的赋范线性空间称为 \textbf{Banach 空间}\index{Banach kongjian@Banach 空间}. 
+
+下面是一些范数的例子. 
+
+\begin{example}[范数的例子]
+    \ 
+    \begin{enumerate}[label = (\alph*)]
+        \item $\mathbb R$ 上的绝对值函数是 $\mathbb R$ 上的一个范数. 
+        \item 对 $p \geqslant 1$，在 $\mathbb R^n$ 上可以定义范数 $\|\cdot\|_p : \bs x = (x_1, \dots, x_n) \mapsto \|\bs x\|_p := (|x_1|^p + \cdots + |x_n|^p)^\frac{1}{p}$，称为 $p$-范数，三角不等式由 Minkowski 不等式给出. 当 $p = 2$ 时，范数即为 Euclid 范数；当 $p \to +\infty$ 时，范数成为 $\|\cdot\|_\infty : \bs x = (x_1, \dots, x_n) \mapsto \|\bs x\|_\infty := \max\{|x_1|, \dots, |x_n|\}$. 
+    \end{enumerate}
+\end{example}
+
+然后我们给出\textbf{内积}的定义：
+
+\begin{definition}[内积的定义]
+    设 $V$ 为 $F$ 线性空间，一个 $V$ 上的\textbf{内积}\index{neiji@内积}是一个映射 $\langle \cdot, \cdot \rangle:V \times V \to F$，满足
+    \begin{enumerate}[label = (\alph*)]
+        \item $\langle \alpha + \beta, \gamma \rangle = \langle \alpha, \gamma \rangle + \langle \beta, \gamma \rangle,\ \forall \alpha, \beta, \gamma \in V$；
+        \item $\langle c\alpha, \beta \rangle = c \langle \alpha, \beta \rangle,\ \forall \alpha, \beta \in V$；
+        \item $\langle \beta, \alpha \rangle = \overline{\langle \alpha, \beta \rangle},\ \forall \alpha, \beta \in V$；
+        \item $\langle \alpha, \alpha \rangle > 0,\ \forall \alpha \neq 0 \in V$. 
+    \end{enumerate}
+    一个 $F$ 线性空间 $V$ 配以其上的一个内积，称为\textbf{内积空间}\index{neiji@内积!neijikongjian@内积空间}. 
+\end{definition}
+
+\begin{remark}
+    (a) (b) 表示内积关于第一个变量是线性的，即 $\langle c_1\alpha + c_2\beta, \gamma \rangle = c_1 \langle \alpha, \gamma \rangle + c_2 \langle \beta, \gamma \rangle$，而 (c) 表示内积具有共轭对称性，由 (c) 可知内积关于第二个变量是共轭线性的，即 $\langle \gamma, c_1\alpha + c_2\beta \rangle = \overline{c_1} \langle \gamma, \alpha \rangle + \overline{c_2} \langle \gamma, \beta \rangle$. 同时，(c) 保证 $\langle \alpha, \alpha \rangle \in \mathbb R$，从而 (d) 中将其与 0 比较是有意义的. 
+\end{remark}
+
+设 $V$ 为 $F$ 线性空间，对 $V$ 上的内积 $\langle \cdot, \cdot \rangle$，定义 
+$$
+\|\cdot\|:V \to \mathbb R,\ \alpha \mapsto \sqrt{\langle \alpha, \alpha \rangle}, 
+$$
+称为\textbf{由内积 $\langle \cdot, \cdot \rangle$ 诱导的范数}\index{neiji@内积!neijiyoudaodefanshu@内积诱导的范数}. $\|\cdot\|$ 为范数这一事实将由命题~\ref{prop:inner-product-norm} 给出. 
+
+由内积诱导的范数可以反过来决定这个内积. 注意到 
+$$
+\|\alpha + \beta\|^2 - \|\alpha - \beta\|^2 = 2\langle \alpha, \beta \rangle + 2\langle \beta, \alpha \rangle, 
+$$
+所以当 $F = \mathbb R$ 时，
+$$
+\langle \alpha, \beta \rangle = \frac{1}{4} (\|\alpha + \beta\|^2 - \|\alpha - \beta\|^2), 
+$$
+当 $F = \mathbb C$ 时，
+$$
+\mathrm{Re}\, \langle \alpha, \beta \rangle = \frac{1}{4} (\|\alpha + \beta\|^2 - \|\alpha - \beta\|^2), 
+$$
+进而 
+$$
+\mathrm{Im}\, \langle \alpha, \beta \rangle = \mathrm{Re}\, (-\i\langle \alpha, \beta \rangle) = \mathrm{Re}\, \langle \alpha, \i\beta \rangle = \frac{1}{4} (\|\alpha + \i\beta\|^2 - \|\alpha - \i\beta\|^2), 
+$$
+所以我们有
+$$
+\langle \alpha, \beta \rangle = \mathrm{Re}\, \langle \alpha, \beta \rangle + \i\, \mathrm{Im}\, \langle \alpha, \beta \rangle = \frac{1}{4} \sum\limits_{k = 0}^{3} \i^k \|\alpha + \i^k \beta\|, 
+$$
+上式称为\textbf{极化恒等式}\index{jihuahengdengshi@极化恒等式}. 
+
+在内积空间中，我们有以下命题：
+
+\begin{proposition} \label{prop:inner-product-norm}
+    设 $V$ 为内积空间，$\|\cdot\|$ 为由内积诱导的范数，则有
+    \begin{enumerate}[label = (\alph*)]
+        \item $\|c\alpha\| = |c| \cdot \|\alpha\|,\ \forall c \in F, \alpha \in V$，其中 $|\cdot|$ 为 $F$ 上的绝对值函数（$\mathbb C$ 上为模长）；
+        \item $\|\alpha\| > 0,\ \forall \alpha \neq 0 \in V$；
+        \item 三角不等式：$\|\alpha + \beta\| \leqslant \|\alpha\| + \|\beta\|,\ \forall \alpha, \beta \in V$；
+        \item Cauchy-Schwarz 不等式\index{Cauchy-Schwarz budengshi@Cauchy-Schwarz 不等式}：$|\langle \alpha, \beta \rangle| \leqslant \|\alpha\| \cdot \|\beta\|,\ \forall \alpha, \beta \in V$，等号成立当且仅当 $\alpha, \beta$ 线性相关. 
+    \end{enumerate}
+\end{proposition}
+
+\begin{proof}
+    (a) (b) 显然成立. 
+
+    我们先证明 (d). $\alpha = 0$ 时显然成立，所以不妨设 $\alpha \neq 0$，令 $t = \frac{\langle \beta, \alpha \rangle}{\|\alpha\|^2}$，则 $\langle \beta - t\alpha, \alpha \rangle = 0$，记 $\gamma = \beta - t\alpha$，则 $\langle \gamma, \alpha \rangle = 0$，从而 
+    $$
+    \|\beta\|^2 = \|t\alpha + \gamma\|^2 = |t|^2\|\alpha\|^2 + \|\gamma\|^2 \geqslant |t|^2\|\alpha\|^2 = \frac{|\langle \beta, \alpha \rangle|^2}{\|\alpha\|^2}, 
+    $$
+    即 $|\langle \alpha, \beta \rangle| \leqslant \|\alpha\| \cdot \|\beta\|$，取等当且仅当 $\gamma = 0$，即 $\alpha, \beta$ 线性相关. 
+
+    注意到 (c) 中不等式平方后等价于 $\mathrm{Re}\, \langle \alpha, \beta \rangle \leqslant \|\alpha\| \cdot \|\beta\|$，由于 $\mathrm{Re}\, \langle \alpha, \beta \rangle \leqslant |\langle \alpha, \beta \rangle|$，结合 (d) 即证. 
+\end{proof}
+
+\begin{remark}
+    从几何上看，(d) 的证明中的 $t\alpha$ 即 $\beta$ 在 $\mathrm{Span}(\alpha)$ 上的正交投影，其中的不等式即 $\beta$ 的模长大于等于正交投影的模长. 
+\end{remark}
+
+需要注意的是，并非所有范数都是由内积诱导的. 事实上，一个范数 $\|\cdot\|$ 是由内积诱导的，当且仅当其满足平行四边形法则：
+$$
+\|\alpha + \beta\|^2 + \|\alpha - \beta\|^2 = 2\|\alpha\|^2 + 2\|\beta\|^2,\ \forall \alpha, \beta \in V, 
+$$
+由于该命题与数学分析的主题无关，证明在此略去. 利用平行四边形法则容易得到，$\mathbb R^2$ 上的 1-范数不是由内积诱导的范数. 
+
+由于内积可以诱导范数，我们同样可以在内积空间中讨论极限、完备性等概念. 完备的内积空间称为 \textbf{Hilbert 空间}\index{Hilbert kongjian@Hilbert 空间}. 
+
+下面是一些内积空间的例子. 
+
+\begin{example}[内积空间的例子]
+    \ 
+    \begin{enumerate}[label = (\alph*)]
+        \item $\mathbb C$ 可看作 $\mathbb C$ 线性空间，在 $\mathbb C$ 上可定义复内积 $\langle z_1, z_2 \rangle = z_1 \overline{z_2}$，该内积诱导的范数正是复数的模长. 
+        \item 在 $\mathbb R^n$ 上定义实内积：对 $\bs x = (x_1, \dots, x_n), \bs y = (y_1, \dots, y_n) \in \mathbb R^n$，$\langle \bs x, \bs y \rangle := x_1 y_1 + \cdots + x_n y_n$，该内积称为 Euclid 内积，其诱导的度量正是 Euclid 度量. $\mathbb R^n$ 配以 Euclid 内积称为 $n$ 维 Euclid 空间. 
+        \item $\ell^2 = \{\{a_n\} \subset \mathbb R \mid \sum\limits_{n = 1}^{+\infty} a_n^2 < \infty\}$ 为 $\mathbb R$ 上的平方收敛序列全体，其可视为 $\mathbb R$ 线性空间，在其上可定义实内积 $\langle \{a_n\}, \{b_n\} \rangle = \sum\limits_{n = 1}^{+\infty} a_n b_n$ 使之成为内积空间. 
+    \end{enumerate}
+\end{example}
+
+一个集合若配以一个度量，即成为度量空间；若在其上赋予线性结构及一个范数，则成为赋范线性空间；若进一步赋予内积，则成为内积空间. 从度量到范数再到内积，是在一个集合上依次添加更多结构的过程. 结构越丰富，空间的性质越强，可用的工具也就越多. 度量使我们能够讨论极限，范数则进一步使度量具有了平移不变性和齐次性，且使我们能够定义向量的模长，内积则在此基础上为我们提供了 Cauchy-Schwarz 不等式这一重要工具，并使我们能够讨论角度与正交性. 
+
+作为这一章的总结，下图描绘了从集合出发、依次添加结构所得到的各类空间，并标明了由各结构导出的核心概念. 从左至右，空间的结构逐步丰富，且每个空间都自动继承其左侧所有空间的结构与性质. 
+
+\begin{center}
+    \begin{tikzpicture}
+        \node[rectangle, rounded corners, draw=gray] (1) at (0, 0) {集合};
+        \node[rectangle, rounded corners, draw=gray] (2) at (3, 0) {拓扑空间};
+        \node[rectangle, rounded corners, draw=gray] (3) at (6.5, 0) {度量空间};
+        \node[rectangle, rounded corners, draw=gray] (4) at (10.25, 0) {赋范线性空间};
+        \node[rectangle, rounded corners, draw=gray] (5) at (14, 0) {内积空间};
+
+        \node (6) at (3, -2) {连续};
+        \node (7) at (6.5, -2) {极限};
+        \node (8) at (10.25, -2) {模长};
+        \node (9) at (14, -2) {角度};
+
+        \draw[thick, ->] (1) -- node[above] {拓扑} (2);
+        \draw[thick, ->] (2) -- node[above] {度量} (3);
+        \draw[thick, ->] (3) -- node[above] {范数} (4);
+        \draw[thick, ->] (4) -- node[above] {内积} (5);
+
+        \draw[thick, ->] (2) -- (6);
+        \draw[thick, ->] (3) -- (7);
+        \draw[thick, ->] (4) -- (8);
+        \draw[thick, ->] (5) -- (9);
+    \end{tikzpicture}
+\end{center}
+
+
+\section{附录：初等函数的构造} \label{sec:1.7}
+
+在这一节中，我们将给出\textbf{基本初等函数}的构造. 基本初等函数有以下几种：常数函数、幂函数、指数函数、对数函数、三角函数、反三角函数. 
+
+% 幂函数、指数函数(整数次幂 $x^n$ --(反函数) $x^{1 / n}$ --(复合) 有理数次幂 $x^{p / q}$ -- $a^x (x \in \mathbb Q)$ --(连续延拓) 实数次幂) --(反函数) 对数函数
+% (级数)三角函数 --(反函数) 反三角函数
+
+我们首先给出以下两个命题：
+
+\begin{proposition} \label{prop:monotone-inverse-continuous-func}
+    设 $f:I \to \mathbb R$ 在区间 $I \subset \mathbb R$ 上连续且严格单调，则 $f$ 存在唯一连续且严格单调的反函数 $f^{-1}:f(I) \to I$ 使得 $f^{-1} \circ f = \mathrm{id}_I$. 
+\end{proposition}
+
+\begin{proof}
+    不妨设 $f$ 严格单调递增. 若 $I$ 不为开区间，我们可以在闭的端点处拼接一段直线，将 $f$ 延拓为在一个包含 $I$ 的开区间上严格单调的连续函数 $\tilde{f}$，例如对 $I = [a, b)$，取 $\eps > 0$，将 $f$ 延拓为定义在 $(a - \eps, b)$ 上的函数
+    $$
+    \tilde{f}(x) = \begin{cases}
+        f(x), & x \in I,  \\
+        f(a) + (x - a), & x \in (a - \eps, a). 
+    \end{cases}
+    $$
+    因此不妨设 $I$ 为开区间，此时 $I$ 上的开集即为 $\mathbb R$ 上的开集. 
+    
+    由定理~\ref{thm:continuous-map-topo} 可知 $f(I)$ 也为区间. $f$ 严格单调保证 $f$ 是 $I \to f(I)$ 的双射，从而 $f$ 存在唯一逆映射 $f^{-1}:f(I) \to I$，易知 $f^{-1}$ 也是严格单调递增的. 
+    
+    然后我们证明 $f^{-1}$ 连续. 由于 $\mathbb R$ 上的每个开集都可写为若干开区间的并，因此我们只需验证开区间关于 $f^{-1}$ 的原像为 $f(I)$ 上的开集. 对任意开区间 $(a, b) \subset I$，
+    $$
+    (f^{-1})^{-1}((a, b)) = \{y \in f(I) \mid f^{-1}(y) \in (a, b)\} = \{y \in f(I) \mid y \in f((a, b))\} = f((a, b)), 
+    $$
+    对任意 $y \in f((a, b))$，存在 $c \in (a, b)$ 使得 $y = f(c)$，存在 $r > 0$ 使得 $B_r(c) \subset (a, b)$，由 $f$ 连续且严格单调，易知 $f(B_r(c)) = (f(c - r), f(c + r)) \subset f((a, b))$ 为包含 $y = f(c)$ 的开区间，所以 $f((a, b))$ 为 $\mathbb R$ 上的开集，同时由于 $I$ 为开区间，我们也得到 $f(I)$ 为开集，从而 $f(I)$ 上的开集即为 $\mathbb R$ 上的开集. 故 $f^{-1}$ 连续. 
+\end{proof}
+
+\begin{remark}
+    需要注意的是，连续性的定义中的开集指相对开集，即子空间拓扑下的开集，所以我们需要假设 $I$ 为开集并验证 $f(I)$ 为开集，以保证 $I$ 上的开集与 $f(I)$ 上的开集均为 $\mathbb R$ 上的开集. 
+\end{remark}
+
+\begin{theorem} \label{thm:Cauchy-continuous-extension}
+    设 $(X, d_X), (Y, d_Y)$ 为度量空间，且 $Y$ 完备，$S \subset X$ 为 $X$ 的稠密子集，$f:S \to Y$ 是 Cauchy 连续的，即 $f$ 连续且将 $S$ 上的 Cauchy 列映射为 $Y$ 上的 Cauchy 列，则 $f$ 可唯一地连续延拓到 $X$ 上，即存在唯一连续函数 $\tilde{f}:X \to Y$ 使得 $\tilde{f}|_S = f$. 
+\end{theorem}
+
+\begin{proof}
+    先证存在性. 对每个 $x \in X$，由于 $S$ 稠密，可取序列 $\{z_n\} \subset S$ 使得 $z_n \to x$，则 $\{z_n\}$ 为 Cauchy 列，由于 $f$ 是 Cauchy 连续的，$\{f(z_n)\}$ 也为 Cauchy 列，结合 $Y$ 完备可知 $\{f(z_n)\}$ 收敛，定义 $\tilde{f}(x) = \lim\limits_{n \to +\infty} f(z_n)$. 首先验证 $\tilde{f}$ 是良定的. 设序列 $\{z_n\}, \{z_n'\} \subset S$ 满足 $z_n \to x, z_n' \to x$，令序列 $\{w_n\}$ 满足 $w_{2n - 1} = z_n, w_{2n} = z_n'$，则 $w_n \to x$，$\{f(w_n)\}$ 收敛，由于 $\{f(z_n)\}$ 与 $\{f(z_n')\}$ 为 $\{f(w_n)\}$ 的子列，所以 $\lim\limits_{n \to +\infty} f(z_n) = \lim\limits_{n \to +\infty} f(z_n') = \lim\limits_{n \to +\infty} f(w_n)$，因此 $\tilde{f}$ 的定义不依赖序列的选取. $\tilde{f}|_S = f$ 可由 Heine 定理直接得到. 然后我们证明 $\tilde{f}$ 连续. 设 $x_0 \in X$，对任意极限为 $x_0$ 的点列 $\{x_n\} \subset X$，对每个 $x_n$，取序列 $\{z_{n, k}\}_{k \in \mathbb N} \subset S$ 满足 $z_{n, k} \to x_n$. 对每个 $n \in \mathbb N$，取 $k(n)$ 使得
+    $$
+    d_X(z_{n, k(n)}, x_n) < 2^{-n},\quad d_Y(f(z_{n, k(n)}), \tilde{f}(x_n)) < 2^{-n}, 
+    $$
+    则 
+    $$
+    d_X(z_{n, k(n)}, x_0) \leqslant d_X(z_{n, k(n)}, x_n) + d_X(x_n, x_0) \to 0, 
+    $$
+    所以 $\lim\limits_{n \to +\infty} z_{n, k(n)} = x_0$，从而 $\lim\limits_{n \to +\infty} f(z_{n, k(n)}) = \tilde{f}(x_0)$，于是
+    $$
+    d_Y(\tilde{f}(x_n), \tilde{f}(x_0)) \leqslant d_Y(f(z_{n, k(n)}), \tilde{f}(x_0)) + d_Y(f(z_{n, k(n)}), \tilde{f}(x_n)) \to 0, 
+    $$
+    所以 $\lim\limits_{n \to +\infty} \tilde{f}(x_n) = \tilde{f}(x_0)$，由 Heine 定理，$\lim\limits_{x \to x_0} \tilde{f}(x) = \tilde{f}(x_0)$，故 $\tilde{f}$ 连续. 
+
+    再证唯一性. 设 $\tilde{f}_1, \tilde{f}_2$ 满足条件，对任意 $x \in X$，取序列 $\{z_n\} \subset S$ 使得 $z_n \to x$，则由 $\tilde{f}_1, \tilde{f}_2$ 的连续性和命题~\ref{prop:cont-swap-lim} 知 $\tilde{f}_1(x) = \tilde{f}_2(x) = \lim\limits_{n \to +\infty} f(z_n)$，所以 $\tilde{f}_1 = \tilde{f}_2$，这样就证明了唯一性. 
+\end{proof}
+
+\begin{remark}
+    当 $X$ 也完备时，容易证明若连续延拓存在，则 $f$ 是 Cauchy 连续的，从而当 $X$ 也完备时，$f$ 存在唯一的连续延拓当且仅当 $f$ 是 Cauchy 连续的. 
+
+    事实上，Cauchy 连续蕴含连续，从而在验证 Cauchy 连续性时不必额外验证函数连续. 
+\end{remark}
+
+% 这一命题允许我们将许多在 $\mathbb Q$ 上有定义的连续函数延拓到 $\mathbb R$ 上，如多项式函数. 
+
+现在我们正式开始进行基本初等函数的构造. 
+
+利用 $\mathbb R$ 上的乘法，我们可以在 $\mathbb R$ 上定义\textbf{正整数次幂函数} $\mathbb R \to \mathbb R, x \mapsto x^n$，其值域为 $\mathbb R$（$n$ 为奇数）或 $[0, +\infty)$（$n$ 为偶数）. 利用恒等式 
+$$
+x^n - y^n = (x - y)(x^{n - 1} + x^{n - 2} y + \cdots + y^{n - 1})
+$$
+可以证明 $x^n$ 在 $\mathbb R$ 上连续，且当 $n$ 为奇数时在 $\mathbb R$ 上严格单调递增，当 $n$ 为偶数时在 $[0, +\infty)$ 上严格单调递增（连续性与单调性只需在 $[0, +\infty)$ 上证明，然后利用 $x^n$ 的奇偶性即可证明在 $\mathbb R$ 上的连续性与单调性）. 
+
+由命题~\ref{prop:monotone-inverse-continuous-func}，对奇数 $n$，$x^n$ 存在连续且严格单调递增的反函数，其定义域与值域均为 $\mathbb R$；对偶数 $n$，$x^n|_{[0, +\infty)}$ 存在连续且严格单调递增的反函数，其定义域与值域均为 $[0, +\infty)$. 我们将对应的反函数均记为 $x^{1 / n}$ 或 $\sqrt[n]{x}$，其满足对定义域内的任意 $x$ 均成立 $(x^{1 / n})^n = (x^n)^{1 / n} = x$. 
+
+然后我们可以定义\textbf{正有理数次幂函数} $x^{p / q} := (x^p)^{1 / q}\,(p, q \in \mathbb N, p, q > 0)$，当 $p$ 为偶数或 $q$ 为奇数时其定义域为 $\mathbb R$，其余情形下其定义域为 $[0, +\infty)$. 由于连续函数的复合仍为连续函数，所以 $x^{p / q}$ 在其定义域上连续. 进一步，我们可以定义\textbf{负有理数次幂函数} $x^{-p / q} := 1 / x^{p / q}\,(p, q \in \mathbb N, p, q > 0)$，其定义域为 $x^{p / q}$ 的定义域除去 0. 规定对 $x \neq 0$，$x^0 = 1$. 
+
+此时对每个正实数 $a > 0$，我们可以定义函数 $f_a:\mathbb Q \to \mathbb R, q \mapsto a^q$，其满足 $a^{p + q} = a^p a^q$. 我们首先证明 $\lim\limits_{q \to 0} a^q = 1$. 由于 $(1 / a)^q = a^{-q}$，不妨设 $a > 1$，此时对任意 $p < q \in \mathbb Q$，$a^q / a^p = a^{q - p} > 1$，从而 $a^p < a^q$，所以 $f_a$ 是严格单调递增的. 对任意 $\eps > 0$，取正整数 $n > \frac{a - 1}{\eps}$，则由 Bernoulli 不等式有 $a < 1 + n\eps \leqslant (1 + \eps)^n$，从而 $a^{1 / n} < 1 + \eps$. 于是对任意 $0 < \eps < 1$，存在正整数 $n > 0$ 使得 
+$$
+a^{1 / n} < 1 + \eps,\quad a^{1 / n} < \frac{1}{1 - \eps}, 
+$$
+则对任意 $q \in \mathbb Q$ 满足 $|q| < 1 / n$ 成立
+$$
+1 - \eps < a^{-1 / n} < a^q < a^{1 / n} < 1 + \eps, 
+$$
+所以 $\lim\limits_{q \to 0} a^q = 1$. 
+
+对任意 Cauchy 列 $\{q_n\} \subset \mathbb Q$，易知 $a^{q_n}$ 有界，设为 $M$，则利用 $\lim\limits_{q \to 0} a^q = 1$，有 
+\begin{align*}
+    \lim_{N \to +\infty} \sup_{n, m > N} |a^{q_n} - a^{q_m}| = \lim_{N \to +\infty} \sup_{n, m > N} a^{q_m}|a^{q_n - q_m} - 1| \leqslant \lim_{N \to +\infty} \sup_{n, m > N} M |a^{q_n - q_m} - 1| = 0, 
+\end{align*}
+从而 $\{a^{q_n}\}$ 也为 Cauchy 列，故 $f_a$ 是 Cauchy 连续的，由定理~\ref{thm:Cauchy-continuous-extension}，$f_a$ 可唯一地连续延拓到 $\mathbb R$ 上，将延拓得到的函数记为 $a^x$，称为\textbf{指数函数}，其定义域为 $\mathbb R$，值域为 $(0, +\infty)$. 利用 $a^x$ 的连续性与 $f_a$ 的性质，容易证明 $a^x$ 满足 $a^{x + y} = a^x a^y$，且当 $a > 1$ 时严格单调递增，当 $0 < a < 1$ 时严格单调递减. 
+
+由于对 $a > 0$ 且 $a \neq 1$，$a^x$ 在 $\mathbb R$ 上连续且严格单调，由命题~\ref{prop:monotone-inverse-continuous-func}，$a^x$ 存在连续且严格单调的反函数，记为 $\log_a x$，其定义域为 $(0, +\infty)$，称为\textbf{对数函数}，满足 $\log_a a^x = x,\ a^{\log_a x} =  x,\ \log_a (xy) = \log_a x + \log_a y$ 以及 $\log_{1 / a} x = -\log_a x$. 
+
+在定义了指数函数之后，我们可以固定指数 $\alpha$，令底数取遍 $(0, +\infty)$，从而得到函数 $(0, +\infty) \to \mathbb R, x \mapsto x^\alpha$，称为\textbf{幂函数}，当 $\alpha > 0$ 时定义域可扩展为 $[0, +\infty)$，其中 $0^\alpha = 0$. 容易证明，对 $\alpha > 0$，$x^\alpha$ 在 $[0, +\infty)$ 上严格单调递增；对 $\alpha < 0$，$x^\alpha$ 在 $(0, +\infty)$ 上严格单调递减. 
+
+接下来我们证明 $x^\alpha$ 在定义域上连续. 首先我们证明 $\lim\limits_{x \to 1} x^\alpha = 1$. 由于 $x^{-\alpha} = 1 / x^\alpha$，所以不妨设 $\alpha > 0$. 由于 $(1 / x)^\alpha = 1 / x^\alpha$，所以只需证明 $\lim\limits_{x \to 1^+} x^\alpha = 1$. 取 $p, q \in \mathbb Q$ 使得 $0 < p < \alpha < q$，由有理数次幂函数的连续性，我们有 $\lim\limits_{x \to 1^+} x^p = \lim\limits_{x \to 1^+} x^q = 1$，利用指数函数的单调性，对 $x > 1$ 有 $x^p < x^\alpha < x^q$，由夹逼定理即得 $\lim\limits_{x \to 1^+} x^\alpha = 1$. 然后对任意 $x_0 > 0$，
+$$
+\lim\limits_{x \to x_0} x^\alpha = \lim\limits_{x \to x_0} x_0^\alpha (x / x_0)^\alpha = x_0^\alpha \lim\limits_{x / x_0 \to 1} (x / x_0)^\alpha = x_0^\alpha, 
+$$
+故 $x^\alpha$ 在定义域上连续（当 $\alpha > 0$ 时容易验证 $x^\alpha$ 在 $x = 0$ 处也连续）.  
+
+
+三角函数的定义需要使用级数相关内容，我们在此给出其定义仅为保证定义的严谨性. 我们需要提前使用级数理论的一些结论，这些结论的严格证明将在{\color{red}[级数章节]}给出. 同时为证明三角函数的性质，我们需要用到导数，其将在第二章中介绍. 
+
+我们将\textbf{正弦函数}与\textbf{余弦函数}分别定义为以下幂级数：
+\begin{align*}
+    \sin x := \sum\limits_{n = 0}^{+\infty} \frac{(-1)^n}{(2n + 1)!} x^{2n + 1},\quad \cos x := \sum\limits_{n = 0}^{+\infty} \frac{(-1)^n}{(2n)!} x^{2n}. 
+\end{align*}
+由以上定义可知 $\sin x$ 为奇函数，$\cos x$ 为偶函数. 两个幂级数均在 $\mathbb R$ 上内闭一致绝对收敛，从而 $\sin x$ 与 $\cos x$ 均无穷阶可导，且导数可通过逐项求导得到，于是
+\begin{align*}
+    (\sin x)' &= \sum\limits_{n = 0}^{+\infty} \frac{(-1)^n}{(2n)!} x^{2n} = \cos x, \\
+    (\cos x)' &= \sum\limits_{n = 1}^{+\infty} \frac{(-1)^n}{(2n - 1)!} x^{2n - 1} = \sum\limits_{n = 0}^{+\infty} \frac{(-1)^{n + 1}}{(2n + 1)!} x^{2n + 1} = -\sin x. 
+\end{align*}
+由于 
+$$
+(\sin^2 x + \cos^2 x)' = 2\sin x \cos x - 2 \cos x \sin x = 0, 
+$$
+所以 $\sin^2 x + \cos^2 x$ 为常数，代入 $x = 0$ 可得 
+$$
+\sin^2 x + \cos^2 x \equiv 1. 
+$$
+
+我们先证明正弦函数的和角公式. 由于对任意 $x \in \mathbb R$，正弦与余弦级数均绝对收敛，所以我们可以对级数的项进行任意重排并使用 Cauchy 乘积. 固定 $x, y \in\mathbb R$，
+$$
+\sin(x+y) = \sum_{n=0}^{+\infty} \frac{(-1)^n}{(2n+1)!} (x+y)^{2n+1}, 
+$$
+由二项式定理，
+$$
+(x+y)^{2n+1} = \sum_{k=0}^{2n+1} \binom{2n+1}{k} x^k y^{2n+1-k}, 
+$$
+代入得
+$$
+\sin(x+y) = \sum_{n=0}^{+\infty} \sum_{k=0}^{2n+1} \frac{(-1)^n}{(2n+1)!} \binom{2n+1}{k} x^k y^{2n+1-k}.
+$$
+由绝对收敛性，可按 $x$ 的指数 $k$ 的奇偶将各项重排为两部分.
+当 $k = 2i\ (i \geqslant 0)$ 时，对应的项为
+$$
+\frac{(-1)^n}{(2n+1)!} \binom{2n+1}{2i} x^{2i} y^{2n+1-2i}, 
+$$
+$2i \leqslant 2n + 1$ 等价于 $i \leqslant n$. 令 $j = n - i \geqslant 0$，则 $n = i + j$，此时 $y$ 的指数为 $2j + 1$. 系数可化简为
+$$
+\frac{(-1)^{i+j}}{(2(i+j)+1)!} \binom{2(i+j)+1}{2i}
+= \frac{(-1)^i}{(2i)!} \cdot \frac{(-1)^j}{(2j+1)!}, 
+$$
+于是这部分所有项的和为
+$$
+\sum_{n=0}^{+\infty} \sum_{i + j = n} \frac{(-1)^i}{(2i)!} x^{2i} \cdot \frac{(-1)^j}{(2j+1)!} y^{2j+1}
+= \left( \sum_{i=0}^{+\infty} \frac{(-1)^i}{(2i)!} x^{2i} \right) \left( \sum_{j=0}^{+\infty} \frac{(-1)^j}{(2j+1)!} y^{2j+1} \right)
+= \cos x \sin y, 
+$$
+其中第一个等号由 Cauchy 乘积定理保证. 
+当 $k = 2i + 1\ (i \geqslant 0)$ 时，对应的项为
+$$
+\frac{(-1)^n}{(2n+1)!} \binom{2n+1}{2i+1} x^{2i+1} y^{2n-2i}.
+$$
+同样有 $i \leqslant n$，令 $j = n - i \geqslant 0$，则 $n = i + j$，$y$ 的指数为 $2j$. 系数化为
+$$
+\frac{(-1)^{i+j}}{(2(i+j)+1)!} \binom{2(i+j)+1}{2i+1}
+= \frac{(-1)^i}{(2i+1)!} \cdot \frac{(-1)^j}{(2j)!}.
+$$
+于是这部分的和为
+$$
+\sum_{n=0}^{+\infty} \sum_{i + j = n} \frac{(-1)^i}{(2i+1)!} x^{2i+1} \cdot \frac{(-1)^j}{(2j)!} y^{2j}
+= \left( \sum_{i=0}^{+\infty} \frac{(-1)^i}{(2i + 1)!} x^{2i + 1} \right) \left( \sum_{j=0}^{+\infty} \frac{(-1)^j}{(2j)!} y^{2j} \right)
+= \sin x \cos y, 
+$$
+其中第一个等号由 Cauchy 乘积定理保证. 将两部分相加即得
+\begin{equation} \label{eq:sin-plus}
+    \sin(x + y) = \sin x \cos y + \cos x \sin y. 
+\end{equation}
+
+在式~(\ref{eq:sin-plus}) 中将 $y$ 替换为 $-y$ 并利用 $\sin x$ 与 $\cos x$ 的奇偶性即得正弦函数的差角公式 
+$$
+\sin(x - y) = \sin x \cos y - \cos x \sin y. 
+$$
+固定 $y$，式~(\ref{eq:sin-plus}) 两边对 $x$ 求导即有余弦函数的和角公式 
+$$
+\cos(x + y) = \cos x \cos y - \sin x \sin y, 
+$$
+在上式中将 $y$ 替换为 $-y$ 即有余弦函数的差角公式
+$$
+\cos(x - y) = \cos x \cos y + \sin x \sin y. 
+$$
+
+我们将 $\pi$ 定义为 $\sin x$ 的最小正零点. 为此我们需要证明最小正零点的存在性. 
+
+由于 $\sin x$ 在 $x = 0$ 处的导数大于零，故存在 $\delta > 0$ 使得对任意 $x \in (0, \delta)$ 均成立 $\sin x > 0$. 若 $\sin x$ 不存在正零点，则由连续性可知 $\sin x > 0,\ \forall x > 0$，由于 $\sin 2x = 2\sin x \cos x$，此时 $\cos x$ 也无正零点，从而也有 $\cos x > 0,\ \forall x > 0$，于是 $\sin x$ 递增，$\cos x$ 递减，又因为 $0 \leqslant \sin x, \cos x \leqslant 1$，所以 $\lim\limits_{x \to +\infty} \sin x, \lim\limits_{x \to +\infty} \cos x$ 存在且有限，分别设为 $a, b$，则 $a^2 + b^2 = 1$. 由余弦函数的和角公式， 
+$$
+0 < \cos 2x = \cos^2 x - \sin^2 x,\ \forall x > 0, 
+$$
+所以 $\cos x > \sin x,\ \forall x > 0$，所以 $b \geqslant a$，从而 $b > 0$，于是 $\lim\limits_{x \to +\infty} (\sin x)' = \lim\limits_{x \to +\infty} \cos x = b > 0$，这导致 $\lim\limits_{x \to +\infty} \sin x = +\infty$，与 $\lim\limits_{x \to +\infty} \sin x = a$ 矛盾. 故 $\sin x$ 存在正零点. 令 
+$$
+x_0 := \inf \{x > 0 \mid \sin x = 0\} \geqslant \delta > 0, 
+$$
+由下确界的定义以及 $\sin x$ 的连续性可知必有 $\sin x_0 = 0$，于是 $x_0$ 为 $\sin x$ 的最小正零点，因此我们可以定义 $\pi = x_0$. 
+
+由 $\sin x$ 的连续性以及其在 $(0, \delta)$ 上大于零可知 $\sin x$ 在 $(0, \pi)$ 上大于零. 由式~(\ref{eq:sin-plus})，
+$$
+0 = \sin \pi = 2\sin \frac{\pi}{2} \cos \frac{\pi}{2}, 
+$$
+由于 $\sin \frac{\pi}{2} > 0$，所以 $\cos \frac{\pi}{2} = 0$，进而有 $\sin \frac{\pi}{2} = 1$. 利用余弦函数的和角公式可知 $\cos \pi = -1$，从而 $\sin (x + \pi) = -\sin x, \cos (x + \pi) = -\cos x$. 进一步，$\sin (x + 2\pi) = \sin x, \cos (x + 2\pi) = \cos x$，结合 $\sin x$ 在 $(0, \pi)$ 上大于零而在 $(\pi, 2\pi)$ 上小于零，易知 $\sin x$ 的最小正周期为 $2\pi$，由和角公式可得 $\cos x = \sin (x + \frac{\pi}{2})$，于是 $\cos x$ 的最小正周期也为 $2\pi$. 特殊角的三角函数值可由和角公式与差角公式得到. 
+
+在此基础上，我们定义\textbf{正切函数} $\tan x := \frac{\sin x}{\cos x}$，\textbf{余切函数} $\cot x := \frac{\cos x}{\sin x}$，\textbf{正割函数} $\sec x := \frac{1}{\cos x}$ 以及\textbf{余割函数} $\csc x := \frac{1}{\sin x}$. 
+
+最后我们定义一些常见的反三角函数. 
+
+$\sin x$ 在 $[-\pi/2, \pi/2]$ 上连续且严格单调递增，由命题~\ref{prop:monotone-inverse-continuous-func}，其存在连续且严格单调递增的反函数 $[-1, 1] \to [-\pi/2, \pi/2]$，记为 $\arcsin x$，称为\textbf{反正弦函数}，满足 $\sin(\arcsin x) = x\ (x \in [-1, 1])$ 和 $\arcsin(\sin x) = x\ (x \in [-\pi/2, \pi/2])$. 
+
+$\cos x$ 在 $[0, \pi]$ 上连续且严格单调递减，其存在连续且严格单调递减的反函数 $[-1, 1] \to [0, \pi]$，记为 $\arccos x$，称为\textbf{反余弦函数}. 
+
+$\tan x$ 在 $(-\pi/2, \pi/2)$ 上连续且严格单调递增，其存在连续且严格单调递增的反函数 $\mathbb R \to (-\pi/2, \pi/2)$，记为 $\arctan x$，称为\textbf{反正切函数}. 
+
+至此，我们完成了基本初等函数的构造. 
+
+\textbf{初等函数}则是由基本初等函数经过有限次四则运算和复合运算产生的函数，由于四则运算与复合保持函数的连续性，所以初等函数在其定义域上连续. 
+
+
+\section{附录：无穷大量与无穷小量}
+
+在这一节中，我们将简单介绍无穷大量与无穷小量的概念，并引入大 $O$ 记号与小 $o$ 记号和量阶的概念以方便后续的叙述与计算. 在这一节中，我们提到的函数均为定义在 $\mathbb R$ 的某个子集上的实值函数. 
+
+在极限的概念提出之前，人们将无穷小量认为是比任意正实数都小，却不等于零的量，是无限接近于零却不为零的实体. 在极限的概念建立之后，标准分析不再将无穷小量作为无限接近于零却不为零的实体，而将其用于描述变量或函数无限趋近于零的行为模式，一个量是无穷小的即这个量的极限是零. 于是我们给出以下定义：
+
+\begin{definition}[无穷小量的定义] \index{wuqiongxiaoliang@无穷小量}
+    数列 $\{a_n\}$ 称为\textbf{无穷小量}，若 $\lim\limits_{n \to +\infty} a_n = 0$. 
+
+    （当 $x \to a$ 时）函数 $f(x)$ 称为\textbf{无穷小量}，若 $\lim\limits_{x \to a} f(x) = 0$. 这里 $a$ 可以为 $\pm\infty$. 
+\end{definition}
+
+简单来说，无穷小量即极限为 0 的数列或函数. 类似地，我们可以定义\textbf{无穷大量}：
+
+\begin{definition}[无穷大量的定义] \index{wuqiongdaliang@无穷大量}
+    数列 $\{a_n\}$ 称为\textbf{无穷大量}，若 $\lim\limits_{n \to +\infty} |a_n| = +\infty$. 
+
+    （当 $x \to a$ 时）函数 $f(x)$ 称为\textbf{无穷大量}，若 $\lim\limits_{x \to a} |f(x)| = +\infty$. 这里 $a$ 可以为 $\pm\infty$. 
+\end{definition}
+
+类似还可以定义\textbf{正无穷大量}与\textbf{负无穷大量}. 
+
+下面是一些例子. 
+
+\begin{example}[无穷小量与无穷大量的例子]
+    \ 
+    \begin{enumerate}[label = (\alph*)]
+        \item 数列 $\{1 / n\}, \{2^{-n}\}$ 均为无穷小量，函数 $x, \sin x$ 在 $x \to 0$ 时为无穷小量，函数 $1 / x$ 在 $x \to \pm\infty$ 时为无穷小量. 
+        \item 数列 $\{n\}, \{2^n\}$ 均为无穷大量，函数 $1 / x$ 在 $x \to 0$ 时为无穷大量. 
+    \end{enumerate}
+\end{example}
+
+比较无穷大量与无穷小量最基本的方法是做比值，由此可以导出\textbf{量阶}的概念. 我们在此只给出函数的量阶的相关定义，数列的量阶是类似的. 
+
+为了叙述的简便，我们先引入\textbf{大 $O$ 记号}与\textbf{小 $o$ 记号}. 
+
+\begin{definition} % [大 $O$ 记号与小 $o$ 记号]
+    给定函数 $f(x), g(x)$，$a \in \overline{\mathbb R}$ 以及包含于 $f(x), g(x)$ 的定义域内的集合 $A$. 
+    \begin{enumerate}[label = (\arabic*)]
+        \item 若 $\lim\limits_{x \to a} \dfrac{f(x)}{g(x)} = 0$，则记
+        $$
+        f(x) = o(g(x)) \ (x \to a). 
+        $$
+        \item 若 $\lim\limits_{x \to a} \dfrac{f(x)}{g(x)} = 1$，则记
+        $$
+        f(x) \sim g(x) \ (x \to a). 
+        $$
+        \item 若存在 $\delta > 0$ 和 $M > 0$ 使得对任意 $x \in A$ 成立 $|f(x)| \leqslant M |g(x)|$，则记 
+        $$
+        f(x) = O(g(x)) \ (x \in A). 
+        $$
+    \end{enumerate}
+\end{definition}
+
+然后我们利用大 $O$ 记号与小 $o$ 记号给出一些\textbf{量阶}的相关术语与记号. 
+
+\begin{definition} % [量阶的相关定义]
+    \ 
+    \begin{enumerate}[label = (\arabic*)]
+        \item 设在 $x \to a$ 时，$f(x)$ 与 $g(x)$ 均为无穷小量. 
+        \begin{enumerate}[label = \roman*.]
+            \item 若 $f(x) = o(g(x)) \ (x \to a)$，则称 $f(x)$ 关于 $g(x)$ 是\textbf{高阶无穷小量}，或 $g(x)$ 关于 $f(x)$ 是\textbf{低阶无穷小量}. 
+
+            \item 若 $f(x) \sim g(x) \ (x \to a)$，则称 $f(x)$ 与 $g(x)$ 为\textbf{等价无穷小量}. 
+
+            \item 若存在 $\delta > 0$ 使得 $f(x) = O(g(x)) \ (x \in U(a, \delta) \setminus \{a\})$，则记 
+            $$
+            f(x) = O(g(x)) \ (x \to a). 
+            $$
+
+            \item 若 $f(x) = O(g(x)) \ (x \to a)$ 且 $g(x) = O(f(x)) \ (x \to a)$，则称 $f(x)$ 与 $g(x)$ 是\textbf{同阶无穷小量}. 
+        \end{enumerate}
+
+        \item 设在 $x \to a$ 时，$f(x)$ 与 $g(x)$ 均为无穷大量. 
+        \begin{enumerate}[label = \roman*.]
+            \item 若 $f(x) = o(g(x)) \ (x \to a)$，则称 $g(x)$ 关于 $f(x)$ 是\textbf{高阶无穷大量}，或 $f(x)$ 关于 $g(x)$ 是\textbf{低阶无穷大量}. 
+
+            \item 若 $f(x) \sim g(x) \ (x \to a)$，则称 $f(x)$ 与 $g(x)$ 为\textbf{等价无穷大量}. 
+
+            \item 若存在 $\delta > 0$ 使得 $f(x) = O(g(x)) \ (x \in U(a, \delta) \setminus \{a\})$，则记 
+            $$
+            f(x) = O(g(x)) \ (x \to a). 
+            $$
+
+            \item 若 $f(x) = O(g(x)) \ (x \to a)$ 且 $g(x) = O(f(x)) \ (x \to a)$，则称 $f(x)$ 与 $g(x)$ 是\textbf{同阶无穷大量}. 
+        \end{enumerate}
+    \end{enumerate}
+\end{definition}
+
+\begin{remark}
+    等价量具有传递性，即 $u \sim v, v \sim w \Rightarrow u \sim w$. 
+
+    无穷大量的倒数为无穷小量，关于 $f$ 的高阶无穷大量的倒数为关于 $1 / f$ 的高阶无穷小量. 
+\end{remark}
+
+大 $O$ 记号与小 $o$ 记号可以为极限的运算带来许多便利，这主要是因为它们在形式上的一些运算性质：在 $x \to a$ 时，
+\begin{enumerate}[label = (\alph*)]
+    \item $O(u(x)) + O(v(x)) = O(|u(x)| + |v(x)|)$；
+    \item $O(u(x)) O(v(x)) = O(u(x) v(x))$；
+    \item $o(u(x)) O(v(x)) = o(u(x) v(x))$；
+    \item $O(u(x)) + o(u(x)) = O(u(x))$；
+    \item $o(u(x)) + o(v(x)) = o(|u(x)| + |v(x)|)$；
+    \item $o(u(x)) o(v(x)) = o(u(x) v(x))$；
+    \item $u(x) = O(v(x)), v(x) = O(w(x)) \Rightarrow u(x) = O(w(x))$；
+    \item $u(x) = O(v(x)), v(x) = o(w(x)) \Rightarrow u(x) = o(w(x))$；
+    \item $\cdots$
+\end{enumerate}
+
+需要注意的是，上面的式子中的等号应理解为类似于 $\subset$ 或 $\in$ 的单向符号，表示左边的函数满足右边的性质. 
+
+量阶分析可以帮助我们简化极限的计算，在计算比值极限时只需保留主部，即无穷小量量阶最低的部分或无穷大量量阶最高的部分. 下面的例子展示了这一想法的一个具体应用. 
+
+\begin{example}
+    考虑分式 
+    $$
+    f(x) = \frac{a_n x^n + a_{n - 1} x^{n - 1} + \cdots + a_k x^k}{b_m x^m + b_{m - 1} x^{m - 1} + \cdots + b_l x^l}, 
+    $$
+    当 $x \to +\infty$ 时，分子的主部为 $a_n x^n$，分母的主部为 $b_m x^m$，所以 $\lim\limits_{x \to +\infty} f(x) = \lim\limits_{x \to +\infty} \dfrac{a_n x^n}{b_m x^m}$；
+    当 $x \to 0$ 时，分子的主部为 $a_k x^k$，分母的主部为 $b_l x^l$，所以 $\lim\limits_{x \to 0} f(x) = \lim\limits_{x \to 0} \dfrac{a_k x^k}{b_l x^l}$（极限存在时）. 
+\end{example}
+
+后续章节中的许多工具可以用于量阶分析，如 L'Hospital 法则、Taylor 公式等. 
+
+
+\section*{练习}
+\addcontentsline{toc}{section}{练习}
+
+\begin{enumerate}
+    \item 参照证明概要验证命题~\ref{prop:plus-R} 与命题~\ref{prop:times-R}. 
+
+    \item \begin{enumerate}
+        \item 证明闭集套定理：设 $(S, d)$ 为完备的度量空间，对子集 $A \subset S$，定义 $A$ 的直径为 
+        $$
+        \mathrm{diam}\, A = \sup\{d(x_1, x_2) \mid x_1, x_2 \in A\}. 
+        $$
+        若非空闭集列 $\{A_n\} \subset \mathcal{P}(S)$ 满足以下条件：
+        \begin{enumerate}[label = (\roman*)]
+            \item $A_{n + 1} \subset A_n,\ \forall n \in \mathbb N$；
+            \item $\lim\limits_{n \to +\infty} \mathrm{diam}\, A_n = 0$，
+        \end{enumerate}
+        则存在唯一 $x \in S$ 满足 $x \in A_n,\ \forall n \in \mathbb N$，即 $\bigcap\limits_{n \in \mathbb N} A_n = \{x\}$. 
+
+        \item 证明在度量空间中，闭集套定理与 Cauchy 收敛准则等价. 
+    \end{enumerate}
+
+    \item 设 $\varphi:\overline{\mathbb R} \to [-1, 1]$ 为双射
+    $$
+    \varphi(x) = \begin{cases}
+        -1, & x = -\infty,  \\
+        \dfrac{x}{1 + |x|}, & -\infty < x < +\infty,  \\
+        1, & x = +\infty, 
+    \end{cases}
+    $$
+    记 $\mathcal{T}_{[-1, 1]}$ 为 $\mathbb R$ 上的度量拓扑在 $[-1, 1]$ 上诱导的子空间拓扑，定义 
+    $$
+    \mathcal{T} := \varphi^{-1}(\mathcal{T}_{[-1, 1]}) = \{\varphi^{-1}(U) \mid U \in \mathcal{T}_{[-1, 1]}\}. 
+    $$ 
+    \begin{enumerate}
+        \item 证明 $\mathcal{T}$ 是 $\overline{\mathbb R}$ 上的拓扑，且 $\mathcal{T}$ 在 $\mathbb R$ 上诱导的子空间拓扑恰为 $\mathbb R$ 上的度量拓扑. 
+        \item 进一步，在拓扑空间 $(\overline{\mathbb R}, \mathcal{T})$ 中，利用邻域的概念在 $\overline{\mathbb R}$ 上定义序列极限，并验证这样定义的极限与 \ref{sec:1.1} 节中定义的数列极限相容，且具有命题~\ref{prop:lim-num-seq} 中的性质. 
+    \end{enumerate}
+
+    \item 证明注记~\ref{rem:1.5.8} 中的断言：
+    \begin{enumerate}
+        \item 对度量空间 $(S, d)$ 的子集 $A$，度量 $d|_A$ 在 $A$ 上诱导的度量拓扑 $\mathcal{T}_{d|_A}$ 恰为 $d$ 在 $S$ 上诱导的度量拓扑 $\mathcal{T}_{d}$ 在子集 $A$ 上诱导的子空间拓扑. 
+
+        \item 设 $(X, \mathcal{T})$ 为拓扑空间，$B \subset A \subset X$，则 $\mathcal{T}_A$ 在 $B$ 上诱导的子空间拓扑与 $\mathcal{T}$ 在 $B$ 上诱导的子空间拓扑 $\mathcal{T}_B$ 是相同的. 
+    \end{enumerate}
+
+    \item 证明命题~\ref{prop:closed-subset-compact}：紧致的拓扑空间的闭子集也是紧致的. 
+    
+    \item 设 $(S, d)$ 为度量空间，称 $S$ 的子集族 $\mathcal{F} \subset \mathcal{P}(S)$ 具有\textbf{有限交性质}\index{youxianjiaoxingzhi@有限交性质}，若 $\mathcal{F}$ 中任意有限个集合的交集均非空. 证明以下等价：
+    \begin{enumerate}
+        \item $S$ 是\textbf{紧致}的；
+        \item $S$ 是\textbf{列紧}的；
+        \item $S$ 是\textbf{完备}且\textbf{完全有界}的（完全有界的定义参见定理~\ref{thm:compact-equiv-seqcompact-ms} 的证明）；
+        \item 对 $S$ 中任意具有有限交性质的闭集族 $\mathcal{F}$，均成立 $\bigcap\limits_{A \in \mathcal{F}} A \neq \varnothing$. 
+    \end{enumerate}
+    其中 (a) 与 (b) 的等价性已由定理~\ref{thm:compact-equiv-seqcompact-ms} 给出，无需证明. 
+
+    \item 设 $(S, d)$ 为度量空间，$f:S \to \mathbb R$. $f$ 称为\textbf{下半连续}的，若对任意 $z \in S$ 成立 
+    $$
+    \varliminf_{x \to z} f(x) \geqslant f(z). 
+    $$
+    \begin{enumerate}
+        \item 证明 $f$ 是下半连续的当且仅当对任意 $c \in \mathbb R$，$f^{-1}((-\infty, c])$ 为闭集. 
+
+        \item 若 $S$ 是紧致的，$f$ 是下半连续的，证明 $f$ 在 $S$ 上存在最小值，即存在 $z \in S$ 使得 $f(z) = \inf\limits_{x \in S} f(x)$. 
+    \end{enumerate}
+
+\end{enumerate}
+
+\end{document}
