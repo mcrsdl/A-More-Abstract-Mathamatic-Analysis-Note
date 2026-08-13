@@ -362,13 +362,13 @@ Fermat 引理是很直观的，其几何意义即可导函数在极值点处的�
     $$
     由定义~\ref{def:lim-func-oneside}，存在 $x_1 > a$ 使得
     $$
-    \bigg| \frac{h(x_1) - h(a)}{x_1 - a} - h'(x_1) \bigg| < -\frac{1}{2} h'(x_1), 
+    \bigg| \frac{h(x_1) - h(a)}{x_1 - a} - h_+'(a) \bigg| < -\frac{1}{2} h_+'(a), 
     $$
     即
     $$
-    \frac{h(x_1) - h(a)}{x_1 - a} < \frac{1}{2} h'(x_1) < 0, 
+    \frac{h(x_1) - h(a)}{x_1 - a} < \frac{1}{2} h_+'(a) < 0, 
     $$
-    则 $h(x_1) < h(a)$. 同理，存在 $x_2 < b$ 使得 $h(x_2) < h(b)$. 由于此时 $h$ 在 $[a, b]$ 上连续，$h$ 存在最小值点 $\xi \in [a, b]$，但由前面的讨论可知最小值点不在区间端点处，即 $\xi \in (a, b)$，由 Fermat 引理知 $h'(\xi) = f'(\xi) - \eta = 0$，即 $f'(\xi) = \eta$. 
+    则 $h(x_1) < h(a)$. 同理，利用 $h_-'(b) > 0$ 可得存在 $x_2 < b$ 使得 $h(x_2) < h(b)$. 由于此时 $h$ 在 $[a, b]$ 上连续，$h$ 存在最小值点 $\xi \in [a, b]$，但由前面的讨论可知最小值点不在区间端点处，即 $\xi \in (a, b)$，由 Fermat 引理知 $h'(\xi) = f'(\xi) - \eta = 0$，即 $f'(\xi) = \eta$. 
 \end{proof}
 
 \begin{remark}
@@ -386,6 +386,10 @@ Darboux 定理给出了导函数的介值性，其与连续函数介值定理的
 \begin{proof}
     若 $f$ 在 $[a, b]$ 上为常值，则 $f'$ 在 $(a, b)$ 上恒为 0. 若 $f$ 在 $[a, b]$ 上不为常值，则 $f$ 在 $[a, b]$ 上的最大值点与最小值点至少有一个属于 $(a, b)$，设为 $\xi$，则由 Fermat 引理，$f'(\xi) = 0$. 
 \end{proof}
+
+\begin{remark} \label{rem:Rolle}
+    以上定理证明的关键是连续函数在紧集上最值的存在性. 在上一章的练习 3 中定义的拓扑下 $\overline{\mathbb R}$ 是紧的，从而其闭子区间（如 $[-\infty, +\infty], [a, +\infty]$ 等）也是紧的，进而我们可以将定理推广至无穷区间（即 $a$ 或 $b$ 取 $\pm\infty$），此时要求 $f$ 的相应极限存在且有限，并定义端点函数值为相应极限. 
+\end{remark}
 
 由 Rolle 中值定理可以得到 Lagrange 中值定理. 
 
@@ -429,7 +433,96 @@ Darboux 定理给出了导函数的介值性，其与连续函数介值定理的
     应用 Rolle 中值定理即可. 
 \end{proof}
 
-由 Cauchy 中值定理可以得到 L'Hospital 法则
+\begin{remark}
+    利用 Rolle 中值定理在无穷区间上的推广（见注记~\ref{rem:Rolle}），我们也可以将 Cauchy 中值定理推广至无穷区间. 
+\end{remark}
 
+由 Cauchy 中值定理可以得到 L'Hospital 法则. 
+
+\begin{theorem}[L'Hospital 法则] \index{L'Hospital faze@L'Hospital 法则}
+    设 $U$ 为 $a$ 的一个邻域，函数 $f, g$ 在 $U \cap (a, +\infty)$ 上可微且 $g'$ 在 $U \cap (a, +\infty)$ 上无零点，若以下条件成立：
+    \begin{enumerate}[label = (\alph*)]
+        \item $\lim\limits_{x \to a^+} f(x) = \lim\limits_{x \to a^+} g(x) = 0$ 或 $\lim\limits_{x \to a^+} g(x) = \pm\infty$，
+        \item $\lim\limits_{x \to a^+} \dfrac{f'(x)}{g'(x)}$ 存在（可以为 $\pm\infty$），
+    \end{enumerate}
+    则有
+    $$
+    \lim_{x \to a^+} \frac{f(x)}{g(x)} = \lim_{x \to a^+} \frac{f'(x)}{g'(x)}. 
+    $$
+\end{theorem}
+
+\begin{remark}
+    定理结论对 $x \to a^-, x \to a$ 也成立，对 $x \to a$ 的情形，要求 $f, g$ 在 $a$ 的一个去心邻域上可微，且 $a$ 可以为 $\pm\infty$. 
+\end{remark}
+
+\begin{proof}
+    设 $\lim\limits_{x \to a^+} \dfrac{f'(x)}{g'(x)} = A$. 通过取倒数，可以将 $A = \pm\infty$ 的情形化归为 $A = 0$ 的情形（细节在此略去），因此不妨设 $A$ 为有限数. 
+    \begin{enumerate}[label = (\arabic*)]
+        \item 对 $\lim\limits_{x \to a^+} f(x) = \lim\limits_{x \to a^+} g(x) = 0$ 的情形，我们可以重新定义 $f(a) = g(a) = 0$，此时 $f, g$ 在 $U \cap [a, +\infty)$ 上连续. 由 Cauchy 中值定理，对任意 $x \in V$，存在 $\xi_x \in (a, x)$ 使得 
+        $$
+        \frac{f(x)}{g(x)} = \frac{f(x) - f(a)}{g(x) - g(a)} = \frac{f'(\xi_x)}{g'(\xi_x)}, 
+        $$
+        当 $x \to a^+$ 时，$\xi_x \to a^+$，所以
+        $$
+        \lim_{x \to a^+} \frac{f(x)}{g(x)} = \lim_{\xi_x \to a^+} \frac{f'(\xi_x)}{g'(\xi_x)} = A. 
+        $$
+
+        \item 对 $\lim\limits_{x \to a^+} g(x) = \pm\infty$ 的情形，由于我们可以将 $f$ 替换为 $f - Ag$，所以不妨设 $A = 0$，只需证明
+        $$
+        \varlimsup_{x \to a^+} \bigg| \frac{f(x)}{g(x)} \bigg| = 0. 
+        $$
+        由于 $A = 0$，对任意 $\eps > 0$，存在 $\delta > 0$ 使得对任意 $x \in U(a, \delta) \cap (a, +\infty)$ 成立
+        $$
+        \bigg| \frac{f'(x)}{g'(x)} \bigg| < \eps. 
+        $$
+        任取 $x_0 \in U(a, \delta) \cap (a, +\infty)$，由 Cauchy 中值定理，对任意 $x \in U(a, x_0)$，存在 $\xi_x \in (x, x_0)$ 使得
+        $$
+        \frac{f'(\xi_x)}{g'(\xi_x)} = \frac{f(x) - f(x_0)}{g(x) - g(x_0)} = \frac{f(x)}{g(x) - g(x_0)} - \frac{f(x_0)}{g(x) - g(x_0)}, 
+        $$
+        上式左边的绝对值小于 $\eps$. 由于 $\lim\limits_{x \to a^+} g(x) = \pm\infty$，我们有 $g(x) \sim g(x) - g(x_0)\ (x \to a^+)$，因此
+        \begin{align*}
+            \varlimsup_{x \to a^+} \bigg| \frac{f(x)}{g(x)} \bigg| &= \varlimsup_{x \to a^+} \bigg| \frac{f(x)}{g(x) - g(x_0)} \bigg| 
+            = \varlimsup_{x \to a^+} \bigg| \frac{f'(\xi_x)}{g'(\xi_x)} + \frac{f(x_0)}{g(x) - g(x_0)} \bigg| \\
+            &\leqslant \varlimsup_{x \to a^+} \bigg| \frac{f'(\xi_x)}{g'(\xi_x)} \bigg| + \varlimsup_{x \to a^+} \bigg| \frac{f(x_0)}{g(x) - g(x_0)} \bigg| 
+            = \varlimsup_{x \to a^+} \bigg| \frac{f'(\xi_x)}{g'(\xi_x)} \bigg|
+            \leqslant \eps, 
+        \end{align*} 
+        由 $\eps$ 的任意性可知 
+        \begin{equation*}
+            \varlimsup_{x \to a^+} \bigg| \frac{f(x)}{g(x)} \bigg| = 0. \tag*{\qedhere}
+        \end{equation*}
+    \end{enumerate}
+\end{proof}
+
+\begin{remark}
+    利用 Cauchy 中值定理在无穷区间上的推广，以上证明可以直接应用于 $a = \pm\infty$ 的情形. 
+\end{remark}
+
+L'Hospital 法则是计算不定型极限（$0 / 0$ 或 $\cdot / \infty$）的重要工具，下面给出几个例子. 
+
+\begin{example}
+    \ 
+    \begin{enumerate}[label = (\alph*)]
+        \item 给定正整数 $n$，应用 L'Hospital 法则有
+        $$
+        \lim_{x \to +\infty} \frac{x^n}{\e^x} = \lim_{x \to +\infty} \frac{n x^{n - 1}}{\e^x} = \cdots = \lim_{x \to +\infty} \frac{n!}{\e^x} = 0. 
+        $$
+        
+        \item 应用 L'Hospital 法则可得
+        $$
+        \lim_{x \to 0^+} x \ln x = \lim_{x \to 0^+} \frac{\ln x}{1 / x} = \lim_{x \to 0^+} \frac{1 / x}{-1 / x^2} = \lim_{x \to 0^+} (-x) = 0. 
+        $$
+    \end{enumerate}
+\end{example}
+
+\section{单调性与凸性}
+
+[单调性，凸性，Jensen 不等式，Young 不等式，H\"older 不等式，...]
+
+\section{Taylor 公式}
+
+\section{不定积分}
+
+[分部积分，有理函数不定积分（利用线性无关性证明有理函数的分解）]
 
 \end{document}
