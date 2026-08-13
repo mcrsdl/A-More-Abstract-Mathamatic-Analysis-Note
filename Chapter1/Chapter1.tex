@@ -1533,6 +1533,8 @@ $$
     设 $(X, d_X), (Y, d_Y)$ 为度量空间，且 $X$ 是紧致的，函数 $f:X \to Y$ 连续，则 $f$ 在 $X$ 上一致连续. 
 \end{theorem}
 
+我们在这里给出两个证明，其中第二个证明用到了前面提到的 Lebesgue 数. 
+
 \begin{proof}[证明 1]
     我们采用反证法. 假设 $f$ 不一致连续，则存在 $\eps_0 > 0$，对任意 $\delta > 0$，存在 $x, y \in X$ 满足 
     $$
@@ -1559,12 +1561,10 @@ $$
     $$
     d_Y(f(y_1), f(y_2)) \leqslant d_Y(f(x), f(y_1)) + d_Y(f(x), f(y_2)) < \eps. 
     $$
-    由于 $X$ 是紧致的，可取开覆盖 $\mathcal{U} = \{B_{\delta_x}(x)\}_{x \in X}$ 的 Lebesgue 数 $L(\mathcal{U})$，取 $0 < \delta < L(\mathcal{U})$，则对任意 $x_1, x_2 \in X$ 满足 $d_X(x_1, x_2) < \delta$，由 $L(\mathcal{U})$ 的定义可知，存在 $U = B_{\delta_x}(x) \in \mathcal{U}$ 使得 $d_X(x_1, U^c) > \delta$，则 $x_1, x_2 \in U = B_{\delta_x}(x)$，从而 $d_Y(f(x_1), f(x_2)) < \eps$，所以 $f$ 在 $X$ 上一致连续. 
+    由于 $X$ 是紧致的，开覆盖 $\mathcal{U} = \{B_{\delta_x}(x)\}_{x \in X}$ 的 Lebesgue 数 $L(\mathcal{U}) > 0$，取 $0 < \delta < L(\mathcal{U})$，则对任意 $x_1, x_2 \in X$ 满足 $d_X(x_1, x_2) < \delta$，由 $L(\mathcal{U})$ 的定义可知，存在 $U = B_{\delta_x}(x) \in \mathcal{U}$ 使得 $d_X(x_1, U^c) > \delta$，则 $x_1, x_2 \in U = B_{\delta_x}(x)$，从而 $d_Y(f(x_1), f(x_2)) < \eps$，所以 $f$ 在 $X$ 上一致连续. 
 \end{proof}
 
 \begin{remark}
-    证明 1 利用了列紧性，证明 2 则利用了紧致性的覆盖性质. 
-
     非紧的集合上的连续函数不一定是一致连续的，例如 $f(x) = x^2$ 在 $\mathbb R$ 上不是一致连续的，因为对任意 $\delta > 0$，
     $$
     \sup\limits_{|x_1 - x_2| < \delta} |f(x_1) - f(x_2)| = +\infty; 
